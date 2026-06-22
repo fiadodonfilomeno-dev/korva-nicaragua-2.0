@@ -9,6 +9,11 @@ class ConversationAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ['sender', 'recipient', 'content', 'timestamp', 'read_status']
-    list_filter = ['read_status', 'timestamp']
+    list_display = ['sender', 'recipient', 'content', 'timestamp', 'read_status_display']
+    list_filter = ['timestamp']
     search_fields = ['content', 'sender__business_name', 'recipient__business_name']
+    
+    def read_status_display(self, obj):
+        return obj.read_status
+    read_status_display.boolean = True
+    read_status_display.short_description = 'Leído'

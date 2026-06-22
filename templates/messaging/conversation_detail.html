@@ -36,10 +36,10 @@
     </div>
     
     <!-- Chat Messages -->
-    <div class="korva-card rounded-lg border border-korva-dark-alt p-6 mb-6 h-[500px] overflow-y-auto flex flex-col space-y-4">
+    <div id="chat-container" class="korva-card rounded-lg border border-korva-dark-alt p-6 mb-6 h-[500px] overflow-y-auto flex flex-col space-y-4">
         {% if chat_messages %}
             {% for msg in chat_messages %}
-            <div class="flex {% if msg.sender == user.profile %}justify-end{% endif %}">
+            <div class="flex {% if msg.sender == user.profile %}justify-end{% else %}justify-start{% endif %}" id="msg-{{ msg.id }}">
                 <div class="max-w-[70%] {% if msg.sender == user.profile %}order-1{% endif %}">
                     {% if msg.content %}
                     <div class="px-4 py-2 rounded-2xl {% if msg.sender == user.profile %}bg-korva-success text-white rounded-br-sm{% else %}bg-korva-dark-alt text-gray-200 rounded-bl-sm{% endif %}">
@@ -63,12 +63,14 @@
                     </div>
                     {% endif %}
                     
-                    <p class="text-xs text-gray-500 mt-1 {% if msg.sender == user.profile %}text-right{% endif %}">
-                        {{ msg.timestamp|date:"H:i" }}
-                        {% if msg.sender == user.profile and msg.read_status %}
-                        <i class="fas fa-check-double text-korva-success ml-1"></i>
-                        {% elif msg.sender == user.profile %}
-                        <i class="fas fa-check text-gray-500 ml-1"></i>
+                    <p class="text-xs text-gray-500 mt-1 flex items-center justify-end gap-1 {% if msg.sender != user.profile %}justify-start{% endif %}">
+                        <span>{{ msg.timestamp|date:"H:i" }}</span>
+                        {% if msg.sender == user.profile %}
+                            {% if msg.is_read_by|default:False %}
+                            <i class="fas fa-check-double text-korva-success" title="Leído"></i>
+                            {% else %}
+                            <i class="fas fa-check text-gray-500" title="Entregado"></i>
+                            {% endif %}
                         {% endif %}
                     </p>
                 </div>
@@ -109,4 +111,29 @@
         </div>
     </form>
 </div>
+
+<script>
+// Auto-scroll to bottom on load
+const chatContainer = document.getElementById('chat-container');
+if (chatContainer) {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+// Poll for new messages (simple approach)
+setInterval(() => {
+    const lastMsg = document.querySelector('[id^="msg-"]:last-child');
+    if (lastMsg) {
+        const lastMsgId = lastMsg.id.replace('msg-', '');
+        // Check for new messages via AJAX
+        fetch(`?last_msg_id=${lastMsgId}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        }).then(response => response.json()).then(data => {
+            if (data.new_messages) {
+                // Reload page to show new messages
+                window.location.reload();
+            }
+        }).catch(() => {});
+    }
+}, 5000);
+</script>
 {% endblock %}

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+from django.http import JsonResponse
 from .models import Message, Conversation
 from .forms import MessageForm
 from users.models import Profile
@@ -39,14 +40,22 @@ def conversation_detail(request, conversation_id):
             messages.error(request, 'No tienes acceso a esta conversación.')
             return redirect('messages')
         
-        # Obtener los mensajes
-        chat_messages = Message.objects.filter(
-            Q(sender=user_profile, recipient__in=[conversation.user1, conversation.user2]) |
-            Q(recipient=user_profile, sender__in=[conversation.user1, conversation.user2])
-        ).order_by('timestamp')
+        # Obtener los mensajes de la conversación
+        chat_messages = conversation.get_messages()
         
-        # Marcar mensajes como leídos
-        Message.objects.filter(recipient=user_profile, sender__in=[conversation.user1, conversation.user2]).update(read_status=True)
+        # AJAX: comprobar nuevos mensajes
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            last_msg_id = request.GET.get('last_msg_id')
+            if last_msg_id:
+                new_messages = chat_messages.filter(id__gt=last_msg_id)
+                if new_messages.exists():
+                    return JsonResponse({'new_messages': True})
+            return JsonResponse({'new_messages': False})
+        
+        # Marcar mensajes como leídos por el usuario actual
+        for msg in chat_messages.filter(recipient=user_profile):
+            if not msg.is_read_by(user_profile):
+                msg.mark_as_read(user_profile)
         
         if request.method == 'POST':
             form = MessageForm(request.POST, request.FILES)
@@ -69,12 +78,12 @@ def conversation_detail(request, conversation_id):
             form = MessageForm()
         
         # Obtener el otro usuario en la conversación
-        other_user = conversation.user2 if conversation.user1 == user_profile else conversation.user1
+        other_user = conversation.get_other_user(user_profile)
         
         context = {
             'conversation': conversation,
             'other_user': other_user,
-            'messages': chat_messages,
+            'chat_messages': chat_messages,
             'form': form,
         }
         
