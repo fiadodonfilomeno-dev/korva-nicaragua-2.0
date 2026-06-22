@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}Korva Nicaragua - Red Social para PyMEs{% endblock %}</title>
+    
+    <meta name="theme-color" content="#09090b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'korva-dark': '#09090b',
+                        'korva-card': '#0c0c0e',
+                        'korva-success': '#10b981',
+                        'korva-warning': '#f59e0b',
+                        'korva-dark-alt': '#1a1a1d',
+                        'korva-light': '#ffffff',
+                        'korva-light-card': '#f8fafc',
+                        'korva-light-border': '#e2e8f0',
+                        'korva-light-text': '#1e293b',
+                        'korva-light-text-muted': '#64748b',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { scrollbar-width: thin; scrollbar-color: #10b981 #1a1a1d; }
+        
+        :root {
+            --bg-primary: #09090b;
+            --bg-secondary: #0c0c0e;
+            --bg-tertiary: #1a1a1d;
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --border-color: #1a1a1d;
+            --border-hover: #2d2d33;
+            --btn-primary: #10b981;
+            --btn-primary-hover: #059669;
+            --btn-secondary: #f59e0b;
+        }
+        
+        html.light {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --btn-primary: #10b981;
+            --btn-primary-hover: #059669;
+            --btn-secondary: #f59e0b;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        ::selection { background: rgba(16, 185, 129, 0.3); }
+        
+        .korva-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            transition: border-color 0.2s ease, background-color 0.3s ease;
+        }
+        .korva-card:hover { border-color: var(--border-hover); }
+        
+        .korva-btn-primary {
+            background-color: var(--btn-primary);
+            color: white;
+            transition: all 0.2s ease;
+        }
+        .korva-btn-primary:hover {
+            background-color: var(--btn-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .korva-btn-secondary {
+            background-color: var(--btn-secondary);
+            color: white;
+            transition: all 0.2s ease;
+        }
+        .korva-btn-secondary:hover {
+            background-color: #d97706;
+            transform: translateY(-1px);
+        }
+        
+        .korva-input {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        .korva-input:focus {
+            outline: none;
+            border-color: var(--btn-primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+        .korva-input::placeholder { color: var(--text-secondary); }
+        
+        .code-font { font-family: 'Fira Code', monospace; }
+        
+        .message-toast {
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 4.7s;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Light mode overrides */
+        html.light .korva-card {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+        html.light .korva-card:hover {
+            border-color: var(--border-hover);
+        }
+        html.light .korva-input {
+            background-color: var(--bg-tertiary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        html.light .korva-input:focus {
+            border-color: var(--btn-primary);
+        }
+        html.light .korva-input::placeholder {
+            color: var(--text-secondary);
+        }
+        html.light .text-gray-300 { color: var(--text-secondary) !important; }
+        html.light .text-gray-400 { color: var(--text-secondary) !important; }
+        html.light .text-gray-500 { color: var(--text-secondary) !important; }
+        html.light .text-gray-600 { color: var(--text-secondary) !important; }
+        html.light .bg-gray-50 { background-color: var(--bg-tertiary) !important; }
+        html.light .bg-gray-100 { background-color: var(--bg-tertiary) !important; }
+        html.light .bg-gray-800 { background-color: var(--bg-secondary) !important; }
+        html.light .bg-gray-900 { background-color: var(--bg-primary) !important; }
+        html.light .border-gray-700 { border-color: var(--border-color) !important; }
+        html.light .border-gray-600 { border-color: var(--border-color) !important; }
+        html.light .hover\\:bg-gray-800:hover { background-color: var(--bg-tertiary) !important; }
+        html.light .hover\\:text-white:hover { color: var(--text-primary) !important; }
+        html.light .text-white { color: var(--text-primary) !important; }
+        html.light .text-gray-200 { color: var(--text-primary) !important; }
+        
+        /* Navbar specific */
+        html.light .bg-korva-card { background-color: var(--bg-secondary) !important; }
+        html.light .border-korva-dark-alt { border-color: var(--border-color) !important; }
+        html.light .text-gray-300 { color: var(--text-secondary) !important; }
+        html.light .hover\\:text-korva-success:hover { color: var(--btn-primary) !important; }
+        html.light .text-korva-success { color: var(--btn-primary) !important; }
+        
+        /* Dropdown */
+        html.light .bg-korva-card { background-color: var(--bg-secondary) !important; }
+        html.light .border-korva-dark-alt { border-color: var(--border-color) !important; }
+        
+        /* Scrollbar for light mode */
+        html.light * { scrollbar-color: var(--btn-primary) var(--bg-tertiary); }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-korva-dark text-gray-200">
+    
+    {% include 'navbar.html' %}
+    
+    <main class="min-h-screen">
+        {% if messages %}
+            <div class="max-w-7xl mx-auto mt-4 px-4 space-y-2">
+                {% for message in messages %}
+                    <div class="message-toast px-5 py-3 rounded-lg shadow-lg flex items-center justify-between
+                        {% if 'error' in message.tags %}bg-red-600 text-white
+                        {% elif 'success' in message.tags %}bg-korva-success text-white
+                        {% else %}bg-korva-dark-alt text-gray-200 border border-korva-dark-alt{% endif %}">
+                        <span class="text-sm font-medium">
+                            {% if 'error' in message.tags %}<i class="fas fa-exclamation-circle mr-2"></i>
+                            {% elif 'success' in message.tags %}<i class="fas fa-check-circle mr-2"></i>
+                            {% else %}<i class="fas fa-info-circle mr-2"></i>{% endif %}
+                            {{ message }}
+                        </span>
+                        <button onclick="this.parentElement.remove()" class="ml-4 text-white opacity-70 hover:opacity-100">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    {% include 'footer.html' %}
+    
+    <script>
+        document.querySelectorAll('.message-toast').forEach(el => {
+            setTimeout(() => { if (el.parentElement) el.remove(); }, 5000);
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

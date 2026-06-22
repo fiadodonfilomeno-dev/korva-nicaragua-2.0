@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Korva Nicaragua - Red Social para PyMEs{% endblock %}
+
+{% block content %}
+<div class="min-h-screen">
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-korva-success via-green-800 to-korva-dark opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-4 py-24 relative">
+            <div class="text-center max-w-4xl mx-auto">
+                <div class="w-24 h-24 bg-korva-success rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-korva-success/30">
+                    <i class="fas fa-rocket text-white text-4xl"></i>
+                </div>
+                <h1 class="text-6xl font-extrabold text-white mb-6 leading-tight">
+                    Conecta tu PyME con <br>
+                    <span class="text-korva-success">Nicaragua</span>
+                </h1>
+                <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    La primera red social empresarial de Nicaragua. Crea conexiones, 
+                    encuentra proveedores, y haz crecer tu negocio.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{% url 'register' %}" class="korva-btn-primary px-8 py-4 rounded-xl text-lg font-bold shadow-lg shadow-korva-success/30">
+                        <i class="fas fa-user-plus mr-2"></i> Crear cuenta gratis
+                    </a>
+                    <a href="{% url 'login' %}" class="px-8 py-4 rounded-xl text-lg font-bold border border-korva-dark-alt text-gray-300 hover:text-white hover:border-korva-success transition">
+                        <i class="fas fa-sign-in-alt mr-2"></i> Iniciar sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="max-w-7xl mx-auto px-4 py-16">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="korva-card rounded-xl p-6 text-center border-korva-dark-alt">
+                <p class="text-4xl font-bold text-korva-success">+500</p>
+                <p class="text-gray-500 mt-1">Empresas registradas</p>
+            </div>
+            <div class="korva-card rounded-xl p-6 text-center border-korva-dark-alt">
+                <p class="text-4xl font-bold text-korva-success">+1,200</p>
+                <p class="text-gray-500 mt-1">Publicaciones</p>
+            </div>
+            <div class="korva-card rounded-xl p-6 text-center border-korva-dark-alt">
+                <p class="text-4xl font-bold text-korva-success">+300</p>
+                <p class="text-gray-500 mt-1">Productos</p>
+            </div>
+            <div class="korva-card rounded-xl p-6 text-center border-korva-dark-alt">
+                <p class="text-4xl font-bold text-korva-success">+50</p>
+                <p class="text-gray-500 mt-1">Ciudades</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="max-w-7xl mx-auto px-4 py-16">
+        <h2 class="text-4xl font-bold text-white text-center mb-12">
+            Todo lo que tu PyME necesita en <span class="text-korva-success">un solo lugar</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="korva-card rounded-xl p-8 border-korva-dark-alt hover:border-korva-success transition">
+                <div class="w-14 h-14 bg-korva-success/20 rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-newspaper text-korva-success text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Muro Social</h3>
+                <p class="text-gray-400">Comparte tus logros, busca aliados y mantente al día con tu sector.</p>
+            </div>
+            <div class="korva-card rounded-xl p-8 border-korva-dark-alt hover:border-korva-success transition">
+                <div class="w-14 h-14 bg-korva-success/20 rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-store text-korva-success text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Marketplace</h3>
+                <p class="text-gray-400">Publica y vende tus productos directamente a otras empresas.</p>
+            </div>
+            <div class="korva-card rounded-xl p-8 border-korva-dark-alt hover:border-korva-success transition">
+                <div class="w-14 h-14 bg-korva-success/20 rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-trophy text-korva-success text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Rankings</h3>
+                <p class="text-gray-400">Compite y destaca entre las mejores PyMEs del país.</p>
+            </div>
+            <div class="korva-card rounded-xl p-8 border-korva-dark-alt hover:border-korva-success transition">
+                <div class="w-14 h-14 bg-korva-success/20 rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-comments text-korva-success text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Mensajería</h3>
+                <p class="text-gray-400">Chatea con otras empresas, comparte imágenes y videos.</p>
+            </div>
+            <div class="korva-card rounded-xl p-8 border-korva-dark-alt hover:border-korva-success transition">
+                <div class="w-14 h-14 bg-korva-success/20 rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-robot text-korva-success text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Korva IA</h3>
+                <p class="text-gray-400">Asistente inteligente para resolver tus dudas empresariales.</p>
+            </div>
+            <div class="korva-card rounded-xl p-8 border-korva-dark-alt hover:border-korva-success transition">
+                <div class="w-14 h-14 bg-korva-success/20 rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-chart-bar text-korva-success text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Reportes</h3>
+                <p class="text-gray-400">Analiza tu rendimiento con reportes exportables.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="max-w-7xl mx-auto px-4 py-16">
+        <div class="korva-card rounded-2xl p-12 border-korva-success text-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-korva-success/10 to-transparent"></div>
+            <div class="relative">
+                <h2 class="text-4xl font-bold text-white mb-4">¿Listo para hacer crecer tu negocio?</h2>
+                <p class="text-xl text-gray-400 mb-8">Únete a la comunidad empresarial más grande de Nicaragua</p>
+                <a href="{% url 'register' %}" class="korva-btn-primary px-10 py-4 rounded-xl text-lg font-bold inline-block shadow-lg shadow-korva-success/30">
+                    <i class="fas fa-rocket mr-2"></i> Comenzar ahora
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer simple -->
+    <footer class="text-center py-8 text-gray-600 text-sm">
+        <p>Korva Nicaragua 2.0 &copy; 2026. Hecho para PyMEs nicaragüenses.</p>
+    </footer>
+</div>
+{% endblock %}

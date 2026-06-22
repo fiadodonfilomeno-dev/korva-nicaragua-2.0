@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Korva IA - Asistente Inteligente{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-white mb-8">
+        <i class="fas fa-robot text-korva-success"></i> Korva IA - Tu Asistente Inteligente
+    </h1>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Conversations List -->
+        <div class="lg:col-span-1">
+            <div class="korva-card rounded-lg border border-korva-dark-alt overflow-hidden">
+                <div class="p-4 border-b border-korva-dark-alt bg-korva-dark-alt">
+                    <h2 class="font-semibold text-white mb-4">Mis Conversaciones</h2>
+                    
+                    <form method="post" action="{% url 'create_ai_conversation' %}" class="space-y-2">
+                        {% csrf_token %}
+                        <input type="text" name="title" placeholder="Nuevo tema..." 
+                            class="w-full px-3 py-2 bg-korva-dark rounded text-white placeholder-gray-500 text-sm">
+                        <button type="submit" class="w-full korva-btn-primary px-3 py-2 rounded text-sm font-semibold">
+                            <i class="fas fa-plus mr-2"></i> Nueva
+                        </button>
+                    </form>
+                </div>
+                
+                {% if conversations %}
+                <div class="space-y-0 max-h-96 overflow-y-auto">
+                    {% for conv in conversations %}
+                    <a href="{% url 'conversation_chat' conv.id %}" 
+                        class="block p-3 hover:bg-korva-dark-alt transition border-b border-korva-dark-alt last:border-0">
+                        <p class="text-white text-sm font-medium truncate">{{ conv.title }}</p>
+                        <p class="text-xs text-gray-500">{{ conv.updated_at|date:"d/m H:i" }}</p>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="p-4 text-center text-gray-500">
+                    <p class="text-sm">No hay conversaciones. ¡Crea una nueva!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="lg:col-span-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Quick Prompts -->
+                <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
+                    <h3 class="text-xl font-bold text-white mb-4">
+                        <i class="fas fa-bolt text-korva-success"></i> Preguntas Rápidas
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        <a href="{% url 'create_ai_conversation' %}" class="block p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition">
+                            <p class="text-white font-medium">¿Plan de Negocio?</p>
+                            <p class="text-xs text-gray-400">Pasos para crear un plan exitoso</p>
+                        </a>
+                        
+                        <a href="{% url 'create_ai_conversation' %}" class="block p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition">
+                            <p class="text-white font-medium">Registro RUC</p>
+                            <p class="text-xs text-gray-400">Cómo registrar tu empresa</p>
+                        </a>
+                        
+                        <a href="{% url 'create_ai_conversation' %}" class="block p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition">
+                            <p class="text-white font-medium">Marketing Digital</p>
+                            <p class="text-xs text-gray-400">Mejora tu presencia en línea</p>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Configuration -->
+                <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
+                    <h3 class="text-xl font-bold text-white mb-4">
+                        <i class="fas fa-cog text-korva-success"></i> Configuración
+                    </h3>
+                    
+                    <form method="post" action="{% url 'update_ai_config' %}" class="space-y-4">
+                        {% csrf_token %}
+                        
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" name="uses_personal_key" 
+                                {% if ai_config.uses_personal_key %}checked{% endif %}
+                                class="w-4 h-4">
+                            <span class="text-white text-sm">Usar mi propia clave API</span>
+                        </label>
+                        
+                        <textarea name="user_api_key" placeholder="Tu clave API de Google Gemini..." 
+                            class="w-full px-3 py-2 bg-korva-dark-alt border border-korva-dark-alt rounded text-white placeholder-gray-500 text-sm h-24"
+                            >{{ ai_config.user_api_key }}</textarea>
+                        
+                        <button type="submit" class="w-full korva-btn-primary px-3 py-2 rounded font-semibold text-sm">
+                            <i class="fas fa-save mr-2"></i> Guardar
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Features -->
+            <div class="korva-card rounded-lg p-6 border border-korva-dark-alt mt-6">
+                <h3 class="text-xl font-bold text-white mb-4">
+                    <i class="fas fa-star text-korva-warning"></i> Características
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <i class="fas fa-comments text-korva-success text-3xl mb-2"></i>
+                        <p class="font-semibold text-white">Chat IA Avanzado</p>
+                        <p class="text-gray-500 text-sm">Conversaciones inteligentes y personalizadas</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <i class="fas fa-history text-korva-success text-3xl mb-2"></i>
+                        <p class="font-semibold text-white">Historial</p>
+                        <p class="text-gray-500 text-sm">Mantén tus conversaciones almacenadas</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <i class="fas fa-shield-alt text-korva-success text-3xl mb-2"></i>
+                        <p class="font-semibold text-white">Privado</p>
+                        <p class="text-gray-500 text-sm">Tus datos siempre protegidos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

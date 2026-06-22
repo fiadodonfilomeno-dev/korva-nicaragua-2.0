@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full korva-card rounded-lg p-8 border border-korva-dark-alt">
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 mx-auto bg-korva-success rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-rocket text-white text-2xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-white">Korva Nicaragua</h2>
+            <p class="text-gray-400 mt-2">Red Social para PyMEs</p>
+        </div>
+        
+        <h3 class="text-xl font-bold text-white mb-6">Iniciar Sesión</h3>
+        
+        {% if messages %}
+            {% for message in messages %}
+            <div class="mb-4 p-4 rounded-lg {% if message.tags %}{{ message.tags }}{% else %}bg-red-500 text-white{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-300 mb-2">
+                    Usuario
+                </label>
+                <input type="text" id="username" name="username" required
+                    class="korva-input w-full" placeholder="Tu nombre de usuario" />
+            </div>
+            
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
+                    Contraseña
+                </label>
+                <input type="password" id="password" name="password" required
+                    class="korva-input w-full" placeholder="Tu contraseña" />
+            </div>
+            
+            <button type="submit" class="korva-btn-primary w-full py-3 rounded-lg font-semibold mt-6">
+                <i class="fas fa-sign-in-alt mr-2"></i> Iniciar Sesión
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center">
+            <p class="text-gray-400">
+                ¿Aún no tienes cuenta?
+                <a href="{% url 'register' %}" class="text-korva-success hover:text-green-400 font-semibold">
+                    Regístrate aquí
+                </a>
+            </p>
+        </div>
+        
+        <div class="mt-4 pt-4 border-t border-korva-dark-alt">
+            <p class="text-xs text-gray-500 text-center">
+                Cuentas de prueba:<br>
+                admin / admin123<br>
+                panaderia_nicaraguena / test1234
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
