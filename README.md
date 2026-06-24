@@ -2,30 +2,6 @@
 
 Plataforma de red social PyME para empresas en Nicaragua. Networking, marketplace, mensajería y colaboración empresarial.
 
-## Bugs
-
-### Resueltos ✅
-- **Mensajería** - Fotos, videos, burbujas de chat, doble check de lectura
-- **Chatbot tutorial** - Tutorial + links para API key cuando no está configurada
-- **Posts con imágenes/videos** - Campo video en Post, upload y display
-- **Perfil estilo Discord** - Banner, avatar circular, badges, stats
-- **Rankings divididos** - General, Novatos (&lt; 1000 pts), Establecidas (1000+ pts)
-- **Frontend mejorado** - Animaciones, scrollbar, transiciones, sombras
-- Rankings sin template → Creado `rankings/rankings.html`
-- Korva IA sin templates ni error handling → Creados templates + try-except
-- Mensajería sin templates ni error handling → Creados templates + try-except
-- Perfiles sin template ni error handling → Creado `users/profile.html` + try-except
-- Like/Dislike: AttributeError → Operaciones directas en campos + modelo Vote
-- Image Upload sin error handling → try-except en vistas
-- Comentarios sin template funcional → Integrado en `post_detail.html`
-
-### Pendientes
-- [ ] Configurar Google Gemini API key en `settings.py` para chatbot funcional
-- [ ] Sistema de notificaciones en tiempo real (WebSockets)
-- [ ] Verificación de email al registrarse
-- [ ] Modo oscuro/claro toggle
-- [ ] API REST para app móvil
-
 ## Características
 
 - **Landing Page** - Página de inicio atractiva para usuarios no autenticados
