@@ -7,7 +7,7 @@ services:
     startCommand: "gunicorn korva_config.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: "3.11.0"
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
@@ -46,14 +46,13 @@ services:
       - key: USE_REDIS
         value: "True"
 
+  - type: redis
+    name: korva-redis
+    plan: free
+    maxmemoryPolicy: allkeys-lru
+
 databases:
   - name: korva-db
     plan: free
     databaseName: korva_db
     user: korva_user
-
-services:
-  - type: redis
-    name: korva-redis
-    plan: free
-    maxmemoryPolicy: allkeys-lru
