@@ -3,6 +3,10 @@
 
 set -o errexit  # Exit on error
 
+echo "=== Instalando dependencias ==="
+pip install --upgrade pip
+pip install -r requirements.txt
+
 echo "=== Esperando a PostgreSQL ==="
 if [ -n "$DATABASE_URL" ]; then
     python -c "
@@ -26,10 +30,6 @@ if db_url:
         print('psycopg2 no disponible, continuando...')
 "
 fi
-
-echo "=== Instalando dependencias ==="
-pip install --upgrade pip
-pip install -r requirements.txt
 
 echo "=== Recopilando archivos estáticos ==="
 python manage.py collectstatic --no-input
