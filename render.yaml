@@ -1,0 +1,59 @@
+services:
+  - type: web
+    name: korva2
+    env: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn korva_config.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: korva-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: korva-redis
+          property: connectionString
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://korva2.onrender.com"
+      - key: FRONTEND_URL
+        value: "https://korva2.onrender.com"
+      - key: EMAIL_BACKEND
+        value: "django.core.mail.backends.smtp.EmailBackend"
+      - key: EMAIL_HOST
+        value: "smtp.gmail.com"
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_USE_TLS
+        value: "True"
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        value: "Korva Nicaragua <noreply@korva.ni>"
+      - key: USE_REDIS
+        value: "True"
+
+databases:
+  - name: korva-db
+    plan: free
+    databaseName: korva_db
+    user: korva_user
+
+services:
+  - type: redis
+    name: korva-redis
+    plan: free
+    maxmemoryPolicy: allkeys-lru

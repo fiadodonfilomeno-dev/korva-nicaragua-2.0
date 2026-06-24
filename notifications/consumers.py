@@ -209,39 +209,51 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def can_access_conversation(self):
         from messaging.models import Conversation
+        from users.models import Profile
         try:
             conversation = Conversation.objects.get(id=self.conversation_id)
-            return conversation.participants.filter(id=self.user.id).exists()
-        except Conversation.DoesNotExist:
+            # Verificar si el usuario actual es user1 o user2 en la conversación
+            profile = Profile.objects.get(user=self.user)
+            return conversation.user1 == profile or conversation.user2 == profile
+        except (Conversation.DoesNotExist, Profile.DoesNotExist):
             return False
     
     @database_sync_to_async
     def save_message(self, content):
         from messaging.models import Conversation, Message
+        from users.models import Profile
         conversation = Conversation.objects.get(id=self.conversation_id)
+        sender_profile = Profile.objects.get(user=self.user)
+        
+        # Determinar destinatario
+        recipient_profile = conversation.user2 if conversation.user1 == sender_profile else conversation.user1
+        
         message = Message.objects.create(
-            conversation=conversation,
-            sender=self.user,
+            sender=sender_profile,
+            recipient=recipient_profile,
             content=content
         )
+        conversation.updated_at = message.timestamp
+        conversation.save()
         
-        # Enviar a todos en la conversación
         return {
             'id': message.id,
             'content': message.content,
             'sender_id': self.user.id,
             'sender_username': self.user.username,
-            'sender_avatar': self.user.profile.logo.url if hasattr(self.user, 'profile') and self.user.profile.logo else None,
-            'created_at': message.created_at.isoformat(),
+            'sender_avatar': sender_profile.logo.url if sender_profile.logo else None,
+            'created_at': message.timestamp.isoformat(),
             'read_by': [],
         }
     
     @database_sync_to_async
     def mark_as_read(self, message_id):
         from messaging.models import Message
+        from users.models import Profile
         try:
-            message = Message.objects.get(id=message_id, conversation_id=self.conversation_id)
-            message.read_by.add(self.user)
+            profile = Profile.objects.get(user=self.user)
+            message = Message.objects.get(id=message_id, recipient=profile)
+            message.read_by.add(profile)
             return True
-        except Message.DoesNotExist:
+        except (Message.DoesNotExist, Profile.DoesNotExist):
             return False

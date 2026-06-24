@@ -75,27 +75,3 @@ class Conversation(models.Model):
             models.Q(sender=self.user2, recipient=self.user1)
         ).order_by('timestamp')
 
-
-class Conversation(models.Model):
-    """Modelo para mantener track de conversaciones entre usuarios"""
-    
-    user1 = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        related_name='conversations_as_user1'
-    )
-    user2 = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        related_name='conversations_as_user2'
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        unique_together = ('user1', 'user2')
-        ordering = ['-updated_at']
-    
-    def __str__(self):
-        return f"Conversación: {self.user1.business_name} <-> {self.user2.business_name}"
-

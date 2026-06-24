@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Perfil - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+    <div class="korva-card rounded-lg p-8 border border-korva-dark-alt">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-white mb-2">Editar Perfil</h1>
+            <p class="text-gray-400">Actualiza la información de tu empresa</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Business Name -->
+            <div>
+                <label for="{{ form.business_name.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    Nombre de la Empresa *
+                </label>
+                {{ form.business_name }}
+                {% if form.business_name.errors %}
+                <p class="text-red-400 text-sm mt-1">{{ form.business_name.errors }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Logo -->
+            <div>
+                <label for="{{ form.logo.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    Logo
+                </label>
+                {% if profile.logo %}
+                <div class="mb-2">
+                    <img src="{{ profile.logo.url }}" alt="Logo actual" class="w-20 h-20 rounded-lg object-cover border border-korva-dark-alt">
+                    <p class="text-xs text-gray-500 mt-1">Logo actual</p>
+                </div>
+                {% endif %}
+                {{ form.logo }}
+                <p class="text-xs text-gray-500 mt-1">Formatos: JPG, PNG. Máx 2MB. Recomendado: 200x200px</p>
+                {% if form.logo.errors %}
+                <p class="text-red-400 text-sm mt-1">{{ form.logo.errors }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Banner -->
+            <div>
+                <label for="{{ form.banner.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    Banner
+                </label>
+                {% if profile.banner %}
+                <div class="mb-2">
+                    <img src="{{ profile.banner.url }}" alt="Banner actual" class="w-full h-32 object-cover rounded-lg border border-korva-dark-alt">
+                    <p class="text-xs text-gray-500 mt-1">Banner actual</p>
+                </div>
+                {% endif %}
+                {{ form.banner }}
+                <p class="text-xs text-gray-500 mt-1">Formatos: JPG, PNG. Máx 5MB. Recomendado: 1200x300px</p>
+                {% if form.banner.errors %}
+                <p class="text-red-400 text-sm mt-1">{{ form.banner.errors }}</p>
+                {% endif %}
+            </div>
+
+            <!-- RUC -->
+            <div>
+                <label for="{{ form.ruc.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    RUC *
+                </label>
+                {{ form.ruc }}
+                <p class="text-xs text-gray-500 mt-1">Formato: J0310000123456 (empieza con J o P, 14-17 caracteres)</p>
+                {% if form.ruc.errors %}
+                <p class="text-red-400 text-sm mt-1">{{ form.ruc.errors }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Ciudad -->
+            <div>
+                <label for="{{ form.city.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    Ciudad *
+                </label>
+                {{ form.city }}
+                {% if form.city.errors %}
+                <p class="text-red-400 text-sm mt-1">{{ form.city.errors }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Sector -->
+            <div>
+                <label for="{{ form.sector.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    Sector *
+                </label>
+                {{ form.sector }}
+                {% if form.sector.errors %}
+                <p class="text-red-400 text-sm mt-1">{{ form.sector.errors }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Bio -->
+            <div>
+                <label for="{{ form.bio.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    Descripción / Bio
+                </label>
+                {{ form.bio }}
+                <p class="text-xs text-gray-500 mt-1">Máximo 500 caracteres</p>
+                {% if form.bio.errors %}
+                <p class="text-red-400 text-sm mt-1">{{ form.bio.errors }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Verified Status (read-only for non-admin) -->
+            {% if user.is_superuser %}
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-1">Verificada</label>
+                <div class="flex items-center">
+                    {{ form.verified }}
+                    <span class="ml-2 text-sm text-gray-400">Sello oficial de verificación</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Buttons -->
+            <div class="flex justify-end gap-4 pt-4 border-t border-korva-dark-alt">
+                <a href="{% url 'profile' user.username %}" class="px-6 py-2 bg-korva-dark-alt text-gray-300 rounded-lg hover:bg-korva-dark transition border border-korva-dark-alt font-medium">
+                    Cancelar
+                </a>
+                <button type="submit" class="korva-btn-primary px-6 py-2 rounded-lg font-medium">
+                    <i class="fas fa-save mr-2"></i>Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

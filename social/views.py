@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Q
-from .models import Post, Comment, PostImage
+from .models import Post, Comment, PostImage, Vote
 from .forms import PostForm, CommentForm, PostImageForm
 from users.models import Profile
 
@@ -97,11 +97,36 @@ def post_detail(request, post_id):
 @login_required(login_url='login')
 @require_POST
 def upvote_post(request, post_id):
-    """Aumentar votos positivos en un post"""
+    """Aumentar votos positivos en un post (un voto por usuario)"""
     try:
         post = get_object_or_404(Post, pk=post_id)
-        post.upvotes += 1
-        post.author.popularity_score += 10
+        user_profile = request.user.profile
+        
+        # Verificar si ya votó
+        existing_vote = Vote.objects.filter(user=user_profile, post=post).first()
+        
+        if existing_vote:
+            if existing_vote.vote_type == 'up':
+                # Ya votó up, quitar voto
+                existing_vote.delete()
+                post.upvotes = max(0, post.upvotes - 1)
+                post.author.popularity_score = max(0, post.author.popularity_score - 10)
+                vote_action = 'removed'
+            else:
+                # Cambió de down a up
+                existing_vote.vote_type = 'up'
+                existing_vote.save()
+                post.upvotes += 1
+                post.downvotes = max(0, post.downvotes - 1)
+                post.author.popularity_score += 15  # +10 up +5 por quitar down
+                vote_action = 'changed_to_up'
+        else:
+            # Nuevo voto up
+            Vote.objects.create(user=user_profile, post=post, vote_type='up')
+            post.upvotes += 1
+            post.author.popularity_score += 10
+            vote_action = 'upvoted'
+        
         post.author.save()
         post.save()
         
@@ -109,7 +134,9 @@ def upvote_post(request, post_id):
             return JsonResponse({
                 'upvotes': post.upvotes,
                 'downvotes': post.downvotes,
-                'author_score': post.author.popularity_score
+                'author_score': post.author.popularity_score,
+                'action': vote_action,
+                'user_vote': 'up' if vote_action in ['upvoted', 'changed_to_up'] else None
             })
         
         return redirect('post_detail', post_id=post.pk)
