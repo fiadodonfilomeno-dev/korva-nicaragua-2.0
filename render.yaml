@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: "./build.sh"
-    startCommand: "uvicorn korva_config.asgi:application --host 0.0.0.0 --port $PORT --workers 1"
+    startCommand: "daphne korva_config.asgi:application --port $PORT --bind 0.0.0.0"
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.0"
