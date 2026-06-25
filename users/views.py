@@ -59,8 +59,6 @@ def register(request):
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password']
             )
-            user.is_active = False  # Usuario inactivo hasta verificar email
-            user.save()
             
             # Crear perfil automáticamente
             profile = Profile.objects.create(
@@ -80,7 +78,9 @@ def register(request):
             else:
                 messages.warning(request, 'Cuenta creada, pero no pudimos enviar el email de verificación. Contacta a soporte.')
             
-            return redirect('login')
+            # Iniciar sesión automáticamente
+            login(request, user)
+            return redirect('home')
     else:
         form = UserRegistrationForm()
     
