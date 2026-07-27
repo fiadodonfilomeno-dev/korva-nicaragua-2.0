@@ -271,4 +271,4 @@ def quick_prompts(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({'prompts': quick_prompts_list})
     
-    return render(request, 'ai/quick_prompts.html', {'prompts': quick_prompts_list})ml', {'prompts': quick_prompts_list})
+    return render(request, 'ai/quick_prompts.html', {'prompts': quick_prompts_list})
