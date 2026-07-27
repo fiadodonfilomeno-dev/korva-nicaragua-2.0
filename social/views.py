@@ -150,21 +150,44 @@ def upvote_post(request, post_id):
 @login_required(login_url='login')
 @require_POST
 def downvote_post(request, post_id):
-    """Disminuir votos en un post"""
+    """Disminuir votos en un post (un voto por usuario, toggle)"""
     try:
         post = get_object_or_404(Post, pk=post_id)
-        post.downvotes += 1
-        post.author.popularity_score = max(0, post.author.popularity_score - 5)
+        user_profile = request.user.profile
+
+        existing_vote = Vote.objects.filter(user=user_profile, post=post).first()
+
+        if existing_vote:
+            if existing_vote.vote_type == 'down':
+                existing_vote.delete()
+                post.downvotes = max(0, post.downvotes - 1)
+                post.author.popularity_score = max(0, post.author.popularity_score + 5)
+                vote_action = 'removed'
+            else:
+                existing_vote.vote_type = 'down'
+                existing_vote.save()
+                post.downvotes += 1
+                post.upvotes = max(0, post.upvotes - 1)
+                post.author.popularity_score = max(0, post.author.popularity_score - 15)
+                vote_action = 'changed_to_down'
+        else:
+            Vote.objects.create(user=user_profile, post=post, vote_type='down')
+            post.downvotes += 1
+            post.author.popularity_score = max(0, post.author.popularity_score - 5)
+            vote_action = 'downvoted'
+
         post.author.save()
         post.save()
-        
+
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
                 'upvotes': post.upvotes,
                 'downvotes': post.downvotes,
-                'author_score': post.author.popularity_score
+                'author_score': post.author.popularity_score,
+                'action': vote_action,
+                'user_vote': 'down' if vote_action in ['downvoted', 'changed_to_down'] else None
             })
-        
+
         return redirect('post_detail', post_id=post.pk)
     except Exception as e:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
