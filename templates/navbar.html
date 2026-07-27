@@ -91,11 +91,10 @@
         const toggleBtn = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
         
-        // Check for saved theme preference or default to dark
+        // Check for saved theme preference or default to light
         const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         
-        if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
+        if (savedTheme !== 'dark') {
             html.classList.add('light');
             themeIcon.classList.remove('fa-sun');
             themeIcon.classList.add('fa-moon');
