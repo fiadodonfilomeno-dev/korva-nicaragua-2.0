@@ -240,3 +240,63 @@ def create_deal(request, product_id):
             return redirect('product_detail', product_id=product.pk)
     return render(request, 'marketplace/create_deal.html', {'product': product})
 
+
+@login_required(login_url='login')
+def export_catalog_pdf(request):
+    """Exportar catalogo de productos del usuario actual como PDF"""
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
+    from reportlab.lib.units import cm
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image as RLImage
+    from reportlab.lib.styles import getSampleStyleSheet
+    from io import BytesIO
+    from datetime import datetime
+    import os
+
+    profile = request.user.profile
+    products = profile.products.filter(is_active=True)
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=2*cm, bottomMargin=2*cm,
+                            leftMargin=2*cm, rightMargin=2*cm)
+    styles = getSampleStyleSheet()
+    story = []
+
+    # Header
+    title_style = styles['Title']
+    story.append(Paragraph(f"Catalogo de Productos", title_style))
+    story.append(Paragraph(f"{profile.business_name} - {profile.get_city_display()}", styles['Heading2']))
+    story.append(Spacer(1, 0.5*cm))
+    story.append(Paragraph(f"Generado: {datetime.now().strftime('%d/%m/%Y %H:%M')}", styles['Normal']))
+    story.append(Spacer(1, 1*cm))
+
+    if not products.exists():
+        story.append(Paragraph("No hay productos en el catalogo.", styles['Normal']))
+    else:
+        # Productos
+        for i, p in enumerate(products, 1):
+            story.append(Paragraph(f"{i}. {p.name}", styles['Heading3']))
+            story.append(Paragraph(f"Categoria: {p.get_category_display()}", styles['Normal']))
+            story.append(Paragraph(f"Precio: ${p.price}", styles['Normal']))
+            if p.description:
+                story.append(Paragraph(p.description[:200], styles['Normal']))
+            if p.image and os.path.exists(p.image.path):
+                try:
+                    story.append(RLImage(p.image.path, width=5*cm, height=5*cm))
+                except:
+                    pass
+            story.append(Paragraph(f"Vistas: {p.views_count} | Activo: {'Si' if p.is_active else 'No'}", styles['Normal']))
+            story.append(Spacer(1, 0.5*cm))
+
+            if i % 4 == 0:
+                doc.build(story)
+                story = []
+
+    if story:
+        doc.build(story)
+
+    buffer.seek(0)
+    response = HttpResponse(buffer.read(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="catalogo_{profile.business_name}_{datetime.now().strftime("%Y%m%d")}.pdf"'
+    return response
+

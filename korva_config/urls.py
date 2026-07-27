@@ -22,7 +22,7 @@ from social.views import (
 from marketplace.views import (
     marketplace, create_product, product_detail, edit_product,
     delete_product, my_products, toggle_favorite_product, my_favorites,
-    add_review, seller_reviews, deals_list, create_deal
+    add_review, seller_reviews, deals_list, create_deal, export_catalog_pdf
 )
 
 # Vistas de rankings
@@ -82,6 +82,7 @@ urlpatterns = [
     path('reviews/<str:username>/', seller_reviews, name='seller_reviews'),
     path('deals/', deals_list, name='deals_list'),
     path('product/<int:product_id>/deal/', create_deal, name='create_deal'),
+    path('export-catalog/', export_catalog_pdf, name='export_catalog_pdf'),
     
     # Rankings
     path('rankings/', rankings, name='rankings'),
