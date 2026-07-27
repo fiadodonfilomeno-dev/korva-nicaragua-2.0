@@ -10,7 +10,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # Vistas de usuarios
-from users.views import register, login_view, logout_view, profile_view, edit_profile, dashboard, verify_email
+from users.views import register, login_view, logout_view, profile_view, edit_profile, dashboard, verify_email, pymes_map
 
 # Vistas de muro social
 from social.views import (
@@ -56,6 +56,7 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     path('profile/<str:username>/', profile_view, name='profile'),
     path('edit-profile/', edit_profile, name='edit_profile'),
+    path('map/', pymes_map, name='pymes_map'),
     
     # Muro Social
     path('', home, name='home'),

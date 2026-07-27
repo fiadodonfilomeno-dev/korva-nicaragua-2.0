@@ -74,6 +74,8 @@ class Profile(models.Model):
     associates_count = models.IntegerField(default=0)
     collaborations_count = models.IntegerField(default=0)
     bio = models.TextField(blank=True, null=True, max_length=500)
+    latitude = models.FloatField(null=True, blank=True, help_text="Latitud geografica")
+    longitude = models.FloatField(null=True, blank=True, help_text="Longitud geografica")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

@@ -191,3 +191,30 @@ def dashboard(request):
     
     return render(request, 'users/dashboard.html', context)
 
+
+def pymes_map(request):
+    """Mapa de PyMEs"""
+    profiles = Profile.objects.exclude(latitude__isnull=True).exclude(longitude__isnull=True)
+    sector = request.GET.get('sector')
+    if sector:
+        profiles = profiles.filter(sector=sector)
+    data = []
+    for p in profiles:
+        data.append({
+            'name': p.business_name,
+            'lat': p.latitude,
+            'lng': p.longitude,
+            'sector': p.get_sector_display(),
+            'city': p.get_city_display(),
+            'username': p.user.username,
+            'tier': p.tier_display,
+            'verified': p.verified,
+        })
+    import json
+    context = {
+        'profiles_json': json.dumps(data),
+        'sectors': Profile.SECTOR_CHOICES,
+        'sector_filter': sector,
+    }
+    return render(request, 'users/map.html', context)
+
