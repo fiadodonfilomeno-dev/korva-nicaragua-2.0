@@ -106,6 +106,9 @@ urlpatterns = [
     path('ai/conversation/<int:conversation_id>/send/', send_ai_message, name='send_ai_message'),
     path('ai/config/', update_ai_config, name='update_ai_config'),
     path('ai/quick-prompts/', quick_prompts, name='quick_prompts'),
+    
+    # Eventos
+    path('events/', include('events.urls')),
 ]
 
 # Servir archivos de media en desarrollo
