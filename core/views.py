@@ -4,6 +4,45 @@ from django.db.models import Q
 from users.models import Profile
 
 
+def search(request):
+    """Busqueda avanzada unificada"""
+    q = request.GET.get('q', '').strip()
+    section = request.GET.get('section', 'all')
+    results = {'profiles': [], 'posts': [], 'products': [], 'groups': []}
+
+    if q:
+        from social.models import Post
+        from marketplace.models import Product
+        from groups.models import Group
+
+        if section in ('all', 'profiles'):
+            results['profiles'] = Profile.objects.filter(
+                Q(business_name__icontains=q) | Q(bio__icontains=q) | Q(city__icontains=q) | Q(sector__icontains=q)
+            )[:20]
+
+        if section in ('all', 'posts'):
+            results['posts'] = Post.objects.filter(
+                moderation_status='approved'
+            ).filter(
+                Q(title__icontains=q) | Q(content__icontains=q) | Q(tags__name__icontains=q)
+            ).distinct()[:20]
+
+        if section in ('all', 'products'):
+            results['products'] = Product.objects.filter(is_active=True).filter(
+                Q(name__icontains=q) | Q(description__icontains=q)
+            )[:20]
+
+        if section in ('all', 'groups'):
+            results['groups'] = Group.objects.filter(
+                Q(name__icontains=q) | Q(description__icontains=q) | Q(sector__icontains=q)
+            )[:20]
+
+    total = sum(len(v) for v in results.values())
+    sections = [('all', 'Todos'), ('profiles', 'Empresas'), ('posts', 'Publicaciones'), ('products', 'Productos'), ('groups', 'Grupos')]
+    context = {'q': q, 'section': section, 'results': results, 'total': total, 'sections': sections}
+    return render(request, 'core/search.html', context)
+
+
 def compute_relevance(profile, user_profile=None):
     """Calcula un score de compatibilidad entre dos perfiles"""
     score = 0

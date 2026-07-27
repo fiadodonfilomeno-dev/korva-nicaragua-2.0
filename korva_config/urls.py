@@ -29,7 +29,7 @@ from marketplace.views import (
 from core.rankings_views import rankings
 
 # Vistas de recomendaciones
-from core.views import recommendations
+from core.views import recommendations, search
 
 # Vistas de mensajería
 from messaging.views import (
@@ -88,6 +88,9 @@ urlpatterns = [
     
     # Alianzas Recomendadas
     path('recommendations/', recommendations, name='recommendations'),
+    
+    # Busqueda Avanzada
+    path('search/', search, name='search'),
     
     # Mensajería
     path('messages/', messages_view, name='messages'),
