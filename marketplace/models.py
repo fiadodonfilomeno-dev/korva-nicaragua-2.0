@@ -79,3 +79,20 @@ class ProductFavorite(models.Model):
     def __str__(self):
         return f"{self.user.business_name} favorito: {self.product.name}"
 
+
+class Review(models.Model):
+    """Modelo para calificaciones y reseñas de vendedores"""
+    reviewer = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='reviews_given')
+    seller = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='reviews_received')
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+    rating = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)])
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('reviewer', 'seller', 'product')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.reviewer.business_name} -> {self.seller.business_name}: {self.rating}★"
+

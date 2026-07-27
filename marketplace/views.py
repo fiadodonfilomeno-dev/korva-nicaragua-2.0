@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import Http404, JsonResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Q
-from .models import Product, ProductFavorite
+from .models import Product, ProductFavorite, Review
 from .forms import ProductForm
 
 def marketplace(request):
@@ -170,4 +170,38 @@ def my_favorites(request):
     fav_products = Product.objects.filter(favorited_by__user=user_profile)
     context = {'fav_posts': fav_posts, 'fav_products': fav_products}
     return render(request, 'marketplace/my_favorites.html', context)
+
+
+@login_required(login_url='login')
+@require_POST
+def add_review(request, username):
+    """Agregar calificacion a un vendedor"""
+    from users.models import Profile as UserProfile
+    seller = get_object_or_404(UserProfile, user__username=username)
+    reviewer = request.user.profile
+    if seller == reviewer:
+        messages.error(request, 'No puedes calificarte a ti mismo.')
+        return redirect('profile', username=username)
+    rating = request.POST.get('rating', 5)
+    comment = request.POST.get('comment', '')
+    product_id = request.POST.get('product_id')
+    product = None
+    if product_id:
+        product = Product.objects.filter(pk=product_id).first()
+    Review.objects.update_or_create(
+        reviewer=reviewer, seller=seller, product=product,
+        defaults={'rating': int(rating), 'comment': comment}
+    )
+    messages.success(request, 'Calificacion enviada.')
+    return redirect('profile', username=username)
+
+
+def seller_reviews(request, username):
+    """Ver calificaciones de un vendedor"""
+    from users.models import Profile as UserProfile
+    seller = get_object_or_404(UserProfile, user__username=username)
+    reviews = Review.objects.filter(seller=seller).select_related('reviewer', 'product')
+    avg = reviews.aggregate(models.Avg('rating'))['rating__avg'] or 0
+    context = {'seller': seller, 'reviews': reviews, 'avg_rating': round(avg, 1)}
+    return render(request, 'marketplace/seller_reviews.html', context)
 
