@@ -76,21 +76,15 @@
         <div class="flex items-center justify-between pt-6 border-t border-korva-dark-alt">
             <div class="flex space-x-6">
                 {% if user.is_authenticated %}
-                <form method="post" action="{% url 'upvote_post' post.id %}" class="inline">
-                    {% csrf_token %}
-                    <button type="submit" class="text-gray-400 hover:text-korva-success transition flex items-center space-x-2">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span class="code-font">{{ post.upvotes }}</span>
-                    </button>
-                </form>
+                <button onclick="vote('up', this)" class="text-gray-400 hover:text-korva-success transition flex items-center space-x-2">
+                    <i class="fas fa-thumbs-up"></i>
+                    <span class="code-font vote-count-up">{{ post.upvotes }}</span>
+                </button>
                 
-                <form method="post" action="{% url 'downvote_post' post.id %}" class="inline">
-                    {% csrf_token %}
-                    <button type="submit" class="text-gray-400 hover:text-red-500 transition flex items-center space-x-2">
-                        <i class="fas fa-thumbs-down"></i>
-                        <span class="code-font">{{ post.downvotes }}</span>
-                    </button>
-                </form>
+                <button onclick="vote('down', this)" class="text-gray-400 hover:text-red-500 transition flex items-center space-x-2">
+                    <i class="fas fa-thumbs-down"></i>
+                    <span class="code-font vote-count-down">{{ post.downvotes }}</span>
+                </button>
                 {% else %}
                 <span class="text-gray-500 flex items-center space-x-2">
                     <i class="fas fa-thumbs-up"></i>
@@ -171,4 +165,25 @@
         {% endif %}
     </div>
 </div>
+<script>
+function getCookie(name) {
+    var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return v ? v[2] : null;
+}
+function vote(type, btn) {
+    fetch('/post/{{ post.id }}/' + type + 'vote/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.closest('.flex').querySelector('.vote-count-up').textContent = data.upvotes;
+        btn.closest('.flex').querySelector('.vote-count-down').textContent = data.downvotes;
+    });
+}
+</script>
 {% endblock %}
