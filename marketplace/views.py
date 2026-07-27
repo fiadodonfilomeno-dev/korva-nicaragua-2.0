@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import Http404
 from django.db.models import Q
 from .models import Product
 from .forms import ProductForm
@@ -23,8 +24,11 @@ def marketplace(request):
             Q(user__business_name__icontains=search_query)
         )
     
-    # Ordenar
+    # Ordenar (whitelist para evitar inyección)
+    allowed_sorts = {'created_at', '-created_at', 'price', '-price', 'views_count', '-views_count', 'name', '-name'}
     sort_by = request.GET.get('sort', '-created_at')
+    if sort_by not in allowed_sorts:
+        sort_by = '-created_at'
     products = products.order_by(sort_by)
     
     context = {
@@ -59,26 +63,22 @@ def create_product(request):
 
 def product_detail(request, product_id):
     """Vista de detalle de un producto"""
-    try:
-        product = get_object_or_404(Product, pk=product_id)
-        product.views_count += 1
-        product.save()
-        
-        # Productos similares
-        similar_products = Product.objects.filter(
-            category=product.category,
-            is_active=True
-        ).exclude(pk=product.pk)[:5]
-        
-        context = {
-            'product': product,
-            'similar_products': similar_products,
-        }
-        
-        return render(request, 'marketplace/product_detail.html', context)
-    except Exception as e:
-        messages.error(request, f'Error al cargar el producto: {str(e)}')
-        return redirect('marketplace')
+    product = get_object_or_404(Product, pk=product_id)
+    product.views_count += 1
+    product.save()
+    
+    # Productos similares
+    similar_products = Product.objects.filter(
+        category=product.category,
+        is_active=True
+    ).exclude(pk=product.pk)[:5]
+    
+    context = {
+        'product': product,
+        'similar_products': similar_products,
+    }
+    
+    return render(request, 'marketplace/product_detail.html', context)
 
 
 @login_required(login_url='login')

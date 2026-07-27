@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from .models import Post, Comment, PostImage, Vote
@@ -14,7 +14,7 @@ def home(request):
         return render(request, 'landing.html')
     
     try:
-        posts = Post.objects.select_related('author').all()
+        posts = Post.objects.select_related('author').filter(moderation_status='approved')
         
         # Buscar posts
         search_query = request.GET.get('q')
@@ -66,32 +66,28 @@ def create_post(request):
 
 def post_detail(request, post_id):
     """Vista de detalle de un post"""
-    try:
-        post = get_object_or_404(Post, pk=post_id)
-        comments = post.comments.all()
-        
-        if request.method == 'POST' and request.user.is_authenticated:
-            form = CommentForm(request.POST)
-            if form.is_valid():
-                comment = form.save(commit=False)
-                comment.post = post
-                comment.author = request.user.profile
-                comment.save()
-                messages.success(request, 'Comentario publicado.')
-                return redirect('post_detail', post_id=post.pk)
-        else:
-            form = CommentForm()
-        
-        context = {
-            'post': post,
-            'comments': comments,
-            'form': form,
-        }
-        
-        return render(request, 'social/post_detail.html', context)
-    except Exception as e:
-        messages.error(request, f'Error: {str(e)}')
-        return redirect('home')
+    post = get_object_or_404(Post, pk=post_id, moderation_status='approved')
+    comments = post.comments.all()
+    
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user.profile
+            comment.save()
+            messages.success(request, 'Comentario publicado.')
+            return redirect('post_detail', post_id=post.pk)
+    else:
+        form = CommentForm()
+    
+    context = {
+        'post': post,
+        'comments': comments,
+        'form': form,
+    }
+    
+    return render(request, 'social/post_detail.html', context)
 
 
 @login_required(login_url='login')

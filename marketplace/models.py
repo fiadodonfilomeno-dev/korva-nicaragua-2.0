@@ -48,6 +48,10 @@ class Product(models.Model):
         return f"{self.name} - {self.user.business_name}"
     
     @property
+    def likes_count(self):
+        return 0
+
+    @property
     def whatsapp_message_url(self):
         """Genera URL para enviar mensaje directo en WhatsApp"""
         # Formatear número sin espacios ni caracteres especiales

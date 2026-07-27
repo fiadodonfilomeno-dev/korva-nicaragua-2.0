@@ -28,11 +28,8 @@
                 <div>
                     <select name="category" class="w-full px-4 py-2 bg-korva-dark-alt border border-korva-dark-alt rounded-lg text-white">
                         <option value="">Todas las categorías</option>
-                        <option value="electronics" {% if category == 'electronics' %}selected{% endif %}>Electrónica</option>
-                        <option value="services" {% if category == 'services' %}selected{% endif %}>Servicios</option>
-                        <option value="food" {% if category == 'food' %}selected{% endif %}>Alimentos</option>
-                        <option value="clothing" {% if category == 'clothing' %}selected{% endif %}>Ropa</option>
-                        <option value="other" {% if category == 'other' %}selected{% endif %}>Otros</option>
+                        <option value="ventas" {% if category == 'ventas' %}selected{% endif %}>Ventas</option>
+                        <option value="compras" {% if category == 'compras' %}selected{% endif %}>Compras</option>
                     </select>
                 </div>
             </div>
