@@ -47,6 +47,7 @@ from core.ai_views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
     
     # Autenticación
     path('register/', register, name='register'),

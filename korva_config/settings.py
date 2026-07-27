@@ -60,6 +60,13 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'channels',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.instagram',
     
     # Korva Apps
     'core.apps.CoreConfig',
@@ -83,6 +90,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'korva_config.urls'
@@ -314,3 +322,67 @@ LOGGING = {
         },
     },
 }
+
+# django-allauth Configuration
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_LOGIN_METHODS = {'username'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
+ACCOUNT_LOGIN_BY_CODE_ENABLED = False
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
+
+# Social Account Providers
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': config('GOOGLE_CLIENT_ID', default=''),
+            'secret': config('GOOGLE_CLIENT_SECRET', default=''),
+            'key': ''
+        },
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    },
+    'facebook': {
+        'APP': {
+            'client_id': config('FACEBOOK_CLIENT_ID', default=''),
+            'secret': config('FACEBOOK_CLIENT_SECRET', default=''),
+            'key': ''
+        },
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id', 'email', 'name', 'first_name', 'last_name',
+            'verified', 'locale', 'timezone', 'link', 'picture',
+        ],
+        'EXCHANGE_TOKEN': True,
+        'VERIFIED_EMAIL': False,
+    },
+    'twitter': {
+        'APP': {
+            'client_id': config('TWITTER_CLIENT_ID', default=''),
+            'secret': config('TWITTER_CLIENT_SECRET', default=''),
+            'key': ''
+        },
+    },
+    'instagram': {
+        'APP': {
+            'client_id': config('INSTAGRAM_CLIENT_ID', default=''),
+            'secret': config('INSTAGRAM_CLIENT_SECRET', default=''),
+            'key': ''
+        },
+    },
+}
+
+# Auto-create Profile for social login users
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_ADAPTER = 'users.social_adapter.KorvaSocialAccountAdapter'
