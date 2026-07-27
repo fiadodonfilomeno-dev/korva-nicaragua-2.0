@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'notifications.apps.NotificationsConfig',
     'api.apps.ApiConfig',
     'events.apps.EventsConfig',
+    'groups.apps.GroupsConfig',
 ]
 
 MIDDLEWARE = [

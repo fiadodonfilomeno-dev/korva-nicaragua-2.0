@@ -109,6 +109,9 @@ urlpatterns = [
     
     # Eventos
     path('events/', include('events.urls')),
+    
+    # Grupos
+    path('groups/', include('groups.urls')),
 ]
 
 # Servir archivos de media en desarrollo
