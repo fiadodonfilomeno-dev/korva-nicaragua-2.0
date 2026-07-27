@@ -9,7 +9,12 @@ from .forms import PostForm, CommentForm, PostImageForm
 from users.models import Profile
 
 def home(request):
-    """Vista principal - Landing si no autenticado, Muro Social si autenticado"""
+    """
+    MURO SOCIAL / PÁGINA DE INICIO:
+    Si el usuario no está autenticado, renderiza la página de bienvenida (Landing).
+    Si está autenticado, muestra el muro social con todas las publicaciones.
+    Permite filtrar/buscar publicaciones por título, contenido o nombre de la PyME.
+    """
     if not request.user.is_authenticated:
         return render(request, 'landing.html')
     
@@ -38,7 +43,11 @@ def home(request):
 
 @login_required(login_url='login')
 def create_post(request):
-    """Vista para crear un nuevo post"""
+    """
+    CREAR PUBLICACIÓN:
+    Permite a una PyME publicar un post con texto, etiquetas y múltiples fotos (galería).
+    Asocia automáticamente la publicación al perfil del usuario logueado.
+    """
     try:
         if request.method == 'POST':
             form = PostForm(request.POST, request.FILES)
@@ -65,9 +74,13 @@ def create_post(request):
 
 
 def post_detail(request, post_id):
-    """Vista de detalle de un post"""
+    """
+    DETALLE DE PUBLICACIÓN Y COMENTARIOS:
+    Muestra la información completa de una publicación con su galería y comentarios.
+    Si el usuario está autenticado, permite enviar nuevos comentarios al post.
+    """
     try:
-        post = get_object_or_404(Post, pk=post_id)
+        post = get_or_404(Post, pk=post_id)
         comments = post.comments.all()
         
         if request.method == 'POST' and request.user.is_authenticated:
@@ -97,7 +110,11 @@ def post_detail(request, post_id):
 @login_required(login_url='login')
 @require_POST
 def upvote_post(request, post_id):
-    """Aumentar votos positivos en un post (un voto por usuario)"""
+    """
+    VOTO POSITIVO (UPVOTE):
+    Permite dar un voto de apoyo a una publicación (+10 puntos de popularidad para la PyME autora).
+    Evita votos duplicados del mismo usuario (los alterna o elimina si ya existían).
+    """
     try:
         post = get_object_or_404(Post, pk=post_id)
         user_profile = request.user.profile
@@ -150,7 +167,10 @@ def upvote_post(request, post_id):
 @login_required(login_url='login')
 @require_POST
 def downvote_post(request, post_id):
-    """Disminuir votos en un post"""
+    """
+    VOTO NEGATIVO (DOWNVOTE):
+    Registra votos negativos reduciendo la popularidad de la PyME autora en -5 puntos.
+    """
     try:
         post = get_object_or_404(Post, pk=post_id)
         post.downvotes += 1
@@ -175,7 +195,10 @@ def downvote_post(request, post_id):
 
 @login_required(login_url='login')
 def edit_post(request, post_id):
-    """Editar un post existente"""
+    """
+    EDITAR PUBLICACIÓN:
+    Permite al autor original modificar el contenido, título o añadir imágenes del post.
+    """
     try:
         post = get_object_or_404(Post, pk=post_id)
         
@@ -208,7 +231,10 @@ def edit_post(request, post_id):
 
 @login_required(login_url='login')
 def delete_post(request, post_id):
-    """Eliminar un post"""
+    """
+    ELIMINAR PUBLICACIÓN:
+    Permite al autor borrar la publicación de forma permanente previa confirmación.
+    """
     try:
         post = get_object_or_404(Post, pk=post_id)
         
