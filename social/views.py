@@ -18,16 +18,20 @@ def home(request):
         
         # Buscar posts
         search_query = request.GET.get('q')
+        tag_query = request.GET.get('tag')
         if search_query:
             posts = posts.filter(
                 Q(title__icontains=search_query) |
                 Q(content__icontains=search_query) |
                 Q(author__business_name__icontains=search_query)
             )
+        if tag_query:
+            posts = posts.filter(tags__name__in=[tag_query])
         
         context = {
             'posts': posts,
             'search_query': search_query,
+            'tag_query': tag_query,
         }
         
         return render(request, 'social/home.html', context)
