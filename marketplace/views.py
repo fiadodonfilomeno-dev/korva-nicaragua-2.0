@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import Http404, JsonResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Q
-from .models import Product, ProductFavorite, Review
+from .models import Product, ProductFavorite, Review, Deal
 from .forms import ProductForm
 
 def marketplace(request):
@@ -204,4 +204,39 @@ def seller_reviews(request, username):
     avg = reviews.aggregate(models.Avg('rating'))['rating__avg'] or 0
     context = {'seller': seller, 'reviews': reviews, 'avg_rating': round(avg, 1)}
     return render(request, 'marketplace/seller_reviews.html', context)
+
+
+def deals_list(request):
+    """Lista de ofertas activas"""
+    from django.utils import timezone
+    deals = Deal.objects.filter(is_active=True, ends_at__gt=timezone.now()).select_related('product', 'seller')
+    context = {'deals': deals}
+    return render(request, 'marketplace/deals_list.html', context)
+
+
+@login_required(login_url='login')
+def create_deal(request, product_id):
+    """Crear oferta para un producto"""
+    product = get_object_or_404(Product, pk=product_id)
+    if product.user != request.user.profile:
+        messages.error(request, 'No tienes permiso.')
+        return redirect('marketplace')
+    if request.method == 'POST':
+        from django.utils import timezone as tz
+        from datetime import datetime
+        title = request.POST.get('title', '')
+        description = request.POST.get('description', '')
+        discount = int(request.POST.get('discount_percent', 0))
+        ends = request.POST.get('ends_at', '')
+        if title and discount > 0:
+            deal_price = float(product.price) * (1 - discount / 100)
+            Deal.objects.create(
+                product=product, seller=request.user.profile, title=title,
+                description=description, discount_percent=discount,
+                original_price=product.price, deal_price=deal_price,
+                starts_at=tz.now(), ends_at=datetime.fromisoformat(ends)
+            )
+            messages.success(request, 'Oferta creada.')
+            return redirect('product_detail', product_id=product.pk)
+    return render(request, 'marketplace/create_deal.html', {'product': product})
 

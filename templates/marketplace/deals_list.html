@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Ofertas y Descuentos - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-white mb-8">
+        <i class="fas fa-tags text-korva-warning"></i> Ofertas y Descuentos
+    </h1>
+
+    {% if deals %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for deal in deals %}
+        <a href="{% url 'product_detail' deal.product.id %}" class="korva-card rounded-lg border border-korva-warning overflow-hidden hover:border-korva-success transition block">
+            {% if deal.product.image %}
+            <img src="{{ deal.product.image.url }}" class="w-full h-40 object-cover">
+            {% else %}
+            <div class="w-full h-40 bg-korva-dark-alt flex items-center justify-center">
+                <i class="fas fa-image text-gray-600 text-3xl"></i>
+            </div>
+            {% endif %}
+            <div class="p-4 relative">
+                <div class="absolute top-2 right-2 bg-korva-danger text-white text-xs font-bold px-2 py-1 rounded">
+                    -{{ deal.discount_percent }}%
+                </div>
+                <span class="text-xs bg-korva-dark-alt text-gray-400 px-2 py-1 rounded">{{ deal.product.get_category_display }}</span>
+                <h3 class="text-lg font-bold text-white mt-2">{{ deal.title }}</h3>
+                <p class="text-gray-400 text-sm">{{ deal.description|truncatewords:15 }}</p>
+                <div class="flex items-center space-x-3 mt-3">
+                    <span class="text-gray-500 line-through text-sm">{{ deal.product.price_display }}</span>
+                    <span class="text-korva-success font-bold text-xl">{{ deal.deal_price_display }}</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-2"><i class="fas fa-store mr-1"></i> {{ deal.seller.business_name }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16 korva-card rounded-lg border border-korva-dark-alt">
+        <i class="fas fa-tags text-5xl text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-400 mb-2">No hay ofertas activas</h3>
+        <p class="text-gray-500">Crea ofertas desde tus productos en el marketplace</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

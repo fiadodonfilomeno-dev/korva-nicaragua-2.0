@@ -96,3 +96,34 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.reviewer.business_name} -> {self.seller.business_name}: {self.rating}★"
 
+
+class Deal(models.Model):
+    """Modelo para ofertas y descuentos"""
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='deals')
+    seller = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='deals')
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    discount_percent = models.PositiveIntegerField(help_text="Porcentaje de descuento (1-100)")
+    original_price = models.DecimalField(max_digits=12, decimal_places=2)
+    deal_price = models.DecimalField(max_digits=12, decimal_places=2)
+    starts_at = models.DateTimeField()
+    ends_at = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.title} - {self.discount_percent}% OFF"
+
+    @property
+    def is_expired(self):
+        from django.utils import timezone
+        return timezone.now() > self.ends_at
+
+    @property
+    def deal_price_display(self):
+        currency_symbol = 'C$' if self.product.currency == 'NIO' else '$'
+        return f"{currency_symbol} {self.deal_price:,.2f}"
+
