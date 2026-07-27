@@ -37,7 +37,7 @@ from messaging.views import (
 )
 
 # Vistas de reportes
-from reports.views import reports_view, export_csv, export_pdf
+from reports.views import reports_view, export_csv, export_pdf, analytics_view
 
 # Vistas de IA
 from core.ai_views import (
@@ -99,6 +99,7 @@ urlpatterns = [
     path('reports/', reports_view, name='reports'),
     path('reports/export-csv/', export_csv, name='export_csv'),
     path('reports/export-pdf/', export_pdf, name='export_pdf'),
+    path('analytics/', analytics_view, name='analytics'),
     
     # IA
     path('ai/', korva_ai, name='korva_ai'),

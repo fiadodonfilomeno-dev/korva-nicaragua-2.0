@@ -170,3 +170,48 @@ def export_pdf(request):
     
     return response
 
+
+@login_required(login_url='login')
+def analytics_view(request):
+    """Dashboard de metricas de alcance con charts"""
+    import json
+    from django.db.models import Sum, Count
+    from django.db.models.functions import TruncMonth
+    from social.models import Post
+    from marketplace.models import Product
+
+    profile = request.user.profile
+    posts = profile.posts.all()
+    products = profile.products.all()
+
+    total_posts = posts.count()
+    total_products = products.count()
+    total_upvotes = posts.aggregate(s=Sum('upvotes'))['s'] or 0
+    total_downvotes = posts.aggregate(s=Sum('downvotes'))['s'] or 0
+    total_views = products.aggregate(s=Sum('views_count'))['s'] or 0
+
+    posts_monthly = posts.annotate(month=TruncMonth('timestamp')).values('month').annotate(c=Count('id')).order_by('month')
+    pm_labels = [p['month'].strftime('%b %Y') if p['month'] else '' for p in posts_monthly]
+    pm_data = [p['c'] for p in posts_monthly]
+
+    top_posts = posts.order_by('-upvotes')[:10]
+    vp_labels = [p.title[:20] for p in top_posts]
+    vp_up = [p.upvotes for p in top_posts]
+    vp_down = [p.downvotes for p in top_posts]
+
+    top_products = products.order_by('-views_count')[:5]
+    pv_labels = [p.name[:20] for p in top_products]
+    pv_data = [p.views_count for p in top_products]
+
+    context = {
+        'total_posts': total_posts,
+        'total_products': total_products,
+        'total_upvotes': total_upvotes,
+        'total_downvotes': total_downvotes,
+        'total_views': total_views,
+        'posts_by_month': json.dumps({'labels': pm_labels, 'data': pm_data}),
+        'votes_by_post': json.dumps({'labels': vp_labels, 'upvotes': vp_up, 'downvotes': vp_down}),
+        'views_by_product': json.dumps({'labels': pv_labels, 'data': pv_data}),
+    }
+    return render(request, 'reports/analytics.html', context)
+
