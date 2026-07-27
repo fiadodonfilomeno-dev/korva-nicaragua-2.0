@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Tutorial Korva IA - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="text-center mb-10">
+        <div class="w-20 h-20 bg-korva-success rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-robot text-white text-3xl"></i>
+        </div>
+        <h1 class="text-4xl font-bold text-white mb-2">Korva IA</h1>
+        <p class="text-gray-400 text-lg">Tu asistente inteligente para hacer crecer tu PyME</p>
+    </div>
+
+    <!-- Steps -->
+    <div class="space-y-6 mb-10">
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt flex items-start gap-4">
+            <div class="w-10 h-10 bg-korva-success rounded-full flex items-center justify-center flex-shrink-0 font-bold text-white">1</div>
+            <div>
+                <h3 class="text-xl font-bold text-white mb-1">Obtén tu API Key de Google Gemini</h3>
+                <p class="text-gray-400">Visita <a href="https://ai.google.dev/" target="_blank" class="text-korva-success hover:underline">ai.google.dev</a>, crea una cuenta y genera tu API Key gratuita.</p>
+            </div>
+        </div>
+
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt flex items-start gap-4">
+            <div class="w-10 h-10 bg-korva-success rounded-full flex items-center justify-center flex-shrink-0 font-bold text-white">2</div>
+            <div>
+                <h3 class="text-xl font-bold text-white mb-1">Configura tu API Key</h3>
+                <p class="text-gray-400">Ingresa tu API Key en el panel de configuración de Korva IA. Es segura y solo tú la usas.</p>
+            </div>
+        </div>
+
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt flex items-start gap-4">
+            <div class="w-10 h-10 bg-korva-success rounded-full flex items-center justify-center flex-shrink-0 font-bold text-white">3</div>
+            <div>
+                <h3 class="text-xl font-bold text-white mb-1">¡Empieza a chatear!</h3>
+                <p class="text-gray-400">Haz preguntas sobre tu negocio, planes, marketing, impuestos y más. Korva IA te responde al instante.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="{% url 'korva_ai' %}" class="korva-btn-primary px-8 py-3 rounded-lg font-semibold text-lg inline-block">
+            <i class="fas fa-arrow-right mr-2"></i> Ir a Korva IA
+        </a>
+    </div>
+
+    <div class="mt-8 korva-card rounded-lg p-6 border border-korva-dark-alt">
+        <h3 class="text-lg font-bold text-white mb-3">
+            <i class="fas fa-lightbulb text-korva-warning mr-2"></i>Tips de uso
+        </h3>
+        <ul class="space-y-2 text-gray-400">
+            <li><i class="fas fa-check text-korva-success mr-2"></i>Pregunta sobre planes de negocio personalizados</li>
+            <li><i class="fas fa-check text-korva-success mr-2"></i>Consulta sobre trámites y registros en Nicaragua</li>
+            <li><i class="fas fa-check text-korva-success mr-2"></i>Recibe recomendaciones de marketing digital</li>
+            <li><i class="fas fa-check text-korva-success mr-2"></i>Obtén análisis de tu mercado objetivo</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

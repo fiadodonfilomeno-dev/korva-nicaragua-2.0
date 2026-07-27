@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ conversation.title }} - Korva IA{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-white">
+                <i class="fas fa-robot text-korva-success"></i> {{ conversation.title }}
+            </h1>
+            <p class="text-gray-500 text-sm mt-1">{{ conversation.created_at|date:"d M Y H:i" }}</p>
+        </div>
+        <a href="{% url 'korva_ai' %}" class="text-gray-400 hover:text-white transition">
+            <i class="fas fa-times text-2xl"></i>
+        </a>
+    </div>
+    
+    <!-- Chat Container -->
+    <div class="korva-card rounded-lg border border-korva-dark-alt p-6 mb-6 h-96 overflow-y-auto">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="mb-4 {% if message.role == 'user' %}text-right{% endif %}">
+                <div class="inline-block max-w-xs {% if message.role == 'user' %}bg-korva-success{% else %}bg-korva-dark-alt{% endif %} rounded-lg p-3">
+                    <p class="text-sm {% if message.role == 'user' %}text-white{% else %}text-gray-300{% endif %} break-words">
+                        {{ message.content }}
+                    </p>
+                    <p class="text-xs {% if message.role == 'user' %}text-green-100{% else %}text-gray-500{% endif %} mt-1">
+                        {{ message.timestamp|date:"H:i" }}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="text-center py-12 text-gray-500">
+            <i class="fas fa-comments text-4xl mb-4"></i>
+            <p>Inicia una conversación. ¡Korva IA está aquí para ayudarte!</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Input Form -->
+    <form method="post" action="{% url 'send_ai_message' conversation.id %}" class="space-y-4">
+        {% csrf_token %}
+        
+        <div class="flex gap-3">
+            <input type="text" name="message" placeholder="Escribe tu pregunta..."
+                class="flex-1 px-4 py-3 bg-korva-dark-alt border border-korva-dark-alt rounded-lg text-white placeholder-gray-500">
+            <button type="submit" class="korva-btn-primary px-6 py-3 rounded-lg font-semibold">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </form>
+    
+    <p class="text-center text-gray-500 text-sm mt-4">
+        <i class="fas fa-info-circle"></i> Korva IA está potenciado por Google Gemini
+    </p>
+</div>
+{% endblock %}

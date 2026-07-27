@@ -1,0 +1,12 @@
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "korva_config.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+testpaths = ["core", "users", "social", "marketplace", "messaging", "reports", "notifications", "api"]
+
+[tool.coverage.run]
+source = ["core", "users", "social", "marketplace", "messaging", "reports", "notifications", "api"]
+omit = ["*/migrations/*", "*/tests.py", "*/test_*.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

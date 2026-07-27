@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}Korva Nicaragua - Red Social para PyMEs{% endblock %}</title>
+    
+    <meta name="theme-color" content="#09090b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+        <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'korva-primary': '#10b981',
+                        'korva-success': '#10b981',
+                        'korva-warning': '#f59e0b',
+                        'korva-danger': '#ef4444',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { scrollbar-width: thin; scrollbar-color: #10b981 #1a1a1d; }
+        
+        :root {
+            --bg-primary: #09090b;
+            --bg-secondary: #0c0c0e;
+            --bg-tertiary: #1a1a1d;
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --border-color: #1a1a1d;
+            --border-hover: #2d2d33;
+            --btn-primary: #10b981;
+            --btn-primary-hover: #059669;
+            --btn-secondary: #f59e0b;
+        }
+        
+        html.light {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --btn-primary: #10b981;
+            --btn-primary-hover: #059669;
+            --btn-secondary: #f59e0b;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        ::selection { background: rgba(16, 185, 129, 0.3); }
+        
+        .korva-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            transition: border-color 0.2s ease, background-color 0.3s ease;
+        }
+        .korva-card:hover { border-color: var(--border-hover); }
+        
+        .korva-btn-primary {
+            background-color: var(--btn-primary);
+            color: white;
+            transition: all 0.2s ease;
+        }
+        .korva-btn-primary:hover {
+            background-color: var(--btn-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .korva-btn-secondary {
+            background-color: var(--btn-secondary);
+            color: white;
+            transition: all 0.2s ease;
+        }
+        .korva-btn-secondary:hover {
+            background-color: #d97706;
+            transform: translateY(-1px);
+        }
+        
+        .korva-input {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        .korva-input:focus {
+            outline: none;
+            border-color: var(--btn-primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+        .korva-input::placeholder { color: var(--text-secondary); }
+        
+        .code-font { font-family: 'Fira Code', monospace; }
+        
+        .message-toast {
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 4.7s;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Light mode overrides */
+        html.light .korva-card {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+        html.light .korva-card:hover {
+            border-color: var(--border-hover);
+        }
+        html.light .korva-input {
+            background-color: var(--bg-tertiary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        html.light .korva-input:focus {
+            border-color: var(--btn-primary);
+        }
+        html.light .korva-input::placeholder {
+            color: var(--text-secondary);
+        }
+        html.light .text-gray-300 { color: var(--text-secondary) !important; }
+        html.light .text-gray-400 { color: var(--text-secondary) !important; }
+        html.light .text-gray-500 { color: var(--text-secondary) !important; }
+        html.light .text-gray-600 { color: var(--text-secondary) !important; }
+        html.light .bg-gray-50 { background-color: var(--bg-tertiary) !important; }
+        html.light .bg-gray-100 { background-color: var(--bg-tertiary) !important; }
+        html.light .bg-gray-800 { background-color: var(--bg-secondary) !important; }
+        html.light .bg-gray-900 { background-color: var(--bg-primary) !important; }
+        html.light .border-gray-700 { border-color: var(--border-color) !important; }
+        html.light .border-gray-600 { border-color: var(--border-color) !important; }
+        html.light .hover\\:bg-gray-800:hover { background-color: var(--bg-tertiary) !important; }
+        html.light .hover\\:text-white:hover { color: var(--text-primary) !important; }
+        html.light .text-white { color: var(--text-primary) !important; }
+        html.light .text-gray-200 { color: var(--text-primary) !important; }
+        
+        /* Navbar specific */
+        html.light .bg-korva-card { background-color: var(--bg-secondary) !important; }
+        html.light .border-korva-dark-alt { border-color: var(--border-color) !important; }
+        html.light .text-gray-300 { color: var(--text-secondary) !important; }
+        html.light .hover\\:text-korva-success:hover { color: var(--btn-primary) !important; }
+        html.light .text-korva-success { color: var(--btn-primary) !important; }
+        
+        /* Dropdown */
+        html.light .bg-korva-card { background-color: var(--bg-secondary) !important; }
+        html.light .border-korva-dark-alt { border-color: var(--border-color) !important; }
+        
+        /* Scrollbar for light mode */
+        html.light * { scrollbar-color: var(--btn-primary) var(--bg-tertiary); }
+
+        /* Mobile improvements */
+        @media (max-width: 640px) {
+            .korva-card { border-radius: 0.75rem; }
+            .max-w-7xl { padding-left: 1rem; padding-right: 1rem; }
+            .text-mobile-sm { font-size: 0.875rem; }
+            .min-h-screen { padding-top: 0.5rem; }
+            button, a { -webkit-tap-highlight-color: transparent; }
+        }
+
+        @media (max-width: 768px) {
+            .korva-card { border-radius: 0.75rem; }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-korva-dark text-gray-200">
+    
+    {% include 'navbar.html' %}
+    
+    <main class="min-h-screen">
+        {% if messages %}
+            <div class="max-w-7xl mx-auto mt-4 px-4 space-y-2">
+                {% for message in messages %}
+                    <div class="message-toast px-5 py-3 rounded-lg shadow-lg flex items-center justify-between
+                        {% if 'error' in message.tags %}bg-red-600 text-white
+                        {% elif 'success' in message.tags %}bg-korva-success text-white
+                        {% else %}bg-korva-dark-alt text-gray-200 border border-korva-dark-alt{% endif %}">
+                        <span class="text-sm font-medium">
+                            {% if 'error' in message.tags %}<i class="fas fa-exclamation-circle mr-2"></i>
+                            {% elif 'success' in message.tags %}<i class="fas fa-check-circle mr-2"></i>
+                            {% else %}<i class="fas fa-info-circle mr-2"></i>{% endif %}
+                            {{ message }}
+                        </span>
+                        <button onclick="this.parentElement.remove()" class="ml-4 text-white opacity-70 hover:opacity-100">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    {% include 'footer.html' %}
+    
+    <script>
+        document.querySelectorAll('.message-toast').forEach(el => {
+            setTimeout(() => { if (el.parentElement) el.remove(); }, 5000);
+        });
+    </script>
+
+    <script>
+    class KorvaSocket {
+        constructor(options = {}) {
+            this.url = options.url || null;
+            this.name = options.name || 'default';
+            this.reconnectDelay = 1000;
+            this.maxReconnectDelay = 30000;
+            this.maxRetries = 20;
+            this.retryCount = 0;
+            this.ws = null;
+            this.listeners = {};
+            this.usePolling = false;
+            this.pollInterval = options.pollInterval || 5000;
+            this.pollUrl = options.pollUrl || null;
+            this.pollTimer = null;
+            this.onStatusChange = options.onStatusChange || null;
+            this.onReconnect = options.onReconnect || null;
+            this.onError = options.onError || null;
+            if (this.url) this.connect();
+        }
+
+        connect() {
+            if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) return;
+            if (this.retryCount >= this.maxRetries) {
+                this.fallbackToPolling();
+                return;
+            }
+            try {
+                this.ws = new WebSocket(this.url);
+                this._updateStatus('connecting');
+            } catch (e) {
+                console.warn(`[KorvaSocket:${this.name}] WS failed, polling fallback:`, e);
+                this.fallbackToPolling();
+                return;
+            }
+            this.ws.onopen = () => {
+                this.retryCount = 0;
+                this.reconnectDelay = 1000;
+                this._updateStatus('connected');
+                if (this.onReconnect) this.onReconnect();
+            };
+            this.ws.onclose = (e) => {
+                if (e.code === 1000) return;
+                this.ws = null;
+                this._updateStatus('disconnected');
+                if (!this.usePolling) setTimeout(() => this.connect(), this._jitter());
+            };
+            this.ws.onerror = () => {
+                this._updateStatus('error');
+                if (this.onError) this.onError();
+            };
+            this.ws.onmessage = (e) => {
+                try {
+                    const data = JSON.parse(e.data);
+                    this._emit(data.type || 'message', data);
+                } catch {
+                    this._emit('message', { raw: e.data });
+                }
+            };
+        }
+
+        _jitter() {
+            const delay = Math.min(this.reconnectDelay, this.maxReconnectDelay);
+            this.reconnectDelay = Math.min(this.reconnectDelay * 1.5, this.maxReconnectDelay);
+            this.retryCount++;
+            return delay + Math.random() * 1000;
+        }
+
+        fallbackToPolling() {
+            if (this.usePolling || !this.pollUrl) return;
+            this.usePolling = true;
+            this._updateStatus('polling');
+            this.poll();
+            this.pollTimer = setInterval(() => this.poll(), this.pollInterval);
+        }
+
+        poll() {
+            if (!this.pollUrl) return;
+            fetch(this.pollUrl)
+                .then(r => r.json())
+                .then(data => this._emit('poll', data))
+                .catch(() => {});
+        }
+
+        send(data) {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify(data));
+            } else if (this.pollUrl) {
+                fetch(this.pollUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this._getCSRF() },
+                    body: JSON.stringify(data),
+                }).catch(() => {});
+            }
+        }
+
+        on(event, callback) {
+            if (!this.listeners[event]) this.listeners[event] = [];
+            this.listeners[event].push(callback);
+            return () => { this.listeners[event] = this.listeners[event].filter(fn => fn !== callback); };
+        }
+
+        _emit(event, data) {
+            (this.listeners[event] || []).forEach(fn => fn(data));
+            (this.listeners['*'] || []).forEach(fn => fn(event, data));
+        }
+
+        _updateStatus(status) {
+            this.status = status;
+            if (this.onStatusChange) this.onStatusChange(status);
+        }
+
+        _getCSRF() {
+            const m = document.cookie.match(/csrftoken=([^;]+)/);
+            return m ? m[1] : '';
+        }
+
+        disconnect() {
+            if (this.pollTimer) clearInterval(this.pollTimer);
+            if (this.ws) { this.ws.close(1000); this.ws = null; }
+            this._updateStatus('disconnected');
+        }
+
+        static manager = { sockets: {} };
+        static create(name, options) {
+            const sock = new KorvaSocket(options);
+            KorvaSocket.manager.sockets[name] = sock;
+            return sock;
+        }
+        static get(name) { return KorvaSocket.manager.sockets[name]; }
+    }
+
+    (function() {
+        let statusEl = null;
+        function showStatusIndicator(status) {
+            if (!statusEl) {
+                statusEl = document.createElement('div');
+                statusEl.id = 'korva-connection-status';
+                statusEl.style.cssText = 'position:fixed;bottom:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;transition:all 0.3s ease;opacity:0;pointer-events:none;';
+                document.body.appendChild(statusEl);
+            }
+            const map = {
+                'connected': { bg: 'rgba(16,185,129,0.9)', icon: 'fa-wifi', text: 'Conectado', color: '#fff' },
+                'connecting': { bg: 'rgba(245,158,11,0.9)', icon: 'fa-spinner fa-spin', text: 'Conectando...', color: '#fff' },
+                'disconnected': { bg: 'rgba(239,68,68,0.9)', icon: 'fa-exclamation-triangle', text: 'Desconectado', color: '#fff' },
+                'polling': { bg: 'rgba(99,102,241,0.9)', icon: 'fa-sync-alt fa-spin', text: 'Modo seguro', color: '#fff' },
+                'error': { bg: 'rgba(239,68,68,0.9)', icon: 'fa-times-circle', text: 'Error de conexión', color: '#fff' },
+            };
+            const s = map[status] || map.disconnected;
+            statusEl.style.cssText += `background:${s.bg};opacity:1;pointer-events:auto;`;
+            statusEl.innerHTML = `<i class="fas ${s.icon}" style="font-size:10px"></i><span style="color:${s.color}">${s.text}</span>`;
+            if (status === 'connected') {
+                setTimeout(() => { if (statusEl) { statusEl.style.opacity = '0'; statusEl.style.pointerEvents = 'none'; } }, 3000);
+            }
+        }
+
+        window.KorvaSocket = KorvaSocket;
+        window.KorvaConnectionStatus = showStatusIndicator;
+    })();
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatSocket = KorvaSocket.create('chat', {
+            url: null,
+            pollUrl: null,
+            pollInterval: 5000,
+            onStatusChange: function(status) {
+                if (window.KorvaConnectionStatus) KorvaConnectionStatus(status);
+            }
+        });
+        setTimeout(async function() {
+            try {
+                const r = await fetch('/api/ws-config/');
+                if (!r.ok) return;
+                const cfg = await r.json();
+                if (cfg.ws_url) {
+                    chatSocket.url = cfg.ws_url;
+                    chatSocket.connect();
+                }
+                if (cfg.poll_url) {
+                    chatSocket.pollUrl = cfg.poll_url;
+                    chatSocket.pollUrl2 = cfg.poll_url;
+                }
+                if (cfg.notification_poll_url) {
+                    KorvaSocket.create('notifications', {
+                        url: cfg.notification_ws_url || null,
+                        pollUrl: cfg.notification_poll_url,
+                        pollInterval: 10000,
+                    });
+                }
+            } catch(e) {}
+        }, 500);
+    });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
