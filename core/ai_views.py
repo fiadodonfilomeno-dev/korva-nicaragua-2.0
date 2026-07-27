@@ -10,13 +10,22 @@ import json
 
 @login_required(login_url='login')
 def ai_tutorial(request):
-    """Tutorial de Korva IA para nuevos usuarios"""
+    """
+    TUTORIAL DE KORVA IA:
+    Muestra la guía introductoria y el manual de uso del asistente virtual
+    a los nuevos usuarios registrados de la plataforma.
+    """
     return render(request, 'ai/tutorial.html')
 
 
 @login_required(login_url='login')
 def korva_ai(request):
-    """Vista principal del Asistente IA Korva"""
+    """
+    PANEL PRINCIPAL DE KORVA IA:
+    Carga la configuración de IA del perfil de la PyME, lista las últimas
+    conversaciones creadas por el usuario y determina si necesita ver el
+    tutorial de configuración de API Keys.
+    """
     try:
         profile = request.user.profile
         ai_config = profile.ai_config
@@ -39,7 +48,11 @@ def korva_ai(request):
 
 @login_required(login_url='login')
 def create_conversation(request):
-    """Crear una nueva conversación con IA"""
+    """
+    CREAR NUEVA CONVERSACIÓN:
+    Inicializa un nuevo hilo de chat de IA para que el usuario pueda
+    organizar sus consultas empresariales de forma independiente.
+    """
     try:
         if request.method == 'POST':
             profile = request.user.profile
@@ -60,7 +73,11 @@ def create_conversation(request):
 
 @login_required(login_url='login')
 def conversation_chat(request, conversation_id):
-    """Vista para chatear en una conversación"""
+    """
+    CHAT DE CONVERSACIÓN ESPECÍFICA:
+    Carga una conversación existente con todo su historial de mensajes
+    ordenados cronológicamente para continuar el diálogo con la IA.
+    """
     try:
         profile = request.user.profile
         conversation = AIConversation.objects.get(pk=conversation_id, user=profile)
@@ -82,7 +99,14 @@ def conversation_chat(request, conversation_id):
 @login_required(login_url='login')
 @require_POST
 def send_ai_message(request, conversation_id):
-    """Enviar un mensaje a la IA"""
+    """
+    ENVIAR MENSAJE A LA IA Y PROCESAR CON GOOGLE GEMINI:
+    1. Guarda el mensaje del usuario en la base de datos.
+    2. Configura el SDK de Google Gemini con la API Key correspondiente.
+    3. Define el modelo ('gemini-pro') y las instrucciones estrictas de moderación.
+    4. Envía el historial acumulado para mantener el contexto de la charla.
+    5. Guarda la respuesta de la IA y la devuelve al cliente (soporta AJAX).
+    """
     profile = request.user.profile
     conversation = AIConversation.objects.get(pk=conversation_id, user=profile)
     ai_config = profile.ai_config
@@ -178,7 +202,11 @@ def send_ai_message(request, conversation_id):
 
 @login_required(login_url='login')
 def update_ai_config(request):
-    """Actualizar configuración de IA del usuario"""
+    """
+    ACTUALIZAR CONFIGURACIÓN DE IA:
+    Permite al usuario ingresar y guardar su propia API Key de Google Gemini
+    para realizar consultas ilimitadas con su cuota personal.
+    """
     if request.method == 'POST':
         profile = request.user.profile
         ai_config = profile.ai_config
@@ -201,7 +229,11 @@ def update_ai_config(request):
 
 @login_required(login_url='login')
 def quick_prompts(request):
-    """Prompts rápidos predefinidos para consultas comunes"""
+    """
+    PREGUNTAS RÁPIDAS (QUICK PROMPTS):
+    Retorna una lista de temas frecuentes (Plan de negocio, RUC, Impuestos, etc.)
+    con plantillas de prompts optimizados para acelerar las consultas de los usuarios.
+    """
     
     quick_prompts_list = [
         {
@@ -221,7 +253,7 @@ def quick_prompts(request):
         },
         {
             'title': 'Impuestos',
-            'prompt': '¿Cuáles son mis obligaciones fiscales como PyME en Nicaragua?',
+            'prompt': '¿Cuáles son mi obligaciones fiscales como PyME en Nicaragua?',
             'icon': 'fa-percentage'
         },
         {
@@ -239,4 +271,4 @@ def quick_prompts(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({'prompts': quick_prompts_list})
     
-    return render(request, 'ai/quick_prompts.html', {'prompts': quick_prompts_list})
+    return render(request, 'ai/quick_prompts.html', {'prompts': quick_prompts_list})ml', {'prompts': quick_prompts_list})
