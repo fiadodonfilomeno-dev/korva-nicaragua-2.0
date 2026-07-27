@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load time_filters %}
 
 {% block title %}{{ post.title }} - Korva Nicaragua{% endblock %}
 
@@ -26,7 +27,7 @@
                     <span class="text-korva-success"><i class="fas fa-check-circle"></i></span>
                     {% endif %}
                 </div>
-                <p class="text-gray-500 text-sm">{{ post.timestamp|date:"d M Y H:i" }}</p>
+                <p class="text-gray-500 text-sm" title="{{ post.timestamp|date:'d M Y H:i' }}">{{ post.timestamp|time_ago }}</p>
             </div>
         </div>
         
@@ -150,7 +151,7 @@
                     
                     <div>
                         <p class="font-semibold text-white">{{ comment.author.business_name }}</p>
-                        <p class="text-xs text-gray-500">{{ comment.timestamp|date:"d M Y H:i" }}</p>
+                        <p class="text-xs text-gray-500" title="{{ comment.timestamp|date:'d M Y H:i' }}">{{ comment.timestamp|time_ago }}</p>
                     </div>
                 </div>
                 

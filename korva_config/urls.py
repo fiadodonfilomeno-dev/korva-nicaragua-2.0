@@ -15,7 +15,7 @@ from users.views import register, login_view, logout_view, profile_view, edit_pr
 # Vistas de muro social
 from social.views import (
     home, create_post, post_detail, upvote_post, downvote_post,
-    edit_post, delete_post
+    edit_post, delete_post, check_new_posts
 )
 
 # Vistas de marketplace
@@ -64,6 +64,7 @@ urlpatterns = [
     path('post/<int:post_id>/downvote/', downvote_post, name='downvote_post'),
     path('post/<int:post_id>/edit/', edit_post, name='edit_post'),
     path('post/<int:post_id>/delete/', delete_post, name='delete_post'),
+    path('api/check-new-posts/', check_new_posts, name='check_new_posts'),
     
     # Marketplace
     path('marketplace/', marketplace, name='marketplace'),

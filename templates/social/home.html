@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
+{% load time_filters %}
 
 {% block title %}Muro Social - Korva Nicaragua{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div id="new-posts-banner" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-korva-success text-white px-6 py-3 rounded-lg shadow-lg cursor-pointer hover:bg-green-600 transition font-semibold">
+</div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" {% if posts %}data-last-post-id="{{ posts.0.id }}"{% endif %}>
     <!-- Header Section -->
     <div class="mb-8">
         <h1 class="text-4xl font-bold text-white mb-2">
@@ -72,7 +75,7 @@
                             {{ post.author.tier_display }}
                         </span>
                     </div>
-                    <p class="text-xs text-gray-500">{{ post.timestamp|date:"d M Y H:i" }}</p>
+                    <p class="text-xs text-gray-500" title="{{ post.timestamp|date:'d M Y H:i' }}">{{ post.timestamp|time_ago }}</p>
                 </div>
             </div>
             
@@ -173,5 +176,29 @@ function vote(postId, type, btn) {
         card.querySelector('.vote-count-down').textContent = data.downvotes;
     });
 }
+// Auto-refresh: detectar posts nuevos
+(function() {
+    var lastId = document.querySelector('[data-last-post-id]');
+    if (!lastId) return;
+    var currentLastId = parseInt(lastId.getAttribute('data-last-post-id')) || 0;
+    var banner = document.getElementById('new-posts-banner');
+
+    setInterval(function() {
+        fetch('/api/check-new-posts/?last_id=' + currentLastId, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.new_count > 0 && banner) {
+                banner.textContent = data.new_count + ' nueva' + (data.new_count > 1 ? 's' : '') + ' publicacion' + (data.new_count > 1 ? 'es' : '') + ' - Click para ver';
+                banner.classList.remove('hidden');
+            }
+        });
+    }, 30000);
+
+    if (banner) {
+        banner.addEventListener('click', function() { location.reload(); });
+    }
+})();
 </script>
 {% endblock %}

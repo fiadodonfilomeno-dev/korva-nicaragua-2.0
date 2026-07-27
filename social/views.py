@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse, Http404
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.db.models import Q
+from django.utils import timezone
 from .models import Post, Comment, PostImage, Vote
 from .forms import PostForm, CommentForm, PostImageForm
 from users.models import Profile
@@ -38,6 +39,18 @@ def home(request):
     except Exception as e:
         messages.error(request, f'Error al cargar el muro: {str(e)}')
         return redirect('home')
+
+
+@login_required(login_url='login')
+@require_GET
+def check_new_posts(request):
+    """AJAX: verifica si hay posts nuevos desde una marca de tiempo"""
+    last_id = request.GET.get('last_id', 0, type=int)
+    new_count = Post.objects.filter(
+        moderation_status='approved',
+        id__gt=last_id
+    ).count()
+    return JsonResponse({'new_count': new_count})
 
 
 @login_required(login_url='login')
