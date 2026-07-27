@@ -5,7 +5,7 @@ from django.http import JsonResponse, Http404
 from django.views.decorators.http import require_POST, require_GET
 from django.db.models import Q
 from django.utils import timezone
-from .models import Post, Comment, PostImage, Vote
+from .models import Post, Comment, PostImage, Vote, Favorite
 from .forms import PostForm, CommentForm, PostImageForm
 from users.models import Profile
 
@@ -261,4 +261,21 @@ def delete_post(request, post_id):
     except Exception as e:
         messages.error(request, f'Error: {str(e)}')
         return redirect('home')
+
+
+@login_required(login_url='login')
+@require_POST
+def toggle_favorite_post(request, post_id):
+    """Agregar/quitar post de favoritos"""
+    post = get_object_or_404(Post, pk=post_id)
+    user_profile = request.user.profile
+    fav, created = Favorite.objects.get_or_create(user=user_profile, post=post)
+    if not created:
+        fav.delete()
+        is_fav = False
+    else:
+        is_fav = True
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'is_favorite': is_fav, 'count': post.favorited_by.count()})
+    return redirect('post_detail', post_id=post.pk)
 

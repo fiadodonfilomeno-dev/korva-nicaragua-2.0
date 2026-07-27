@@ -65,3 +65,17 @@ class Product(models.Model):
         currency_symbol = 'C$' if self.currency == 'NIO' else '$'
         return f"{currency_symbol} {self.price:,.2f}"
 
+
+class ProductFavorite(models.Model):
+    """Modelo para favoritos de productos"""
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='favorite_products')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='favorited_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.business_name} favorito: {self.product.name}"
+

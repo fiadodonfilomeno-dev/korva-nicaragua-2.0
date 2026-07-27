@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import Http404
+from django.http import Http404, JsonResponse
+from django.views.decorators.http import require_POST
 from django.db.models import Q
-from .models import Product
+from .models import Product, ProductFavorite
 from .forms import ProductForm
 
 def marketplace(request):
@@ -141,4 +142,32 @@ def my_products(request):
     except Exception as e:
         messages.error(request, f'Error: {str(e)}')
         return redirect('marketplace')
+
+
+@login_required(login_url='login')
+@require_POST
+def toggle_favorite_product(request, product_id):
+    """Agregar/quitar producto de favoritos"""
+    product = get_object_or_404(Product, pk=product_id)
+    user_profile = request.user.profile
+    fav, created = ProductFavorite.objects.get_or_create(user=user_profile, product=product)
+    if not created:
+        fav.delete()
+        is_fav = False
+    else:
+        is_fav = True
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'is_favorite': is_fav, 'count': product.favorited_by.count()})
+    return redirect('product_detail', product_id=product.pk)
+
+
+@login_required(login_url='login')
+def my_favorites(request):
+    """Ver favoritos del usuario"""
+    from social.models import Post
+    user_profile = request.user.profile
+    fav_posts = Post.objects.filter(favorited_by__user=user_profile)
+    fav_products = Product.objects.filter(favorited_by__user=user_profile)
+    context = {'fav_posts': fav_posts, 'fav_products': fav_products}
+    return render(request, 'marketplace/my_favorites.html', context)
 

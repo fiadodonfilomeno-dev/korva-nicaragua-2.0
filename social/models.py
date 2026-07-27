@@ -104,3 +104,17 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comentario de {self.author.business_name} en {self.post.title}"
 
+
+class Favorite(models.Model):
+    """Modelo para favoritos de posts"""
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='favorite_posts')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='favorited_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'post')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.business_name} favorito: {self.post.title}"
+

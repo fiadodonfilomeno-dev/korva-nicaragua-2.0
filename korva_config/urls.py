@@ -15,13 +15,13 @@ from users.views import register, login_view, logout_view, profile_view, edit_pr
 # Vistas de muro social
 from social.views import (
     home, create_post, post_detail, upvote_post, downvote_post,
-    edit_post, delete_post, check_new_posts
+    edit_post, delete_post, check_new_posts, toggle_favorite_post
 )
 
 # Vistas de marketplace
 from marketplace.views import (
     marketplace, create_product, product_detail, edit_product,
-    delete_product, my_products
+    delete_product, my_products, toggle_favorite_product, my_favorites
 )
 
 # Vistas de rankings
@@ -65,6 +65,7 @@ urlpatterns = [
     path('post/<int:post_id>/edit/', edit_post, name='edit_post'),
     path('post/<int:post_id>/delete/', delete_post, name='delete_post'),
     path('api/check-new-posts/', check_new_posts, name='check_new_posts'),
+    path('post/<int:post_id>/favorite/', toggle_favorite_post, name='toggle_favorite_post'),
     
     # Marketplace
     path('marketplace/', marketplace, name='marketplace'),
@@ -73,6 +74,8 @@ urlpatterns = [
     path('product/<int:product_id>/edit/', edit_product, name='edit_product'),
     path('product/<int:product_id>/delete/', delete_product, name='delete_product'),
     path('my-products/', my_products, name='my_products'),
+    path('product/<int:product_id>/favorite/', toggle_favorite_product, name='toggle_favorite_product'),
+    path('my-favorites/', my_favorites, name='my_favorites'),
     
     # Rankings
     path('rankings/', rankings, name='rankings'),
