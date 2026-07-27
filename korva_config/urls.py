@@ -27,6 +27,9 @@ from marketplace.views import (
 # Vistas de rankings
 from core.rankings_views import rankings
 
+# Vistas de recomendaciones
+from core.views import recommendations
+
 # Vistas de mensajería
 from messaging.views import (
     messages_view, conversation_detail, start_conversation, send_message
@@ -72,6 +75,9 @@ urlpatterns = [
     
     # Rankings
     path('rankings/', rankings, name='rankings'),
+    
+    # Alianzas Recomendadas
+    path('recommendations/', recommendations, name='recommendations'),
     
     # Mensajería
     path('messages/', messages_view, name='messages'),
