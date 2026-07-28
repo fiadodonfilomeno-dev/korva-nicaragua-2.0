@@ -151,6 +151,9 @@ urlpatterns = [
     
     # Notificaciones
     path('notifications/', include('notifications.urls')),
+
+    # API REST
+    path('api/', include('api.urls')),
 ]
 
 # Servir archivos de media en desarrollo
