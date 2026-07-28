@@ -24,4 +24,7 @@ else:
     print('Superusuario admin ya existe')
 "
 
+echo "=== Cargando datos de prueba ==="
+python load_test_data.py
+
 echo "=== Build completado ==="

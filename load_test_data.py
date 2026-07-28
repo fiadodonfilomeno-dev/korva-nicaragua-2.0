@@ -46,7 +46,7 @@ for user_data in users_data:
         user = User.objects.create_user(
             username=user_data['username'],
             email=user_data['email'],
-            password='test1234'
+            password='admin123'
         )
         
         profile = Profile.objects.create(
