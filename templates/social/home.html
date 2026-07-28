@@ -22,27 +22,45 @@
         {% endif %}
     </div>
     
-    <!-- Search and Create Post Section -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div class="md:col-span-2">
-            <form method="get" class="flex">
-                <input type="text" name="q" placeholder="Buscar publicaciones..." value="{{ search_query }}"
-                    class="korva-input flex-1 rounded-l-lg" />
-                <button type="submit" class="korva-btn-primary px-6 rounded-r-lg font-medium">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
+    <!-- Search and Filters Section -->
+    <div class="mb-8 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2">
+                <form method="get" class="flex">
+                    {% if sector_filter %}<input type="hidden" name="sector" value="{{ sector_filter }}">{% endif %}
+                    <input type="text" name="q" placeholder="Buscar publicaciones..." value="{{ search_query }}"
+                        class="korva-input flex-1 rounded-l-lg" />
+                    <button type="submit" class="korva-btn-primary px-6 rounded-r-lg font-medium">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            
+            {% if user.is_authenticated %}
+            <a href="{% url 'create_post' %}" class="korva-btn-primary px-6 py-3 rounded-lg font-medium text-center">
+                <i class="fas fa-plus"></i> Crear Post
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}" class="korva-btn-primary px-6 py-3 rounded-lg font-medium text-center">
+                <i class="fas fa-sign-in-alt"></i> Inicia sesión
+            </a>
+            {% endif %}
         </div>
         
-        {% if user.is_authenticated %}
-        <a href="{% url 'create_post' %}" class="korva-btn-primary px-6 py-3 rounded-lg font-medium text-center">
-            <i class="fas fa-plus"></i> Crear Post
-        </a>
-        {% else %}
-        <a href="{% url 'login' %}" class="korva-btn-primary px-6 py-3 rounded-lg font-medium text-center">
-            <i class="fas fa-sign-in-alt"></i> Inicia sesión
-        </a>
-        {% endif %}
+        <!-- Sector Filter -->
+        <form method="get" class="flex items-center gap-3">
+            {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+            <label class="text-sm text-gray-400 font-medium">Categoría:</label>
+            <select name="sector" onchange="this.form.submit()" class="korva-input text-sm py-2 px-3 rounded-lg w-auto">
+                <option value="">Todas las categorías</option>
+                {% for value, label in sectors %}
+                <option value="{{ value }}" {% if sector_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            {% if sector_filter %}
+            <a href="{% url 'home' %}{% if search_query %}?q={{ search_query }}{% endif %}" class="text-sm text-gray-500 hover:text-white transition">x Limpiar</a>
+            {% endif %}
+        </form>
     </div>
     
     <!-- Posts Grid -->

@@ -23,6 +23,7 @@ def home(request):
         # Buscar posts
         search_query = request.GET.get('q')
         tag_query = request.GET.get('tag')
+        sector_filter = request.GET.get('sector')
         if search_query:
             posts = posts.filter(
                 Q(title__icontains=search_query) |
@@ -31,11 +32,15 @@ def home(request):
             )
         if tag_query:
             posts = posts.filter(tags__name__in=[tag_query])
+        if sector_filter:
+            posts = posts.filter(author__sector=sector_filter)
         
         context = {
             'posts': posts,
             'search_query': search_query,
             'tag_query': tag_query,
+            'sector_filter': sector_filter,
+            'sectors': Profile.SECTOR_CHOICES,
         }
         
         return render(request, 'social/home.html', context)
