@@ -9,6 +9,8 @@
         <div>
             {% if product.image %}
             <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full rounded-lg border border-korva-dark-alt cursor-pointer hover:opacity-90 transition" onclick="openLightbox(this.src, '{{ product.name|escapejs }}')">
+            {% elif product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full rounded-lg border border-korva-dark-alt cursor-pointer hover:opacity-90 transition" onclick="openLightbox(this.src, '{{ product.name|escapejs }}')">
             {% else %}
             <div class="w-full h-96 bg-korva-dark-alt rounded-lg flex items-center justify-center border border-korva-dark-alt">
                 <i class="fas fa-image text-gray-600 text-6xl"></i>

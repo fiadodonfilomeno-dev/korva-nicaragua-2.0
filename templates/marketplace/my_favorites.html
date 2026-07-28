@@ -46,6 +46,8 @@
             <div class="korva-card rounded-lg border border-korva-dark-alt overflow-hidden hover:border-korva-success transition">
                 {% if product.image %}
                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-40 object-cover">
+                {% elif product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-40 object-cover">
                 {% else %}
                 <div class="w-full h-40 bg-korva-dark-alt flex items-center justify-center">
                     <i class="fas fa-image text-gray-600 text-3xl"></i>

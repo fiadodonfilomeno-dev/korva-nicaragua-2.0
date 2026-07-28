@@ -29,7 +29,8 @@ class Product(models.Model):
     )
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='NIO')
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
-    image = models.ImageField(upload_to='products/')
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
+    image_url = models.URLField(max_length=500, blank=True, null=True, help_text="URL de imagen externa (Google/Unsplash)")
     contact_whatsapp = models.CharField(
         max_length=20,
         validators=[

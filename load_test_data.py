@@ -80,23 +80,24 @@ for c in comments_data:
 # PRODUCTS
 print("\n[*] Creando productos en marketplace...")
 products_data = [
-    {'name': 'Pan de yema (docena)', 'description': 'Pan de yema artesanal, horneado diariamente. Ingredientes naturales, sin preservantes.', 'price': 80, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena'},
-    {'name': 'Pastel de tres leches', 'description': 'Pastel de tres leches tradicional, disponible en tamaños personalizados. Ideal para cumpleaños y eventos.', 'price': 450, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena'},
-    {'name': 'Café artesanal molido (1lb)', 'description': 'Café 100% nicaragüense, tostado artesanalmente. Disponible en presentación de 1 libra.', 'price': 180, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena'},
-    {'name': 'Jarra de cerámica pintada a mano', 'description': 'Jarra decorativa de cerámica, pintada a mano con diseños tradicionales de Nicaragua. Capacidad 1.5 litros.', 'price': 350, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli'},
-    {'name': 'Set de tazas artesanales (6 pzs)', 'description': 'Set de 6 tazas de cerámica hechas a mano, cada una con diseño único. Perfectas para cafetería.', 'price': 600, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli'},
-    {'name': 'Hamaca nicaragüense tejida', 'description': 'Hamaca tradicional tejida a mano en Estelí. Algodón de alta resistencia. Colores variados.', 'price': 1200, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli'},
-    {'name': 'Desarrollo de sitio web corporativo', 'description': 'Sitio web profesional con panel administrativo, diseño responsivo y optimización SEO. Incluye hosting 1 año.', 'price': 300, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions'},
-    {'name': 'App móvil para PyMEs', 'description': 'Aplicación móvil Android/iOS para tu negocio. Incluye catálogo de productos, carrito de compras y notificaciones.', 'price': 800, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions'},
-    {'name': 'Consultoría en transformación digital', 'description': 'Asesoría personalizada para digitalizar tu PyME. Incluye diagnóstico, plan de acción y acompañamiento.', 'price': 200, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions'},
+    {'name': 'Pan de yema (docena)', 'description': 'Pan de yema artesanal, horneado diariamente. Ingredientes naturales, sin preservantes.', 'price': 80, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena', 'image_url': 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=400'},
+    {'name': 'Pastel de tres leches', 'description': 'Pastel de tres leches tradicional, disponible en tamaños personalizados. Ideal para cumpleaños y eventos.', 'price': 450, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena', 'image_url': 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400'},
+    {'name': 'Café artesanal molido (1lb)', 'description': 'Café 100% nicaragüense, tostado artesanalmente. Disponible en presentación de 1 libra.', 'price': 180, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena', 'image_url': 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400'},
+    {'name': 'Jarra de cerámica pintada a mano', 'description': 'Jarra decorativa de cerámica, pintada a mano con diseños tradicionales de Nicaragua. Capacidad 1.5 litros.', 'price': 350, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli', 'image_url': 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=400'},
+    {'name': 'Set de tazas artesanales (6 pzs)', 'description': 'Set de 6 tazas de cerámica hechas a mano, cada una con diseño único. Perfectas para cafetería.', 'price': 600, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli', 'image_url': 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400'},
+    {'name': 'Hamaca nicaragüense tejida', 'description': 'Hamaca tradicional tejida a mano en Estelí. Algodón de alta resistencia. Colores variados.', 'price': 1200, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli', 'image_url': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400'},
+    {'name': 'Desarrollo de sitio web corporativo', 'description': 'Sitio web profesional con panel administrativo, diseño responsivo y optimización SEO. Incluye hosting 1 año.', 'price': 300, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions', 'image_url': 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400'},
+    {'name': 'App móvil para PyMEs', 'description': 'Aplicación móvil Android/iOS para tu negocio. Incluye catálogo de productos, carrito de compras y notificaciones.', 'price': 800, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions', 'image_url': 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400'},
+    {'name': 'Consultoría en transformación digital', 'description': 'Asesoría personalizada para digitalizar tu PyME. Incluye diagnóstico, plan de acción y acompañamiento.', 'price': 200, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions', 'image_url': 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400'},
 ]
 for p in products_data:
     profile = get_profile(p['owner'])
     if not Product.objects.filter(name=p['name'], user=profile).exists():
-        Product.objects.create(name=p['name'], description=p['description'], price=p['price'], currency=p['currency'], category=p['category'], contact_whatsapp=p['whatsapp'], user=profile, is_active=True)
+        Product.objects.create(name=p['name'], description=p['description'], price=p['price'], currency=p['currency'], category=p['category'], contact_whatsapp=p['whatsapp'], image_url=p.get('image_url', ''), user=profile, is_active=True)
         print(f"  [OK] Producto '{p['name']}'")
     else:
-        print(f"  [SKIP] Producto '{p['name']}' ya existe")
+        Product.objects.filter(name=p['name'], user=profile).update(image_url=p.get('image_url', ''))
+        print(f"  [OK] Producto '{p['name']}' actualizado (image_url)")
 
 # REVIEWS
 print("\n[*] Creando reseñas...")

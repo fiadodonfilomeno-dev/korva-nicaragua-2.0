@@ -31,6 +31,8 @@
             <div class="flex items-center space-x-3">
                 {% if txn.product.image %}
                 <img src="{{ txn.product.image.url }}" class="w-16 h-16 rounded-lg object-cover">
+                {% elif txn.product.image_url %}
+                <img src="{{ txn.product.image_url }}" class="w-16 h-16 rounded-lg object-cover">
                 {% endif %}
                 <div>
                     <a href="{% url 'product_detail' txn.product.id %}" class="font-semibold text-white hover:text-korva-success">{{ txn.product.name }}</a>
