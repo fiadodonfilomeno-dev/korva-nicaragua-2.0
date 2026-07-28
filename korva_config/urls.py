@@ -57,6 +57,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('verify-email/<uuid:token>/', verify_email, name='verify_email'),
+    path('password-reset/', include('django.contrib.auth.urls')),
     path('dashboard/', dashboard, name='dashboard'),
     path('profile/<str:username>/', profile_view, name='profile'),
     path('edit-profile/', edit_profile, name='edit_profile'),
