@@ -41,15 +41,15 @@
                 </button>
                 
                 {% if user.is_authenticated %}
-                    <div class="relative group">
-                        <button class="flex items-center space-x-2 korva-btn-primary px-4 py-2 rounded-lg text-sm font-medium">
+                    <div class="relative">
+                        <button id="user-menu-btn" class="flex items-center space-x-2 korva-btn-primary px-4 py-2 rounded-lg text-sm font-medium">
                             <i class="fas fa-user"></i>
                             <span class="hidden sm:inline">{{ user.username }}</span>
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
                         
                         <!-- Dropdown Menu -->
-                        <div class="absolute right-0 mt-2 w-48 bg-korva-card border border-korva-dark-alt rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
+                        <div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-korva-card border border-korva-dark-alt rounded-lg shadow-xl hidden">
                             <a href="{% url 'profile' user.username %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm">
                                 <i class="fas fa-user-circle"></i> Mi Perfil
                             </a>
@@ -140,4 +140,17 @@
             }
         });
     })();
+
+    // User Menu Toggle — solo se cierra al hacer click en el boton nuevamente
+    const menuBtn = document.getElementById('user-menu-btn');
+    const menuDropdown = document.getElementById('user-menu-dropdown');
+    if (menuBtn && menuDropdown) {
+        menuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            menuDropdown.classList.toggle('hidden');
+        });
+        menuDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
 </script>
