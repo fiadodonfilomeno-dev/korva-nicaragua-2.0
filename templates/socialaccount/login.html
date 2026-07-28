@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load allauth %}
+{% block title %}{% trans "Sign In" %} - Korva Nicaragua{% endblock %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md bg-korva-card rounded-2xl shadow-xl p-8 border border-korva-dark-alt text-center">
+        {% with provider.name|lower as provider_name %}
+        <div class="w-16 h-16 bg-korva-success rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fab {% if provider_name == 'google' %}fa-google{% elif provider_name == 'facebook' %}fa-facebook{% elif provider_name == 'twitter' or provider_name == 'x' %}fa-x-twitter{% elif provider_name == 'instagram' %}fa-instagram{% else %}fa-globe{% endif %} text-white text-2xl"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-white mb-2">
+            {% if process == "connect" %}
+                Conectar {{ provider.name }}
+            {% else %}
+                Iniciar sesión con {{ provider.name }}
+            {% endif %}
+        </h1>
+        <p class="text-gray-400 mb-6">
+            {% if process == "connect" %}
+                Vas a conectar una cuenta de {{ provider.name }} a tu perfil.
+            {% else %}
+                Vas a iniciar sesión usando una cuenta de {{ provider.name }}.
+            {% endif %}
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="korva-btn-primary px-8 py-3 rounded-lg font-semibold w-full">
+                <i class="fab {% if provider_name == 'google' %}fa-google{% elif provider_name == 'facebook' %}fa-facebook{% elif provider_name == 'twitter' or provider_name == 'x' %}fa-x-twitter{% elif provider_name == 'instagram' %}fa-instagram{% else %}fa-globe{% endif %} mr-2"></i> Continuar con {{ provider.name }}
+            </button>
+        </form>
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}
