@@ -18,7 +18,6 @@ users_data = [
         'username': 'panaderia_nicaraguena',
         'email': 'panaderia@korva.com',
         'business_name': 'Panadería Nicaragüeña',
-        'password': 'admin123',
         'ruc': 'J0310000000002',
         'city': 'managua',
         'sector': 'alimentos'
@@ -27,7 +26,6 @@ users_data = [
         'username': 'artesanias_esteli',
         'email': 'artesanias@korva.com',
         'business_name': 'Artesanías Estelí',
-        'password': 'admin123',
         'ruc': 'J0310000000003',
         'city': 'esteli',
         'sector': 'artesanias'
@@ -36,7 +34,6 @@ users_data = [
         'username': 'tech_solutions',
         'email': 'tech@korva.com',
         'business_name': 'Tech Solutions Nicaragua',
-        'password': 'admin123',
         'ruc': 'J0310000000004',
         'city': 'managua',
         'sector': 'tecnologia'
@@ -45,7 +42,6 @@ users_data = [
         'username': 'evaluador',
         'email': 'evaluador@gmail.com',
         'business_name': 'Evaluador Korva',
-        'password': 'admin123',
         'ruc': 'J0310000000005',
         'city': 'managua',
         'sector': 'tecnologia'
@@ -54,11 +50,12 @@ users_data = [
 
 print("[*] Creando usuarios de prueba...")
 for user_data in users_data:
+    password = user_data['username'].replace('_', '')
     if not User.objects.filter(username=user_data['username']).exists():
         user = User.objects.create_user(
             username=user_data['username'],
             email=user_data['email'],
-            password=user_data.get('password', 'admin123')
+            password=password
         )
         
         profile = Profile.objects.create(
@@ -78,7 +75,10 @@ for user_data in users_data:
         
         print(f"  [OK] Usuario '{user_data['username']}' creado")
     else:
-        print(f"  [SKIP] Usuario '{user_data['username']}' ya existe")
+        user = User.objects.get(username=user_data['username'])
+        user.set_password(password)
+        user.save()
+        print(f"  [OK] Usuario '{user_data['username']}' actualizado (password: {password})")
 
 # Crear posts de prueba
 print("\n[*] Creando posts de prueba...")
@@ -121,7 +121,7 @@ print("  URL: http://localhost:8000")
 print("  Admin: http://localhost:8000/admin")
 print("\nCuentas de prueba:")
 print("  admin / admin123 (Administrador)")
-print("  panaderia_nicaraguena / admin123")
-print("  artesanias_esteli / admin123")
-print("  tech_solutions / admin123")
-print("  evaluador / admin123")
+print("  panaderia_nicaraguena / panaderianicaraguena")
+print("  artesanias_esteli / artesaniasesteli")
+print("  tech_solutions / techsolutions")
+print("  evaluador / evaluador")
