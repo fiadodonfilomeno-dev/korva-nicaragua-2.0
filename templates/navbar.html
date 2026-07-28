@@ -8,29 +8,28 @@
                     <div class="w-10 h-10 bg-korva-success rounded-full flex items-center justify-center">
                         <i class="fas fa-rocket text-white text-lg"></i>
                     </div>
-                    <span class="text-xl font-bold text-white hidden sm:inline">Korva Nicaragua</span>
                 </a>
             </div>
             
             <!-- Navigation Links -->
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="{% url 'home' %}" class="text-gray-300 hover:text-korva-success transition">
-                    <i class="fas fa-home"></i> Muro
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="{% url 'home' %}" class="text-gray-300 hover:text-korva-success transition text-lg" title="Muro">
+                    <i class="fas fa-home"></i>
                 </a>
-                <a href="{% url 'marketplace' %}" class="text-gray-300 hover:text-korva-success transition">
-                    <i class="fas fa-shopping-bag"></i> Marketplace
+                <a href="{% url 'marketplace' %}" class="text-gray-300 hover:text-korva-success transition text-lg" title="Marketplace">
+                    <i class="fas fa-shopping-bag"></i>
                 </a>
-                <a href="{% url 'rankings' %}" class="text-gray-300 hover:text-korva-success transition">
-                    <i class="fas fa-trophy"></i> Rankings
+                <a href="{% url 'rankings' %}" class="text-gray-300 hover:text-korva-success transition text-lg" title="Rankings">
+                    <i class="fas fa-trophy"></i>
                 </a>
-                <a href="{% url 'recommendations' %}" class="text-gray-300 hover:text-korva-success transition">
-                    <i class="fas fa-handshake"></i> Alianzas
+                <a href="{% url 'recommendations' %}" class="text-gray-300 hover:text-korva-success transition text-lg" title="Alianzas">
+                    <i class="fas fa-handshake"></i>
                 </a>
-                <a href="{% url 'messages' %}" class="text-gray-300 hover:text-korva-success transition">
-                    <i class="fas fa-envelope"></i> Mensajes
+                <a href="{% url 'messages' %}" class="text-gray-300 hover:text-korva-success transition text-lg" title="Mensajes">
+                    <i class="fas fa-envelope"></i>
                 </a>
-                <a href="{% url 'korva_ai' %}" class="text-gray-300 hover:text-korva-success transition">
-                    <i class="fas fa-robot"></i> Korva IA
+                <a href="{% url 'korva_ai' %}" class="text-gray-300 hover:text-korva-success transition text-lg" title="Korva IA">
+                    <i class="fas fa-robot"></i>
                 </a>
             </div>
             
@@ -43,46 +42,44 @@
                 
                 {% if user.is_authenticated %}
                     <div class="relative group">
-                        <button class="flex items-center space-x-2 korva-btn-primary px-4 py-2 rounded-lg text-sm font-medium">
+                        <button class="flex items-center space-x-2 korva-btn-primary px-3 py-2 rounded-lg text-sm font-medium" title="{{ user.username }}">
                             <i class="fas fa-user"></i>
-                            <span class="hidden sm:inline">{{ user.username }}</span>
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
                         
                         <!-- Dropdown Menu -->
-                        <div class="absolute right-0 mt-2 w-48 bg-korva-card border border-korva-dark-alt rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
-                            <a href="{% url 'profile' user.username %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
-                                <i class="fas fa-user-circle"></i> Mi Perfil
+                        <div class="absolute right-0 mt-2 w-10 bg-korva-card border border-korva-dark-alt rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
+                            <a href="{% url 'profile' user.username %}" class="block py-2 text-center text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm" title="Mi Perfil">
+                                <i class="fas fa-user-circle"></i>
                             </a>
-                            <a href="{% url 'edit_profile' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
-                                <i class="fas fa-edit"></i> Editar Perfil
+                            <a href="{% url 'edit_profile' %}" class="block py-2 text-center text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm" title="Editar Perfil">
+                                <i class="fas fa-edit"></i>
                             </a>
-                            <a href="{% url 'reports' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
-                                <i class="fas fa-chart-bar"></i> Mis Reportes
+                            <a href="{% url 'reports' %}" class="block py-2 text-center text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm" title="Mis Reportes">
+                                <i class="fas fa-chart-bar"></i>
                             </a>
-                            <hr class="border-korva-dark-alt">
-                            <p class="px-4 py-1 text-xs text-gray-600 uppercase tracking-wider">Marketplace</p>
-                            <a href="{% url 'my_products' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
-                                <i class="fas fa-box"></i> Mis Productos
+                            <hr class="border-korva-dark-alt my-1">
+                            <a href="{% url 'my_products' %}" class="block py-2 text-center text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm" title="Mis Productos">
+                                <i class="fas fa-box"></i>
                             </a>
-                            <a href="{% url 'my_purchases' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
-                                <i class="fas fa-shopping-bag"></i> Mis Compras
+                            <a href="{% url 'my_purchases' %}" class="block py-2 text-center text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm" title="Mis Compras">
+                                <i class="fas fa-shopping-bag"></i>
                             </a>
-                            <a href="{% url 'seller_wallet' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
-                                <i class="fas fa-wallet"></i> Wallet
+                            <a href="{% url 'seller_wallet' %}" class="block py-2 text-center text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm" title="Wallet">
+                                <i class="fas fa-wallet"></i>
                             </a>
-                            <hr class="border-korva-dark-alt">
-                            <a href="{% url 'logout' %}" class="block px-4 py-2 text-red-400 hover:bg-korva-dark-alt transition">
-                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            <hr class="border-korva-dark-alt my-1">
+                            <a href="{% url 'logout' %}" class="block py-2 text-center text-red-400 hover:bg-korva-dark-alt transition text-sm" title="Cerrar Sesion">
+                                <i class="fas fa-sign-out-alt"></i>
                             </a>
                         </div>
                     </div>
                 {% else %}
-                    <a href="{% url 'login' %}" class="text-gray-300 hover:text-korva-success transition">
-                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    <a href="{% url 'login' %}" class="text-gray-300 hover:text-korva-success transition text-lg" title="Iniciar Sesion">
+                        <i class="fas fa-sign-in-alt"></i>
                     </a>
-                    <a href="{% url 'register' %}" class="korva-btn-primary px-4 py-2 rounded-lg text-sm font-medium">
-                        <i class="fas fa-user-plus"></i> Registrarse
+                    <a href="{% url 'register' %}" class="korva-btn-primary px-3 py-2 rounded-lg text-sm font-medium text-lg" title="Registrarse">
+                        <i class="fas fa-user-plus"></i>
                     </a>
                 {% endif %}
             </div>
