@@ -9,6 +9,7 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
 
 # Vistas de usuarios
 from users.views import register, login_view, logout_view, profile_view, edit_profile, dashboard, verify_email, pymes_map
@@ -51,6 +52,7 @@ from core.ai_views import (
 )
 
 urlpatterns = [
+    path('favicon.ico', RedirectView.as_view(url='/static/favicon.svg', permanent=True)),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     
