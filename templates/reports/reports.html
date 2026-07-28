@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Reportes - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-white mb-8">
+        <i class="fas fa-chart-bar text-korva-success"></i> Reportes y Analíticas
+    </h1>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt text-center">
+            <p class="text-3xl font-bold text-korva-success">{{ report.total_posts }}</p>
+            <p class="text-gray-400 text-sm mt-1">Publicaciones</p>
+        </div>
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt text-center">
+            <p class="text-3xl font-bold text-korva-success">{{ report.total_products }}</p>
+            <p class="text-gray-400 text-sm mt-1">Productos</p>
+        </div>
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt text-center">
+            <p class="text-3xl font-bold text-korva-warning">{{ profile.popularity_score }}</p>
+            <p class="text-gray-400 text-sm mt-1">Popularidad</p>
+        </div>
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt text-center">
+            <p class="text-3xl font-bold text-korva-success">{{ profile.tier_display }}</p>
+            <p class="text-gray-400 text-sm mt-1">Nivel</p>
+        </div>
+    </div>
+
+    <!-- Secciones -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt hover:border-korva-success transition">
+            <div class="text-center">
+                <i class="fas fa-chart-line text-4xl text-korva-success mb-4"></i>
+                <h3 class="text-lg font-bold text-white mb-2">Métricas de Alcance</h3>
+                <p class="text-gray-400 text-sm mb-4">Gráficas de publicaciones, votos y visitas</p>
+                <a href="{% url 'analytics' %}" class="korva-btn-primary inline-block px-6 py-2 rounded-lg font-semibold">
+                    <i class="fas fa-eye mr-2"></i> Ver Dashboard
+                </a>
+            </div>
+        </div>
+
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt hover:border-korva-success transition">
+            <div class="text-center">
+                <i class="fas fa-file-csv text-4xl text-korva-success mb-4"></i>
+                <h3 class="text-lg font-bold text-white mb-2">Exportar CSV</h3>
+                <p class="text-gray-400 text-sm mb-4">Descarga tus datos en formato CSV</p>
+                <a href="{% url 'export_csv' %}" class="korva-btn-primary inline-block px-6 py-2 rounded-lg font-semibold">
+                    <i class="fas fa-download mr-2"></i> Descargar CSV
+                </a>
+            </div>
+        </div>
+
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt hover:border-korva-success transition">
+            <div class="text-center">
+                <i class="fas fa-file-pdf text-4xl text-korva-warning mb-4"></i>
+                <h3 class="text-lg font-bold text-white mb-2">Exportar PDF</h3>
+                <p class="text-gray-400 text-sm mb-4">Reporte completo en PDF profesional</p>
+                <a href="{% url 'export_pdf' %}" class="korva-btn-secondary inline-block px-6 py-2 rounded-lg font-semibold">
+                    <i class="fas fa-download mr-2"></i> Descargar PDF
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detalle -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
+            <h3 class="text-lg font-bold text-white mb-4"><i class="fas fa-users text-korva-success"></i> Seguidores y Aliados</h3>
+            <div class="space-y-3">
+                <div class="flex justify-between py-2 border-b border-korva-dark-alt">
+                    <span class="text-gray-400">Seguidores</span>
+                    <span class="text-white font-semibold">{{ profile.followers_count }}</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-korva-dark-alt">
+                    <span class="text-gray-400">Aliados</span>
+                    <span class="text-white font-semibold">{{ profile.associates_count }}</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-korva-dark-alt">
+                    <span class="text-gray-400">Colaboraciones</span>
+                    <span class="text-white font-semibold">{{ profile.collaborations_count }}</span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-400">Crecimiento de seguidores</span>
+                    <span class="text-korva-success font-semibold">+{{ report.followers_growth }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
+            <h3 class="text-lg font-bold text-white mb-4"><i class="fas fa-shopping-cart text-korva-success"></i> Ventas y Compras</h3>
+            <div class="space-y-3">
+                <div class="flex justify-between py-2 border-b border-korva-dark-alt">
+                    <span class="text-gray-400">Ventas totales</span>
+                    <span class="text-white font-semibold">C$ {{ report.total_sales|floatformat:2 }}</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-korva-dark-alt">
+                    <span class="text-gray-400">Compras totales</span>
+                    <span class="text-white font-semibold">C$ {{ report.total_purchases|floatformat:2 }}</span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-400">Tasa de engagement</span>
+                    <span class="text-korva-success font-semibold">{{ report.engagement_rate }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="text-gray-500 text-xs text-center mt-8">Última actualización: {{ report.last_generated }}</p>
+</div>
+{% endblock %}

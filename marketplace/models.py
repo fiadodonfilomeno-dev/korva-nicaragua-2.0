@@ -34,11 +34,11 @@ class Product(models.Model):
         max_length=20,
         validators=[
             RegexValidator(
-                regex=r'^\+?1?\d{9,15}$',
-                message='Número de WhatsApp inválido'
+                regex=r'^\+?\d{8,15}$',
+                message='Número de WhatsApp inválido (ej: +50587654321)'
             )
         ],
-        help_text="Ej: +50587654321 o 87654321"
+        help_text="Ej: +50587654321"
     )
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='products')
     created_at = models.DateTimeField(auto_now_add=True)

@@ -81,7 +81,7 @@
                 
                 <!-- Price and Action -->
                 <div class="flex justify-between items-center">
-                    <span class="text-2xl font-bold text-korva-success">C$ {{ product.price }}</span>
+                    <span class="text-2xl font-bold text-korva-success">{{ product.price_display }}</span>
                     <a href="{% url 'product_detail' product.id %}" class="korva-btn-primary px-4 py-2 rounded-lg font-semibold text-sm">
                         Ver
                     </a>
