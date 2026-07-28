@@ -66,8 +66,14 @@ def create_product(request):
 def product_detail(request, product_id):
     """Vista de detalle de un producto"""
     product = get_object_or_404(Product, pk=product_id)
-    product.views_count += 1
-    product.save()
+    
+    # Solo contar vista si esta autenticado y no es duplicado en la sesion
+    if request.user.is_authenticated:
+        viewed_key = f'viewed_product_{product_id}'
+        if not request.session.get(viewed_key):
+            product.views_count += 1
+            product.save()
+            request.session[viewed_key] = True
     
     # Productos similares
     similar_products = Product.objects.filter(

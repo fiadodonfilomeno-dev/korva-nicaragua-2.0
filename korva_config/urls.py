@@ -6,6 +6,7 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -58,7 +59,10 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('verify-email/<uuid:token>/', verify_email, name='verify_email'),
-    path('password-reset/', include('django.contrib.auth.urls')),
+    path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('dashboard/', dashboard, name='dashboard'),
     path('profile/<str:username>/', profile_view, name='profile'),
     path('edit-profile/', edit_profile, name='edit_profile'),
