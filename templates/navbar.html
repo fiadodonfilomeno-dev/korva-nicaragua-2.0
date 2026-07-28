@@ -120,35 +120,35 @@
 
 <!-- Mobile Drawer -->
 <div id="mobile-drawer" class="fixed top-0 right-0 h-full w-72 bg-korva-card border-l border-korva-dark-alt z-50 transform translate-x-full transition-transform duration-300 md:hidden overflow-y-auto">
-    <div class="p-6">
+    <div class="p-4 sm:p-6">
         <div class="flex items-center justify-between mb-6">
             <span class="text-lg font-bold text-white">Korva Nicaragua</span>
-            <button id="mobile-close-btn" class="text-gray-300 hover:text-korva-success transition">
+            <button id="mobile-close-btn" class="text-gray-300 hover:text-korva-success transition p-2">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
 
         <div class="space-y-1">
-            <a href="{% url 'home' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                <i class="fas fa-home w-6"></i> Muro
+            <a href="{% url 'home' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-home w-5 text-center"></i> Muro
             </a>
-            <a href="{% url 'marketplace' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                <i class="fas fa-shopping-bag w-6"></i> Marketplace
+            <a href="{% url 'marketplace' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-shopping-bag w-5 text-center"></i> Marketplace
             </a>
-            <a href="{% url 'rankings' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                <i class="fas fa-trophy w-6"></i> Rankings
+            <a href="{% url 'rankings' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-trophy w-5 text-center"></i> Rankings
             </a>
-            <a href="{% url 'recommendations' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                <i class="fas fa-handshake w-6"></i> Alianzas
+            <a href="{% url 'recommendations' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-handshake w-5 text-center"></i> Alianzas
             </a>
-            <a href="{% url 'messages' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                <i class="fas fa-envelope w-6"></i> Mensajes
+            <a href="{% url 'messages' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-envelope w-5 text-center"></i> Mensajes
             </a>
-            <a href="{% url 'activity_feed' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                <i class="fas fa-stream w-6"></i> Actividad
+            <a href="{% url 'activity_feed' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-stream w-5 text-center"></i> Actividad
             </a>
-            <a href="{% url 'korva_ai' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                <i class="fas fa-robot w-6"></i> Korva IA
+            <a href="{% url 'korva_ai' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-robot w-5 text-center"></i> Korva IA
             </a>
         </div>
 
@@ -156,44 +156,44 @@
 
         {% if user.is_authenticated %}
             <div class="space-y-1">
-                <a href="{% url 'profile' user.username %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                    <i class="fas fa-user-circle w-6"></i> Mi Perfil
+                <a href="{% url 'profile' user.username %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-user-circle w-5 text-center"></i> Mi Perfil
                 </a>
-                <a href="{% url 'edit_profile' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                    <i class="fas fa-edit w-6"></i> Editar Perfil
+                <a href="{% url 'edit_profile' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-edit w-5 text-center"></i> Editar Perfil
                 </a>
-                <a href="{% url 'activity_feed' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                    <i class="fas fa-stream w-6"></i> Actividad
+                <a href="{% url 'activity_feed' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-stream w-5 text-center"></i> Actividad
                 </a>
-                <a href="{% url 'reports' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                    <i class="fas fa-chart-bar w-6"></i> Mis Reportes
+                <a href="{% url 'reports' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-chart-bar w-5 text-center"></i> Mis Reportes
                 </a>
-                <a href="{% url 'my_products' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                    <i class="fas fa-box w-6"></i> Mis Productos
+                <a href="{% url 'my_products' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-box w-5 text-center"></i> Mis Productos
                 </a>
-                <a href="{% url 'my_purchases' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                    <i class="fas fa-shopping-bag w-6"></i> Mis Compras
+                <a href="{% url 'my_purchases' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-shopping-bag w-5 text-center"></i> Mis Compras
                 </a>
-                <a href="{% url 'seller_wallet' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                    <i class="fas fa-wallet w-6"></i> Wallet
+                <a href="{% url 'seller_wallet' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-wallet w-5 text-center"></i> Wallet
                 </a>
             </div>
             <hr class="border-korva-dark-alt my-4">
             <div class="px-4 py-1 text-xs text-gray-600 uppercase tracking-wider">Seguridad</div>
-            <a href="{% url 'blocked_users_list' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                <i class="fas fa-user-slash w-6"></i> Bloqueados
+            <a href="{% url 'blocked_users_list' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-user-slash w-5 text-center"></i> Bloqueados
             </a>
             <hr class="border-korva-dark-alt my-4">
             <form method="POST" action="{% url 'logout' %}" onsubmit="return confirm('¿Estás seguro de cerrar sesión?')">
                 {% csrf_token %}
-                <button type="submit" class="block w-full text-left px-4 py-3 text-red-400 hover:bg-korva-dark-alt rounded-lg transition">
-                    <i class="fas fa-sign-out-alt w-6"></i> Cerrar Sesión
+                <button type="submit" class="flex items-center gap-3 w-full text-left px-4 py-3 text-red-400 hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-sign-out-alt w-5 text-center"></i> Cerrar Sesión
                 </button>
             </form>
         {% else %}
             <div class="space-y-3">
-                <a href="{% url 'login' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
-                    <i class="fas fa-sign-in-alt w-6"></i> Iniciar Sesión
+                <a href="{% url 'login' %}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-sign-in-alt w-5 text-center"></i> Iniciar Sesión
                 </a>
                 <a href="{% url 'register' %}" class="block px-4 py-3 bg-korva-success text-white rounded-lg text-center font-medium hover:opacity-90 transition">
                     <i class="fas fa-user-plus"></i> Registrarse

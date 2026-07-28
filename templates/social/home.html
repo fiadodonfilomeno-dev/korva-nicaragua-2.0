@@ -113,30 +113,30 @@
             <div class="flex items-center justify-between pt-4 border-t border-korva-dark-alt">
                 <div class="flex space-x-4">
                     {% if user.is_authenticated %}
-                    <button onclick="vote({{ post.id }}, 'up', this)" class="text-gray-400 hover:text-korva-success transition">
-                        <i class="fas fa-thumbs-up"></i>
+                    <button onclick="vote({{ post.id }}, 'up', this)" class="flex items-center gap-1 text-gray-400 hover:text-korva-success transition p-2 -ml-2">
+                        <i class="fas fa-thumbs-up text-lg sm:text-base"></i>
                         <span class="text-xs code-font vote-count-up">{{ post.upvotes }}</span>
                     </button>
                     
-                    <button onclick="vote({{ post.id }}, 'down', this)" class="text-gray-400 hover:text-red-500 transition">
-                        <i class="fas fa-thumbs-down"></i>
+                    <button onclick="vote({{ post.id }}, 'down', this)" class="flex items-center gap-1 text-gray-400 hover:text-red-500 transition p-2">
+                        <i class="fas fa-thumbs-down text-lg sm:text-base"></i>
                         <span class="text-xs code-font vote-count-down">{{ post.downvotes }}</span>
                     </button>
                     {% else %}
-                    <span class="text-gray-400 cursor-not-allowed">
-                        <i class="fas fa-thumbs-up"></i>
+                    <span class="flex items-center gap-1 text-gray-400 cursor-not-allowed p-2 -ml-2">
+                        <i class="fas fa-thumbs-up text-lg sm:text-base"></i>
                         <span class="text-xs code-font">{{ post.upvotes }}</span>
                     </span>
                     
-                    <span class="text-gray-400 cursor-not-allowed">
-                        <i class="fas fa-thumbs-down"></i>
+                    <span class="flex items-center gap-1 text-gray-400 cursor-not-allowed p-2">
+                        <i class="fas fa-thumbs-down text-lg sm:text-base"></i>
                         <span class="text-xs code-font">{{ post.downvotes }}</span>
                     </span>
                     {% endif %}
                 </div>
                 
-                <a href="{% url 'post_detail' post.id %}" class="text-gray-400 hover:text-korva-success transition">
-                    <i class="fas fa-comment-dots"></i>
+                <a href="{% url 'post_detail' post.id %}" class="text-gray-400 hover:text-korva-success transition p-2">
+                    <i class="fas fa-comment-dots text-lg sm:text-base"></i>
                 </a>
             </div>
         </div>
