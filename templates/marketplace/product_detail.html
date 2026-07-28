@@ -91,6 +91,8 @@
             <div class="korva-card rounded-lg border border-korva-dark-alt overflow-hidden">
                 {% if similar.image %}
                 <img src="{{ similar.image.url }}" class="w-full h-40 object-cover">
+                {% elif similar.image_url %}
+                <img src="{{ similar.image_url }}" class="w-full h-40 object-cover">
                 {% else %}
                 <div class="w-full h-40 bg-korva-dark-alt flex items-center justify-center">
                     <i class="fas fa-image text-gray-600 text-3xl"></i>
