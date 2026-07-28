@@ -129,10 +129,15 @@ def login_view(request):
     return render(request, 'auth/login.html')
 
 
+from django.views.decorators.http import require_POST
+
+
 def logout_view(request):
-    """Vista para cerrar sesión"""
-    logout(request)
-    messages.success(request, 'Sesión cerrada correctamente.')
+    """Vista para cerrar sesion"""
+    if request.method == 'POST':
+        logout(request)
+        messages.success(request, 'Sesion cerrada correctamente.')
+        return redirect('home')
     return redirect('home')
 
 

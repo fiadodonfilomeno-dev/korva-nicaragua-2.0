@@ -81,9 +81,12 @@
                             <a href="{% url 'blocked_users_list' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm">
                                 <i class="fas fa-user-slash"></i> Bloqueados
                             </a>
-                            <a href="{% url 'logout' %}" class="block px-4 py-2 text-red-400 hover:bg-korva-dark-alt transition text-sm">
-                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                            </a>
+                            <form id="logout-form" method="POST" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-red-400 hover:bg-korva-dark-alt transition text-sm">
+                                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                </button>
+                            </form>
                         </div>
                     </div>
                 {% else %}
@@ -167,9 +170,12 @@
                 <i class="fas fa-user-slash w-6"></i> Bloqueados
             </a>
             <hr class="border-korva-dark-alt my-4">
-            <a href="{% url 'logout' %}" class="block px-4 py-3 text-red-400 hover:bg-korva-dark-alt rounded-lg transition">
-                <i class="fas fa-sign-out-alt w-6"></i> Cerrar Sesión
-            </a>
+            <form method="POST" action="{% url 'logout' %}" onsubmit="return confirm('¿Estás seguro de cerrar sesión?')">
+                {% csrf_token %}
+                <button type="submit" class="block w-full text-left px-4 py-3 text-red-400 hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-sign-out-alt w-6"></i> Cerrar Sesión
+                </button>
+            </form>
         {% else %}
             <div class="space-y-3">
                 <a href="{% url 'login' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
@@ -275,6 +281,16 @@
         mobileBtn.addEventListener('click', openDrawer);
         mobileOverlay.addEventListener('click', closeDrawer);
         if (mobileClose) mobileClose.addEventListener('click', closeDrawer);
+    }
+
+    // Logout confirmation
+    const logoutForm = document.getElementById('logout-form');
+    if (logoutForm) {
+        logoutForm.addEventListener('submit', function(e) {
+            if (!confirm('¿Estás seguro de cerrar sesión?')) {
+                e.preventDefault();
+            }
+        });
     }
 
     // Notification unread count polling
