@@ -87,12 +87,86 @@
             </div>
             
             <!-- Mobile Menu Button -->
-            <button class="md:hidden text-gray-300 hover:text-korva-success transition">
+            <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-korva-success transition">
                 <i class="fas fa-bars text-xl"></i>
             </button>
         </div>
     </div>
 </nav>
+
+<!-- Mobile Drawer Overlay -->
+<div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+
+<!-- Mobile Drawer -->
+<div id="mobile-drawer" class="fixed top-0 right-0 h-full w-72 bg-korva-card border-l border-korva-dark-alt z-50 transform translate-x-full transition-transform duration-300 md:hidden overflow-y-auto">
+    <div class="p-6">
+        <div class="flex items-center justify-between mb-6">
+            <span class="text-lg font-bold text-white">Korva Nicaragua</span>
+            <button id="mobile-close-btn" class="text-gray-300 hover:text-korva-success transition">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div class="space-y-1">
+            <a href="{% url 'home' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-home w-6"></i> Muro
+            </a>
+            <a href="{% url 'marketplace' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-shopping-bag w-6"></i> Marketplace
+            </a>
+            <a href="{% url 'rankings' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-trophy w-6"></i> Rankings
+            </a>
+            <a href="{% url 'recommendations' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-handshake w-6"></i> Alianzas
+            </a>
+            <a href="{% url 'messages' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-envelope w-6"></i> Mensajes
+            </a>
+            <a href="{% url 'korva_ai' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-robot w-6"></i> Korva IA
+            </a>
+        </div>
+
+        <hr class="border-korva-dark-alt my-4">
+
+        {% if user.is_authenticated %}
+            <div class="space-y-1">
+                <a href="{% url 'profile' user.username %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-user-circle w-6"></i> Mi Perfil
+                </a>
+                <a href="{% url 'edit_profile' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-edit w-6"></i> Editar Perfil
+                </a>
+                <a href="{% url 'reports' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-chart-bar w-6"></i> Mis Reportes
+                </a>
+                <a href="{% url 'my_products' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-box w-6"></i> Mis Productos
+                </a>
+                <a href="{% url 'my_purchases' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-shopping-bag w-6"></i> Mis Compras
+                </a>
+                <a href="{% url 'seller_wallet' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-wallet w-6"></i> Wallet
+                </a>
+            </div>
+            <hr class="border-korva-dark-alt my-4">
+            <a href="{% url 'logout' %}" class="block px-4 py-3 text-red-400 hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-sign-out-alt w-6"></i> Cerrar Sesión
+            </a>
+        {% else %}
+            <div class="space-y-3">
+                <a href="{% url 'login' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-sign-in-alt w-6"></i> Iniciar Sesión
+                </a>
+                <a href="{% url 'register' %}" class="block px-4 py-3 bg-korva-success text-white rounded-lg text-center font-medium hover:opacity-90 transition">
+                    <i class="fas fa-user-plus"></i> Registrarse
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
 
 <script>
     // Theme Toggle Functionality
@@ -166,4 +240,25 @@
         }
         lastScrollY = currentScrollY;
     }, { passive: true });
+
+    // Mobile Drawer Toggle
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileDrawer = document.getElementById('mobile-drawer');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    const mobileClose = document.getElementById('mobile-close-btn');
+    function openDrawer() {
+        mobileDrawer.classList.remove('translate-x-full');
+        mobileOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer() {
+        mobileDrawer.classList.add('translate-x-full');
+        mobileOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+    if (mobileBtn && mobileDrawer && mobileOverlay) {
+        mobileBtn.addEventListener('click', openDrawer);
+        mobileOverlay.addEventListener('click', closeDrawer);
+        if (mobileClose) mobileClose.addEventListener('click', closeDrawer);
+    }
 </script>
