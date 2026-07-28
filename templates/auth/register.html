@@ -49,7 +49,7 @@
                 </div>
             </div>
             
-            <form method="post" class="space-y-6">
+            <form method="post" class="space-y-6" id="register-form">
                 {% csrf_token %}
                 
                 <!-- Información de Usuario -->
@@ -167,8 +167,8 @@
                 </div>
                 
                 <!-- Botón de Envío -->
-                <button type="submit" class="korva-btn-primary w-full py-3 rounded-lg font-semibold">
-                    <i class="fas fa-user-plus mr-2"></i> Crear Cuenta
+                <button type="submit" id="register-btn" class="korva-btn-primary w-full py-3 rounded-lg font-semibold">
+                    <i class="fas fa-user-plus mr-2" id="register-btn-icon"></i> <span id="register-btn-text">Crear Cuenta</span>
                 </button>
             </form>
             
@@ -183,4 +183,18 @@
         </div>
     </div>
 </div>
+<script>
+document.getElementById('register-form').addEventListener('submit', function(e) {
+    var btn = document.getElementById('register-btn');
+    if (btn.disabled) {
+        e.preventDefault();
+        return;
+    }
+    btn.disabled = true;
+    btn.classList.remove('korva-btn-primary');
+    btn.classList.add('korva-btn-disabled', 'opacity-70', 'cursor-not-allowed');
+    document.getElementById('register-btn-icon').className = 'fas fa-spinner fa-spin mr-2';
+    document.getElementById('register-btn-text').textContent = 'Creando cuenta...';
+});
+</script>
 {% endblock %}
