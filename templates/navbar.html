@@ -1,4 +1,4 @@
-<nav class="bg-korva-card border-b border-korva-dark-alt fixed top-0 left-0 right-0 z-50">
+<nav id="main-nav" class="bg-korva-card border-b border-korva-dark-alt fixed top-0 left-0 right-0 z-50 transition-transform duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             
@@ -153,4 +153,17 @@
             e.stopPropagation();
         });
     }
+
+    // Navbar hide/show on scroll
+    let lastScrollY = 0;
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', function() {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > lastScrollY && currentScrollY > 50) {
+            nav.style.transform = 'translateY(-100%)';
+        } else {
+            nav.style.transform = 'translateY(0)';
+        }
+        lastScrollY = currentScrollY;
+    }, { passive: true });
 </script>
