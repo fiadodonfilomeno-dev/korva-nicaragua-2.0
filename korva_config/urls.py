@@ -154,6 +154,12 @@ urlpatterns = [
 
     # API REST
     path('api/', include('api.urls')),
+
+    # Rosetta (traducciones)
+    path('rosetta/', include('rosetta.urls')),
+
+    # Cambio de idioma
+    path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 # Servir archivos de media en desarrollo

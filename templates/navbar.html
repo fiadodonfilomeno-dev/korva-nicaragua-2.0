@@ -1,3 +1,4 @@
+{% load i18n %}
 <nav id="main-nav" class="bg-korva-card border-b border-korva-dark-alt fixed top-0 left-0 right-0 z-50 transition-transform duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
@@ -13,25 +14,25 @@
             
             <!-- Navigation Links (solo iconos) -->
             <div class="hidden md:flex items-center space-x-6">
-                <a href="{% url 'home' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="Muro">
+                <a href="{% url 'home' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="{% trans 'Muro' %}">
                     <i class="fas fa-home"></i>
                 </a>
-                <a href="{% url 'marketplace' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="Marketplace">
+                <a href="{% url 'marketplace' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="{% trans 'Marketplace' %}">
                     <i class="fas fa-shopping-bag"></i>
                 </a>
-                <a href="{% url 'rankings' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="Rankings">
+                <a href="{% url 'rankings' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="{% trans 'Rankings' %}">
                     <i class="fas fa-trophy"></i>
                 </a>
-                <a href="{% url 'recommendations' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="Alianzas">
+                <a href="{% url 'recommendations' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="{% trans 'Alianzas' %}">
                     <i class="fas fa-handshake"></i>
                 </a>
-                <a href="{% url 'activity_feed' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="Actividad">
+                <a href="{% url 'activity_feed' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="{% trans 'Actividad' %}">
                     <i class="fas fa-stream"></i>
                 </a>
-                <a href="{% url 'messages' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="Mensajes">
+                <a href="{% url 'messages' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="{% trans 'Mensajes' %}">
                     <i class="fas fa-envelope"></i>
                 </a>
-                <a href="{% url 'korva_ai' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="Korva IA">
+                <a href="{% url 'korva_ai' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="{% trans 'Korva IA' %}">
                     <i class="fas fa-robot"></i>
                 </a>
             </div>
@@ -42,6 +43,27 @@
                 <button id="theme-toggle" class="p-2 rounded-lg text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition" aria-label="Cambiar tema" title="Cambiar tema">
                     <i id="theme-icon" class="fas fa-sun text-xl"></i>
                 </button>
+
+                <!-- Language Switcher -->
+                <div class="relative" id="lang-switcher">
+                    <button id="lang-btn" class="flex items-center space-x-1 p-2 rounded-lg text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm font-medium" title="Idioma">
+                        <i class="fas fa-globe text-lg"></i>
+                        <span>{{ LANGUAGE_CODE|upper }}</span>
+                    </button>
+                    <div id="lang-dropdown" class="absolute right-0 mt-2 w-36 bg-korva-card border border-korva-dark-alt rounded-lg shadow-lg py-1 hidden z-50">
+                        {% get_available_languages as LANGUAGES %}
+                        {% get_current_language as CURRENT_LANG %}
+                        {% for lang_code, lang_name in LANGUAGES %}
+                        <form action="{% url 'set_language' %}" method="post" class="block">
+                            {% csrf_token %}
+                            <input name="language" type="hidden" value="{{ lang_code }}">
+                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-korva-dark-alt hover:text-white transition {% if lang_code == CURRENT_LANG %}text-korva-success font-semibold{% endif %}">
+                                {{ lang_name }}
+                            </button>
+                        </form>
+                        {% endfor %}
+                    </div>
+                </div>
                 
                 {% if user.is_authenticated %}
                 <!-- Notification Bell -->
@@ -293,6 +315,22 @@
         mobileBtn.addEventListener('click', openDrawer);
         mobileOverlay.addEventListener('click', closeDrawer);
         if (mobileClose) mobileClose.addEventListener('click', closeDrawer);
+    }
+
+    // Language switcher dropdown toggle
+    const langBtn = document.getElementById('lang-btn');
+    const langDropdown = document.getElementById('lang-dropdown');
+    if (langBtn && langDropdown) {
+        langBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            langDropdown.classList.toggle('hidden');
+        });
+        document.addEventListener('click', function() {
+            langDropdown.classList.add('hidden');
+        });
+        langDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
     }
 
     // Logout confirmation
