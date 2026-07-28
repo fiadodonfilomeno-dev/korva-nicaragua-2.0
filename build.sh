@@ -3,36 +3,9 @@
 
 set -o errexit  # Exit on error
 
-echo "=== Instalando dependencias del sistema ==="
-apt-get update -qq && apt-get install -y -qq libpq-dev gcc 2>/dev/null || echo "apt no disponible, continuando..."
-
 echo "=== Instalando dependencias Python ==="
 pip install --upgrade pip
 pip install -r requirements.txt
-
-echo "=== Esperando a PostgreSQL ==="
-if [ -n "$DATABASE_URL" ]; then
-    python -c "
-import os, time, sys
-db_url = os.environ.get('DATABASE_URL', '')
-if db_url:
-    try:
-        import psycopg2
-        for i in range(30):
-            try:
-                conn = psycopg2.connect(db_url)
-                conn.close()
-                print('PostgreSQL listo')
-                break
-            except Exception:
-                time.sleep(1)
-        else:
-            print('ERROR: Timeout esperando PostgreSQL')
-            sys.exit(1)
-    except ImportError:
-        print('psycopg2 no disponible, continuando...')
-"
-fi
 
 echo "=== Recopilando archivos estáticos ==="
 python manage.py collectstatic --no-input
