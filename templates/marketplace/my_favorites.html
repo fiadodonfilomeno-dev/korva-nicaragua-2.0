@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load time_filters %}
+
+{% block title %}Mis Favoritos - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-white mb-8">
+        <i class="fas fa-heart text-korva-danger"></i> Mis Favoritos
+    </h1>
+
+    <!-- Posts Favoritos -->
+    <div class="mb-10">
+        <h2 class="text-2xl font-bold text-white mb-4"><i class="fas fa-file-alt text-korva-success"></i> Publicaciones Guardadas</h2>
+        {% if fav_posts %}
+        <div class="space-y-4">
+            {% for post in fav_posts %}
+            <div class="korva-card rounded-lg p-5 border border-korva-dark-alt hover:border-korva-success transition">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <a href="{% url 'post_detail' post.id %}" class="text-lg font-bold text-white hover:text-korva-success">{{ post.title }}</a>
+                        <p class="text-gray-400 text-sm mt-1">{{ post.content|truncatewords:20 }}</p>
+                        <p class="text-xs text-gray-500 mt-2">{{ post.timestamp|time_ago }}</p>
+                    </div>
+                    <form method="post" action="{% url 'toggle_favorite_post' post.id %}" class="ml-4">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-400 hover:text-red-300 transition">
+                            <i class="fas fa-heart-broken text-xl"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-500">No tienes publicaciones guardadas</p>
+        {% endif %}
+    </div>
+
+    <!-- Productos Favoritos -->
+    <div>
+        <h2 class="text-2xl font-bold text-white mb-4"><i class="fas fa-shopping-bag text-korva-success"></i> Productos Guardados</h2>
+        {% if fav_products %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for product in fav_products %}
+            <div class="korva-card rounded-lg border border-korva-dark-alt overflow-hidden hover:border-korva-success transition">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-40 object-cover">
+                {% else %}
+                <div class="w-full h-40 bg-korva-dark-alt flex items-center justify-center">
+                    <i class="fas fa-image text-gray-600 text-3xl"></i>
+                </div>
+                {% endif %}
+                <div class="p-4">
+                    <a href="{% url 'product_detail' product.id %}" class="font-bold text-white hover:text-korva-success">{{ product.name }}</a>
+                    <p class="text-korva-success font-bold mt-1">{{ product.price_display }}</p>
+                    <div class="flex justify-between items-center mt-3">
+                        <a href="{% url 'product_detail' product.id %}" class="text-sm text-gray-400 hover:text-korva-success">Ver detalle</a>
+                        <form method="post" action="{% url 'toggle_favorite_product' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-400 hover:text-red-300 transition">
+                                <i class="fas fa-heart-broken"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-500">No tienes productos guardados</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

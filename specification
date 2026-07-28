@@ -1,0 +1,82 @@
+# PROMPT DE INSTRUCCIÓN: SISTEMA WEB DE RED SOCIAL PYME "KORVA NICARAGUA" (DJANGO)
+
+Actúa como un desarrollador Senior especializado en Python y Django. Tu objetivo es construir una aplicación web full-stack moderna llamada "Korva Nicaragua", una plataforma social y colaborativa de fomento comercial para microempresas y PyMEs en Nicaragua.
+
+El framework principal debe ser Django (Python) usando su motor de plantillas (Django Templates) con Tailwind CSS integrado por CDN para los estilos, o Django REST Framework + un cliente web. Priorizaremos una arquitectura monolítica clásica de Django para simplificar su ejecución independiente.
+
+---
+
+## 🎨 DISEÑO VISUAL Y AMBIENTACIÓN
+- **Paleta de Colores**: Tema oscuro sofisticado y de alto contraste (Fondo principal: `#09090b` / Slate oscuro, Fondo de tarjetas o paneles: `#0c0c0e`, Elementos de destaque, botones y éxito: Verde Esmeralda `#10b981`, Incentivos y advertencias: Ámbar `#f59e0b`).
+- **Tipografía**: Fuente limpia sin serifas para uso general (como Inter o UI sans-serif) y de ancho fijo (Fira Code o JetBrains Mono) para indicadores numéricos y valores de popularidad para dar un "vibe" técnico o fintech.
+
+---
+
+## 👥 ROLES DE USUARIO, TIERS Y MODELO DE NEGOCIO (INSPIRADO EN BINANCE)
+La base del ecosistema es el "Korva Level", un ranking dinámico basado en un puntaje de reputación corporativa (`popularity_score`).
+1. **Modelos de Base de Datos para Usuarios**: Un modelo `Profile` que extienda el `User` nativo de Django, conteniendo:
+   - `business_name` (Nombre comercial)
+   - `logo` y `banner` (URLs o ImageFields)
+   - `ruc` (Registro Único de Contribuyente nicaragüense, ej: 'J0310000123456')
+   - `verified` (Boolean - Sello Oficial de Verificación ✓)
+   - `city` (Managua, Masaya, Estelí, León, Granada, Jinotega, Matagalpa, etc.)
+   - `sector` (Alimentos, Agropecuario, Artesanías, Tecnología, Textil, Servicios)
+   - `popularity_score` (Integer, por defecto 0)
+   - `followers_count`, `associates_count`, `collaborations_count` (Integers)
+
+2. **Cálculo Dinámico de Rangos (Tiers)**: Crea una property o método en el modelo que retorne el rango basado en el puntaje de popularidad:
+   - **0 a 999 pts**: PyME Nivel Bronce 🟢
+   - **1,000 a 2,499 pts**: PyME Nivel Plata ⚪
+   - **2,500 a 4,999 pts**: PyME Nivel Oro 🟡
+   - **>= 5,000 pts**: Corporativo VIP 🟣
+
+3. **Insignia y Validación de RUC**: 
+   - Permitir a los usuarios ingresar su registro mercantil RUC de Nicaragua mediante un formulario seguro.
+   - Si el RUC es válido (por ejemplo, validando que inicie con letra o tenga longitud correspondiente), se le otorga la insignia `@verified = True` y un bono inmediato de `+1,000 pts` de popularidad empresarial.
+
+---
+
+## 🛠️ MÓDULOS DE FUNCIONALIDADES CORP (VISTAS Y LOGICA TEMPLATE)
+
+### Módulo 1: El Muro Social (Social Feed)
+- El punto de encuentro de las PyMEs para publicar alianzas, requerimientos y preguntas.
+- **Modelo `Post`**: `title`, `content`, `author` (FK Profile), `timestamp`, `tags` (Lista o ManyToMany), `upvotes`, `downvotes`, `moderation_status` (Choices: 'approved', 'flagged', 'removed').
+- **Votos Reputacionales**: Al hacer Click en "Upvote", el autor del post gana `+10 pts` en su `popularity_score`. Al hacer Click en "Downvote", pierde `5 pts`.
+- **Comentarios**: Un sistema de comentarios inline para cada publicación.
+- **Auditoría IA (Moderación)**: Un botón de "Auditar IA" en cada post. Este botón activará un analizador de contenido simulado (o una llamada en segundo plano a la API de Google Gemini en Python) para verificar si el contenido infringe normas (discursos odiosos, spam o información ajena al fomento de negocios). Si la IA determina una violación, el post se marca como "flagged" o "removed".
+
+### Módulo 2: Catálogo de Mercado y Proveedores (Marketplace)
+- Panel de ofertas de venta directa y requerimientos (demandas) de compra.
+- **Modelo `Product`**: `name`, `description`, `price`, `currency` (C$ Córdobas o $ US-Dólares), `category` ('Ventas' / 'Compras'), `image`, `contact_whatsapp` (String), `user` (FK Profile).
+- **Interacción**: Botones que enlazan dinámicamente con un número de WhatsApp usando plantillas precargadas con la URL `https://wa.me/` que detalle de qué negocio e ítem proviene el mensaje.
+- **Carga de Archivos Avanzada**: El formulario para subir artículos en el catálogo debe soportar la selección habitual de imágenes o un drag-and-drop estético que se asocie de manera fluida al input de archivos.
+
+### Módulo 3: Rankings de Popularidad e Indicadores (Binance-Inspired Style)
+- Tabla de posiciones (Leaderboard) que ordena a las PyMEs nicaragüenses según su `popularity_score`. El usuario logueado debe ver claramente su posición de rango.
+- Un gráfico interactivo usando una librería frontend (como Chart.js o similar) que simule o compile visualmente el crecimiento comercial y colaboraciones mensuales del ecosistema.
+
+### Módulo 4: Mensajería Directa Privada (Canales DM)
+- Chat privado en tiempo real o simulado entre cooperativas y empresas nicaragüenses.
+- **Modelo `Message`**: `sender` (FK Profile), `recipient` (FK Profile), `content`, `timestamp`, `read_status`.
+- Interfaz que permita elegir entre un listado de socios y abrir un hilo de conversación de propuestas comerciales corporativas con un flujo elegante.
+
+### Módulo 5: Asistente de Consultoría "Korva IA" (Gemini Integration)
+- Un chatbot que asesore a los microempresarios de Nicaragua sobre la DGI, inscripción del RUC, cotas fijas fiscales, envíos nacionales eficientes (ej: alternativas de envíos departamentales) y consejos comerciales.
+- El panel del chat debe admitir un campo opcional para que los mismos usuarios ingresen y guarden en su perfil su propia clave de API de Google Gemini (`user_api_key`) para uso personalizado de llamadas a la IA. De lo contrario, se usará una clave de servidor compartida.
+- Debe incluir tarjetas de sugerencia (Shortcuts de consultas predefinidas) para respuestas instantáneas de plan de negocio, envíos y de cómo usar el ecosistema de Korva.
+
+### Módulo 6: Exporte Reglamentario de Reportes Analíticos (RF-04)
+- **Exportación en CSV / Excel**: Un botón que compile la base de datos de publicaciones cargadas, transacciones y calificaciones del mes actual, permitiendo descargar dinámicamente el archivo en formato `.csv` para su posterior lectura corporativa.
+- **Certificado PDF Imprimible**: Un botón que genere una carta/informe analítico formal listo para imprimir u opción de exportar a PDF con las estadísticas generales de tracción empresarial (KPIs).
+
+---
+
+## 🔒 ARQUITECTURA DE REQUISITOS (DJANGO TECH STACK)
+Asegura que la configuración de Django incluya:
+- Un archivo `settings.py` con las configuraciones adecuadas para servir archivos estáticos (`STATIC_URL`, `STATICFILES_DIRS`).
+- El uso de `SQLite` para bases de datos locales rápidas de prueba, estructurado de forma que sea escalable a `PostgreSQL`.
+- Archivo `urls.py` limpio mapeando adecuadamente cada sección: `/` (Muro Social), `/marketplace/` (Catálogo), `/rankings/` (Líderes), `/chat/` (Mensajes), `/reports/` (Exportes y Descargas).
+- Django Forms y validadores para los campos de registro mercantil y WhatsApp.
+- Lógica de plantillas ordenada usando herencia (`base.html`, `navbar.html`, `footer.html`).
+
+Escribe todos los modelos de base de datos (`models.py`), vistas (`views.py`), templates en HTML estilizados con Tailwind, y urls correspondientes para cumplir estrictamente con lo requerido.

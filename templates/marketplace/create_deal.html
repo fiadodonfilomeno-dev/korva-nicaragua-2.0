@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Oferta - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-white mb-2"><i class="fas fa-tag text-korva-warning"></i> Crear Oferta</h1>
+    <p class="text-gray-400 mb-8">Producto: <strong class="text-white">{{ product.name }}</strong> - Precio actual: {{ product.price_display }}</p>
+
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        <div>
+            <label class="block text-gray-400 text-sm mb-2">Titulo de la oferta *</label>
+            <input type="text" name="title" required class="korva-input w-full" placeholder="Ej: Liquidacion de temporada">
+        </div>
+        <div>
+            <label class="block text-gray-400 text-sm mb-2">Descripcion</label>
+            <textarea name="description" rows="3" class="korva-input w-full" placeholder="Detalles de la oferta..."></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-gray-400 text-sm mb-2">Descuento (%) *</label>
+                <input type="number" name="discount_percent" required min="1" max="99" class="korva-input w-full" placeholder="25">
+            </div>
+            <div>
+                <label class="block text-gray-400 text-sm mb-2">Fecha de expiracion *</label>
+                <input type="datetime-local" name="ends_at" required class="korva-input w-full">
+            </div>
+        </div>
+        <button type="submit" class="korva-btn-primary px-8 py-3 rounded-lg font-semibold w-full">
+            <i class="fas fa-tag mr-2"></i> Crear Oferta
+        </button>
+    </form>
+</div>
+{% endblock %}

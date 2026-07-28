@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Notificaciones - Korva Nicaragua{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-white">Notificaciones</h1>
+        {% if unread_count > 0 %}
+            <a href="{% url 'mark_all_read' %}" class="text-sm text-korva-success hover:underline">
+                <i class="fas fa-check-double mr-1"></i>Marcar todas como leídas
+            </a>
+        {% endif %}
+    </div>
+
+    {% if notifications %}
+        <div class="space-y-2">
+            {% for n in notifications %}
+                <div class="bg-korva-card rounded-lg p-4 flex items-start gap-4 transition hover:bg-korva-dark-alt {% if not n.is_read %}border-l-4 border-korva-success{% endif %}">
+                    <div class="text-xl text-korva-success mt-1">
+                        <i class="{{ n.icon }}"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-white">{{ n.title }}</p>
+                        <p class="text-xs text-gray-400 mt-0.5">{{ n.message }}</p>
+                        <p class="text-xs text-gray-600 mt-1">{{ n.created_at|timesince }}</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        {% if not n.is_read %}
+                            <a href="{% url 'mark_notification_read' n.id %}" class="text-xs text-korva-success hover:underline" title="Marcar como leída">
+                                <i class="fas fa-check"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-16">
+            <i class="fas fa-bell text-5xl text-gray-600 mb-4"></i>
+            <p class="text-gray-400">No tienes notificaciones</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

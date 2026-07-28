@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: korva2
+    env: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn korva_config.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.0"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://korva2.onrender.com"
+      - key: FRONTEND_URL
+        value: "https://korva2.onrender.com"
+      - key: EMAIL_BACKEND
+        value: "django.core.mail.backends.console.EmailBackend"
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        value: "Korva Nicaragua <noreply@korva.ni>"
+      - key: USE_REDIS
+        value: "False"

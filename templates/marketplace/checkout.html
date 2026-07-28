@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load time_filters %}
+
+{% block title %}Comprar {{ product.name }} - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-white mb-8"><i class="fas fa-shopping-cart text-korva-success"></i> Finalizar Compra</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
+            <h3 class="text-lg font-bold text-white mb-4">Resumen del Producto</h3>
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="w-full h-48 object-cover rounded-lg mb-4">
+            {% endif %}
+            <h4 class="text-xl font-bold text-white">{{ product.name }}</h4>
+            <p class="text-gray-400 text-sm mt-1">{{ product.user.business_name }}</p>
+            <p class="text-3xl font-bold text-korva-success mt-4">{{ product.price_display }}</p>
+        </div>
+
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
+            <h3 class="text-lg font-bold text-white mb-4"><i class="fas fa-university text-korva-success"></i> Transferencia Bancaria</h3>
+            <p class="text-gray-400 text-sm mb-4">Realiza la transferencia a la cuenta del vendedor y reporta el pago aqui.</p>
+
+            <div class="bg-korva-dark-alt rounded-lg p-4 mb-6 space-y-2 text-sm">
+                <p class="text-gray-300"><span class="text-gray-500">Banco:</span> <span class="text-white font-medium" id="bank-label">Lafise Bancentro</span></p>
+                <p class="text-gray-300"><span class="text-gray-500">Titular:</span> <span class="text-white font-medium">{{ product.user.business_name }}</span></p>
+                <p class="text-gray-300"><span class="text-gray-500">Monto:</span> <span class="text-white font-medium">{{ product.price_display }}</span></p>
+                <p class="text-gray-300"><span class="text-gray-500">Concepto:</span> <span class="text-white font-medium">Compra {{ product.name }}</span></p>
+            </div>
+
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Banco para transferir</label>
+                    <select name="bank" required class="korva-input w-full">
+                        <option value="">Selecciona tu banco</option>
+                        <option value="lafise">Lafise Bancentro</option>
+                        <option value="banpro">Banpro Grupo Promerica</option>
+                        <option value="bac">BAC Credomatic</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Notas (opcional)</label>
+                    <textarea name="notes" rows="2" class="korva-input w-full" placeholder="Numero de referencia de tu transferencia..."></textarea>
+                </div>
+                <button type="submit" class="korva-btn-primary w-full py-3 rounded-lg font-semibold">
+                    <i class="fas fa-check mr-2"></i> Solicitar Compra
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-6 korva-card rounded-lg p-6 border border-korva-dark-alt">
+        <h4 class="font-bold text-white mb-2"><i class="fas fa-info-circle text-korva-success"></i> Comision de Korva</h4>
+        <p class="text-gray-400 text-sm">Korva cobra una comision del <strong class="text-white">5%</strong> sobre cada transaccion completada para mantener la plataforma. El vendedor recibe el <strong class="text-white">95%</strong> del monto.</p>
+    </div>
+</div>
+{% endblock %}

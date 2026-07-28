@@ -1,0 +1,56 @@
+## BUGS RESUELTOS ✅
+
+### 1. Mensajería
+- Se agregaron campos `image` y `video` al modelo Message
+- Formulario actualizado con soporte multimedia (FileInput)
+- Vista actualizada para manejar request.FILES
+- Template rediseñado con burbujas de chat, doble check de lectura, previsualización de imágenes y videos
+- Lista de conversaciones con previsualización del último mensaje
+
+### 2. Chatbot Tutorial
+- Creado `ai_tutorial` view + template tutorial con pasos e ilustraciones
+- Cuando el usuario no tiene API key configurada, se muestra banner con enlace al tutorial
+- URLs: `/ai/tutorial/`, enlaces a Google AI Studio
+
+### 3. Publicaciones con imágenes y videos
+- Campo `video` agregado al modelo Post
+- Formulario PostForm actualizado con soporte video
+- Create/Edit views actualizadas para request.FILES
+- Templates home.html y post_detail.html con display de imágenes y videos
+
+### 4. Perfil estilo Discord
+- Banner superior con gradiente
+- Avatar circular superpuesto con borde
+- Badges/logros (Verificada, Destacada, Colaboradora, Creadora)
+- Stats cards (puntos, seguidores, publicaciones, productos)
+- Sección "Acerca de"
+- Tabs de publicaciones y productos con diseño tipo Discord
+
+### 5. Rankings divididos en categorías
+- 3 categorías: General, Novatos (< 1000 pts), Establecidas (1000+ pts)
+- Tabs interactivos para cambiar entre categorías
+- Posición del usuario en cada categoría
+
+### 6. Frontend mejorado
+- Mensajes flash con animación slideIn/fadeOut y auto-dismiss
+- Scrollbar personalizada
+- Hover effects en cards y botones
+- Sombras y transiciones suaves
+- Placeholder inputs mejorados
+
+## PENDIENTES
+
+### Pendientes del usuario
+- [ ] Configurar Google Gemini API key en `settings.py` para chatbot funcional
+- [ ] La IA debe hablar SOLO de negocios/PyMEs, no +18, no insultos, no tareas académicas, no política/religión → ✓ Ya implementado en system prompt
+
+### Sugerencias para mejorar
+- [ Hazlo] Sistema de notificaciones en tiempo real (WebSockets) para mensajes y likes
+- [ eso ya te lo habia pedido] Verificación de email al registrarse
+- [sip tanmbien te lo habia pedido  ] Modo oscuro/claro toggle
+- [ ponlo] Página de inicio con landing atractivo antes del login
+- [ Sip tambien ] Panel de administración para moderar contenido (posts, comentarios)
+- [ Ehm... ensename como quedaria ] Soporte para múltiples imágenes en un post (galería)
+- [ va hazlo] Integración con WhatsApp para notificaciones
+- [ Esta bien ] API REST para app móvil futura
+- [ va hazlo] Dockerizar la aplicación para despliegue fácil

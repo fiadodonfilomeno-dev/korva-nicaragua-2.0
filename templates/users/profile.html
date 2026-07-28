@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ profile.business_name }} - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Discord-style Profile -->
+    <div class="korva-card rounded-lg overflow-hidden border border-korva-dark-alt">
+        <!-- Banner -->
+        <div class="h-48 bg-gradient-to-r from-korva-success to-green-800 relative">
+            {% if profile.banner %}
+            <img src="{{ profile.banner.url }}" class="w-full h-full object-cover">
+            {% endif %}
+        </div>
+        
+        <!-- Profile Info -->
+        <div class="px-8 pb-8">
+            <!-- Avatar and Actions -->
+            <div class="flex items-end justify-between -mt-16 mb-6">
+                <div class="relative">
+                    {% if profile.logo %}
+                    <img src="{{ profile.logo.url }}" alt="{{ profile.business_name }}" 
+                        class="w-32 h-32 rounded-full border-4 border-korva-card">
+                    {% else %}
+                    <div class="w-32 h-32 rounded-full border-4 border-korva-card bg-korva-dark-alt flex items-center justify-center">
+                        <i class="fas fa-building text-korva-success text-4xl"></i>
+                    </div>
+                    {% endif %}
+                    {% if profile.verified %}
+                    <span class="absolute -bottom-1 -right-1 bg-korva-success rounded-full p-1 border-4 border-korva-card">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <div class="flex gap-3 pb-2">
+                    {% if user.is_authenticated and user.profile == profile %}
+                    <a href="{% url 'edit_profile' %}" class="px-4 py-2 bg-korva-dark-alt rounded-lg text-sm font-semibold text-white hover:bg-korva-dark transition border border-korva-dark-alt">
+                        <i class="fas fa-edit mr-2"></i> Editar Perfil
+                    </a>
+                    {% elif user.is_authenticated %}
+                    <a href="{% url 'start_conversation' profile.user.username %}" class="korva-btn-primary px-4 py-2 rounded-lg text-sm font-semibold">
+                        <i class="fas fa-envelope mr-2"></i> Mensaje
+                    </a>
+                    <div class="relative group">
+                        <button class="px-3 py-2 bg-korva-dark-alt rounded-lg text-sm text-gray-300 hover:text-red-400 transition border border-korva-dark-alt">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="absolute right-0 mt-1 w-44 bg-korva-card border border-korva-dark-alt rounded-lg shadow-xl hidden group-hover:block">
+                            <a href="{% url 'report_user' profile.user.username %}" class="block px-4 py-2 text-sm text-gray-300 hover:text-red-400 hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-flag mr-2"></i> Reportar
+                            </a>
+                            <a href="{% url 'block_user' profile.user.username %}" class="block px-4 py-2 text-sm text-red-400 hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-user-slash mr-2"></i> Bloquear
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Name and Info -->
+            <div class="mb-6">
+                <div class="flex items-center gap-3 mb-1">
+                    <h1 class="text-3xl font-bold text-white">{{ profile.business_name }}</h1>
+                    <span class="px-3 py-1 text-xs font-semibold rounded-full 
+                        {% if profile.tier == 'vip' %}bg-purple-500 text-white
+                        {% elif profile.tier == 'oro' %}bg-yellow-500 text-black
+                        {% elif profile.tier == 'plata' %}bg-gray-300 text-black
+                        {% else %}bg-korva-dark-alt text-gray-300{% endif %}">
+                        {{ profile.tier_display }}
+                    </span>
+                </div>
+                <div class="flex items-center gap-4 text-gray-400 text-sm">
+                    <span><i class="fas fa-map-marker-alt text-korva-success mr-1"></i>{{ profile.get_city_display }}</span>
+                    <span><i class="fas fa-briefcase text-korva-success mr-1"></i>{{ profile.get_sector_display }}</span>
+                    <span><i class="fas fa-calendar text-korva-success mr-1"></i>Miembro desde {{ profile.created_at|date:"M Y" }}</span>
+                </div>
+            </div>
+            
+            <!-- About -->
+            {% if profile.bio %}
+            <div class="mb-6 p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt">
+                <p class="text-sm font-semibold text-gray-400 mb-2">ACERCA DE</p>
+                <p class="text-gray-200">{{ profile.bio }}</p>
+            </div>
+            {% endif %}
+            
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="text-center p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt">
+                    <p class="text-2xl font-bold text-white">{{ profile.popularity_score }}</p>
+                    <p class="text-xs text-gray-500">Puntos</p>
+                </div>
+                <div class="text-center p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt">
+                    <p class="text-2xl font-bold text-white">{{ profile.followers_count }}</p>
+                    <p class="text-xs text-gray-500">Seguidores</p>
+                </div>
+                <div class="text-center p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt">
+                    <p class="text-2xl font-bold text-white">{{ posts|length }}</p>
+                    <p class="text-xs text-gray-500">Publicaciones</p>
+                </div>
+                <div class="text-center p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt">
+                    <p class="text-2xl font-bold text-white">{{ products|length }}</p>
+                    <p class="text-xs text-gray-500">Productos</p>
+                </div>
+            </div>
+            
+            <!-- Roles / Badges -->
+            <div class="mb-6">
+                <p class="text-sm font-semibold text-gray-400 mb-3">BADGES / LOGROS</p>
+                <div class="flex flex-wrap gap-2">
+                    {% if profile.verified %}
+                    <span class="px-3 py-1 bg-korva-success bg-opacity-20 text-korva-success text-xs rounded-full border border-korva-success">
+                        <i class="fas fa-check-circle mr-1"></i>Verificada
+                    </span>
+                    {% endif %}
+                    {% if profile.popularity_score >= 1000 %}
+                    <span class="px-3 py-1 bg-yellow-500 bg-opacity-20 text-yellow-500 text-xs rounded-full border border-yellow-500">
+                        <i class="fas fa-star mr-1"></i>PyME Destacada
+                    </span>
+                    {% endif %}
+                    {% if profile.collaborations_count > 0 %}
+                    <span class="px-3 py-1 bg-blue-500 bg-opacity-20 text-blue-400 text-xs rounded-full border border-blue-500">
+                        <i class="fas fa-handshake mr-1"></i>Colaboradora
+                    </span>
+                    {% endif %}
+                    {% if profile.posts.count >= 5 %}
+                    <span class="px-3 py-1 bg-purple-500 bg-opacity-20 text-purple-400 text-xs rounded-full border border-purple-500">
+                        <i class="fas fa-pen mr-1"></i>Creadora
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="border-t border-korva-dark-alt pt-6">
+                <div class="flex gap-6 mb-6">
+                    <button onclick="showTab('posts')" class="tab-btn active pb-2 font-semibold text-white border-b-2 border-korva-success">
+                        <i class="fas fa-pen mr-2"></i>Publicaciones ({{ posts|length }})
+                    </button>
+                    <button onclick="showTab('products')" class="tab-btn pb-2 font-semibold text-gray-500 hover:text-white">
+                        <i class="fas fa-shopping-bag mr-2"></i>Productos ({{ products|length }})
+                    </button>
+                </div>
+                
+                <!-- Posts -->
+                <div id="posts-tab" class="tab-content space-y-4">
+                    {% if posts %}
+                    {% for post in posts %}
+                    <div class="p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt hover:border-korva-success transition">
+                        <div class="flex items-start justify-between mb-2">
+                            <h4 class="font-bold text-white">{{ post.title }}</h4>
+                            <span class="text-xs text-gray-500">{{ post.timestamp|date:"d M Y" }}</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-2">{{ post.content|truncatewords:40 }}</p>
+                        {% if post.image %}
+                        <img src="{{ post.image.url }}" class="w-full max-h-40 object-cover rounded mb-2">
+                        {% endif %}
+                        <a href="{% url 'post_detail' post.id %}" class="text-korva-success text-sm hover:underline">
+                            Leer más <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-pen text-3xl mb-3"></i>
+                        <p>Sin publicaciones aún</p>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Products -->
+                <div id="products-tab" class="tab-content hidden space-y-4">
+                    {% if products %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% for product in products %}
+                        <div class="p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt">
+                            {% if product.image %}
+                            <img src="{{ product.image.url }}" class="w-full h-40 object-cover rounded mb-3">
+                            {% endif %}
+                            <h4 class="font-bold text-white">{{ product.name }}</h4>
+                            <p class="text-korva-success font-bold text-lg mb-2">C$ {{ product.price }}</p>
+                            <a href="{% url 'product_detail' product.id %}" class="text-korva-success text-sm hover:underline">
+                                Ver producto <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-shopping-bag text-3xl mb-3"></i>
+                        <p>Sin productos aún</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showTab(name) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('border-b-2', 'border-korva-success', 'text-white');
+        el.classList.add('text-gray-500');
+    });
+    document.getElementById(name + '-tab').classList.remove('hidden');
+    event.target.closest('.tab-btn').classList.add('border-b-2', 'border-korva-success', 'text-white');
+    event.target.closest('.tab-btn').classList.remove('text-gray-500');
+}
+</script>
+{% endblock %}

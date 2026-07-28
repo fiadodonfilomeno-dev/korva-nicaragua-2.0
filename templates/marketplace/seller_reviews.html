@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load time_filters %}
+
+{% block title %}Calificaciones de {{ seller.business_name }} - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-white mb-2">
+        <i class="fas fa-star text-korva-warning"></i> Calificaciones de {{ seller.business_name }}
+    </h1>
+    <p class="text-gray-400 mb-8">Promedio: <span class="text-korva-warning font-bold">{{ avg_rating }}</span> / 5 estrellas</p>
+
+    {% if reviews %}
+    <div class="space-y-4">
+        {% for review in reviews %}
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-3">
+                    <a href="{% url 'profile' review.reviewer.user.username %}" class="font-semibold text-white hover:text-korva-success">
+                        {{ review.reviewer.business_name }}
+                    </a>
+                    <div class="flex text-korva-warning">
+                        {% for i in "12345" %}
+                        {% if forloop.counter <= review.rating %}
+                        <i class="fas fa-star"></i>
+                        {% else %}
+                        <i class="far fa-star"></i>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <span class="text-xs text-gray-500">{{ review.created_at|time_ago }}</span>
+            </div>
+            {% if review.comment %}
+            <p class="text-gray-300">{{ review.comment }}</p>
+            {% endif %}
+            {% if review.product %}
+            <p class="text-xs text-gray-500 mt-2">Producto: {{ review.product.name }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-12 korva-card rounded-lg border border-korva-dark-alt">
+        <i class="fas fa-star text-4xl text-gray-600 mb-4"></i>
+        <p class="text-gray-400">Aun no hay calificaciones</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Login Cancelled" %} - Korva Nicaragua{% endblock %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md bg-korva-card rounded-2xl shadow-xl p-8 border border-korva-dark-alt text-center">
+        <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-ban text-white text-2xl"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-white mb-2">Inicio de Sesión Cancelado</h1>
+        <p class="text-gray-400 mb-6">Decidiste cancelar el inicio de sesión con tu cuenta externa.</p>
+        <a href="{% url 'login' %}" class="korva-btn-primary px-6 py-2.5 rounded-lg font-medium inline-block">Volver a Iniciar Sesión</a>
+    </div>
+</div>
+{% endblock %}

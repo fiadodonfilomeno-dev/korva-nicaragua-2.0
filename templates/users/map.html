@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Mapa de PyMEs - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-white mb-2">
+        <i class="fas fa-map-marker-alt text-korva-success"></i> Mapa de PyMEs
+    </h1>
+    <p class="text-gray-400 mb-6">Encuentra empresas y emprendedores cerca de ti</p>
+
+    <!-- Filtros -->
+    <div class="flex flex-wrap gap-3 mb-6">
+        <a href="{% url 'pymes_map' %}" class="px-4 py-2 rounded-lg text-sm font-medium transition
+            {% if not sector_filter %}bg-korva-success text-white{% else %}bg-korva-dark-alt text-gray-400 hover:text-white{% endif %}">
+            Todas
+        </a>
+        {% for value, label in sectors %}
+        <a href="{% url 'pymes_map' %}?sector={{ value }}" class="px-4 py-2 rounded-lg text-sm font-medium transition
+            {% if sector_filter == value %}bg-korva-success text-white{% else %}bg-korva-dark-alt text-gray-400 hover:text-white{% endif %}">
+            {{ label }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <div id="map" class="w-full rounded-lg border border-korva-dark-alt" style="height: 600px;"></div>
+</div>
+
+<script>
+var profiles = {{ profiles_json|safe }};
+
+var map = L.map('map').setView([12.1150, -86.2362], 7);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+var greenIcon = L.icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34]
+});
+
+profiles.forEach(function(p) {
+    var verified = p.verified ? ' <i class="fas fa-check-circle" style="color:#10b981"></i>' : '';
+    var marker = L.marker([p.lat, p.lng], {icon: greenIcon}).addTo(map);
+    marker.bindPopup(
+        '<b>' + p.name + '</b>' + verified + '<br>' +
+        '<small>' + p.sector + ' - ' + p.city + '</small><br>' +
+        '<small>' + p.tier + '</small><br>' +
+        '<a href="/profile/' + p.username + '/" style="color:#10b981">Ver perfil</a>'
+    );
+});
+</script>
+{% endblock %}
