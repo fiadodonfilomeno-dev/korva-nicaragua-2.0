@@ -45,7 +45,7 @@ users_data = [
         'username': 'evaluador',
         'email': 'evaluador@gmail.com',
         'business_name': 'Evaluador Korva',
-        'password': 'Evaluador2026!',
+        'password': 'admin123',
         'ruc': 'J0310000000005',
         'city': 'managua',
         'sector': 'tecnologia'
@@ -124,4 +124,4 @@ print("  admin / admin123 (Administrador)")
 print("  panaderia_nicaraguena / admin123")
 print("  artesanias_esteli / admin123")
 print("  tech_solutions / admin123")
-print("  evaluador / Evaluador2026! (Correo: evaluador@gmail.com)")
+print("  evaluador / admin123")
