@@ -18,6 +18,7 @@ users_data = [
         'username': 'panaderia_nicaraguena',
         'email': 'panaderia@korva.com',
         'business_name': 'Panadería Nicaragüeña',
+        'password': 'admin123',
         'ruc': 'J0310000000002',
         'city': 'managua',
         'sector': 'alimentos'
@@ -26,6 +27,7 @@ users_data = [
         'username': 'artesanias_esteli',
         'email': 'artesanias@korva.com',
         'business_name': 'Artesanías Estelí',
+        'password': 'admin123',
         'ruc': 'J0310000000003',
         'city': 'esteli',
         'sector': 'artesanias'
@@ -34,6 +36,7 @@ users_data = [
         'username': 'tech_solutions',
         'email': 'tech@korva.com',
         'business_name': 'Tech Solutions Nicaragua',
+        'password': 'admin123',
         'ruc': 'J0310000000004',
         'city': 'managua',
         'sector': 'tecnologia'
@@ -42,6 +45,7 @@ users_data = [
         'username': 'evaluador',
         'email': 'evaluador@gmail.com',
         'business_name': 'Evaluador Korva',
+        'password': 'Evaluador2026!',
         'ruc': 'J0310000000005',
         'city': 'managua',
         'sector': 'tecnologia'
@@ -54,7 +58,7 @@ for user_data in users_data:
         user = User.objects.create_user(
             username=user_data['username'],
             email=user_data['email'],
-            password='admin123'
+            password=user_data.get('password', 'admin123')
         )
         
         profile = Profile.objects.create(
@@ -64,10 +68,10 @@ for user_data in users_data:
             city=user_data['city'],
             sector=user_data['sector'],
             verified=True,
-            popularity_score=1500,
-            followers_count=50,
-            associates_count=25,
-            collaborations_count=8
+            popularity_score=2000 if user_data['username'] == 'evaluador' else 1500,
+            followers_count=100 if user_data['username'] == 'evaluador' else 50,
+            associates_count=50 if user_data['username'] == 'evaluador' else 25,
+            collaborations_count=15 if user_data['username'] == 'evaluador' else 8
         )
         
         KorvaAIConfig.objects.create(user=profile)
