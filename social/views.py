@@ -8,6 +8,7 @@ from django.utils import timezone
 from .models import Post, Comment, PostImage, Vote, Favorite
 from .forms import PostForm, CommentForm, PostImageForm
 from users.models import Profile
+from notifications.utils import create_notification
 
 def home(request):
     """Vista principal - Landing si no autenticado, Muro Social si autenticado"""
@@ -139,6 +140,15 @@ def upvote_post(request, post_id):
             post.upvotes += 1
             post.author.popularity_score += 10
             vote_action = 'upvoted'
+            create_notification(
+                recipient=post.author.user,
+                sender=request.user,
+                notification_type='like',
+                title='Te dieron un like',
+                message=f'A {request.user.profile.business_name or request.user.username} le gustó tu publicación',
+                related_object_id=post.id,
+                related_object_type='post',
+            )
         
         post.author.save()
         post.save()
@@ -275,6 +285,15 @@ def toggle_favorite_post(request, post_id):
         is_fav = False
     else:
         is_fav = True
+        create_notification(
+            recipient=post.author.user,
+            sender=request.user,
+            notification_type='like',
+            title='Guardaron tu publicación en favoritos',
+            message=f'{request.user.profile.business_name or request.user.username} guardó tu publicación en favoritos',
+            related_object_id=post.id,
+            related_object_type='post',
+        )
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({'is_favorite': is_fav, 'count': post.favorited_by.count()})
     return redirect('post_detail', post_id=post.pk)

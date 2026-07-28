@@ -137,6 +137,9 @@ urlpatterns = [
     
     # Grupos
     path('groups/', include('groups.urls')),
+    
+    # Notificaciones
+    path('notifications/', include('notifications.urls')),
 ]
 
 # Servir archivos de media en desarrollo

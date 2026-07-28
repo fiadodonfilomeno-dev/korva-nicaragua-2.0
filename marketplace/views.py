@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 from django.db.models import Q, Sum, Count
 from .models import Product, ProductFavorite, Review, Deal, Transaction, BankAccount, PayoutRequest
 from .forms import ProductForm
+from notifications.utils import create_notification
 
 def marketplace(request):
     """Vista principal del marketplace"""
@@ -156,6 +157,15 @@ def toggle_favorite_product(request, product_id):
         is_fav = False
     else:
         is_fav = True
+        create_notification(
+            recipient=product.user.user,
+            sender=request.user,
+            notification_type='product_inquiry',
+            title='Guardaron tu producto en favoritos',
+            message=f'{request.user.profile.business_name or request.user.username} guardó "{product.name}" en favoritos',
+            related_object_id=product.id,
+            related_object_type='product',
+        )
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({'is_favorite': is_fav, 'count': product.favorited_by.count()})
     return redirect('product_detail', product_id=product.pk)
@@ -191,6 +201,15 @@ def add_review(request, username):
     Review.objects.update_or_create(
         reviewer=reviewer, seller=seller, product=product,
         defaults={'rating': int(rating), 'comment': comment}
+    )
+    create_notification(
+        recipient=seller.user,
+        sender=request.user,
+        notification_type='comment',
+        title='Nueva calificación',
+        message=f'{request.user.profile.business_name or request.user.username} te calificó con {rating} estrellas',
+        related_object_id=seller.id,
+        related_object_type='profile',
     )
     messages.success(request, 'Calificacion enviada.')
     return redirect('profile', username=username)
@@ -318,6 +337,15 @@ def buy_product(request, product_id):
             product=product, buyer=buyer, seller=product.user,
             amount=product.price, currency=product.currency, bank=bank,
             buyer_notes=notes,
+        )
+        create_notification(
+            recipient=product.user.user,
+            sender=request.user,
+            notification_type='product_inquiry',
+            title='Nueva solicitud de compra',
+            message=f'{request.user.profile.business_name or request.user.username} quiere comprar "{product.name}"',
+            related_object_id=product.id,
+            related_object_type='product',
         )
         messages.success(request, 'Solicitud de compra creada. Transfiere el monto al vendedor usando los datos bancarios.')
         return redirect('my_purchases')
