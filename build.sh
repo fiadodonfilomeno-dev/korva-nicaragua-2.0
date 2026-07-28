@@ -3,7 +3,10 @@
 
 set -o errexit  # Exit on error
 
-echo "=== Instalando dependencias ==="
+echo "=== Instalando dependencias del sistema ==="
+apt-get update -qq && apt-get install -y -qq libpq-dev gcc 2>/dev/null || echo "apt no disponible, continuando..."
+
+echo "=== Instalando dependencias Python ==="
 pip install --upgrade pip
 pip install -r requirements.txt
 
