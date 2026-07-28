@@ -22,7 +22,10 @@ from social.views import (
 from marketplace.views import (
     marketplace, create_product, product_detail, edit_product,
     delete_product, my_products, toggle_favorite_product, my_favorites,
-    add_review, seller_reviews, deals_list, create_deal, export_catalog_pdf
+    add_review, seller_reviews, deals_list, create_deal, export_catalog_pdf,
+    buy_product, my_purchases, my_sales, transaction_detail,
+    confirm_payment, confirm_receipt, complete_transaction, cancel_transaction,
+    seller_wallet, bank_account_view, request_payout,
 )
 
 # Vistas de rankings
@@ -84,6 +87,19 @@ urlpatterns = [
     path('deals/', deals_list, name='deals_list'),
     path('product/<int:product_id>/deal/', create_deal, name='create_deal'),
     path('export-catalog/', export_catalog_pdf, name='export_catalog_pdf'),
+    
+    # Pagos y Comisiones
+    path('product/<int:product_id>/buy/', buy_product, name='buy_product'),
+    path('my-purchases/', my_purchases, name='my_purchases'),
+    path('my-sales/', my_sales, name='my_sales'),
+    path('transaction/<int:transaction_id>/', transaction_detail, name='transaction_detail'),
+    path('transaction/<int:transaction_id>/confirm-payment/', confirm_payment, name='confirm_payment'),
+    path('transaction/<int:transaction_id>/confirm-receipt/', confirm_receipt, name='confirm_receipt'),
+    path('transaction/<int:transaction_id>/complete/', complete_transaction, name='complete_transaction'),
+    path('transaction/<int:transaction_id>/cancel/', cancel_transaction, name='cancel_transaction'),
+    path('seller-wallet/', seller_wallet, name='seller_wallet'),
+    path('bank-account/', bank_account_view, name='bank_account'),
+    path('request-payout/', request_payout, name='request_payout'),
     
     # Rankings
     path('rankings/', rankings, name='rankings'),

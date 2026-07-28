@@ -67,6 +67,15 @@
                     <i class="fas fa-trash mr-2"></i> Eliminar
                 </a>
             </div>
+            {% elif user.is_authenticated and user.profile != product.user %}
+            <div class="flex gap-3">
+                <a href="{% url 'start_conversation' product.user.user.username %}" class="flex-1 px-4 py-3 rounded-lg font-semibold text-center border border-gray-600 text-white hover:border-korva-success hover:text-korva-success transition">
+                    <i class="fas fa-envelope mr-2"></i> Contactar
+                </a>
+                <a href="{% url 'buy_product' product.id %}" class="korva-btn-primary flex-1 px-4 py-3 rounded-lg font-semibold text-center">
+                    <i class="fas fa-shopping-cart mr-2"></i> Comprar
+                </a>
+            </div>
             {% endif %}
         </div>
     </div>

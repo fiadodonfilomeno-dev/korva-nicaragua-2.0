@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import Http404, JsonResponse
 from django.views.decorators.http import require_POST
-from django.db.models import Q
-from .models import Product, ProductFavorite, Review, Deal
+from django.db.models import Q, Sum, Count
+from .models import Product, ProductFavorite, Review, Deal, Transaction, BankAccount, PayoutRequest
 from .forms import ProductForm
 
 def marketplace(request):
@@ -299,4 +299,194 @@ def export_catalog_pdf(request):
     response = HttpResponse(buffer.read(), content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="catalogo_{profile.business_name}_{datetime.now().strftime("%Y%m%d")}.pdf"'
     return response
+
+
+@login_required(login_url='login')
+def buy_product(request, product_id):
+    """Iniciar compra de un producto"""
+    product = get_object_or_404(Product, pk=product_id, is_active=True)
+    buyer = request.user.profile
+
+    if buyer == product.user:
+        messages.error(request, 'No puedes comprar tu propio producto.')
+        return redirect('product_detail', product_id=product.pk)
+
+    if request.method == 'POST':
+        bank = request.POST.get('bank', '')
+        notes = request.POST.get('notes', '')
+        Transaction.objects.create(
+            product=product, buyer=buyer, seller=product.user,
+            amount=product.price, currency=product.currency, bank=bank,
+            buyer_notes=notes,
+        )
+        messages.success(request, 'Solicitud de compra creada. Transfiere el monto al vendedor usando los datos bancarios.')
+        return redirect('my_purchases')
+
+    return render(request, 'marketplace/checkout.html', {'product': product})
+
+
+@login_required(login_url='login')
+def my_purchases(request):
+    """Compras realizadas por el usuario"""
+    transactions = Transaction.objects.filter(buyer=request.user.profile).select_related('product', 'seller')
+    return render(request, 'marketplace/my_purchases.html', {'transactions': transactions})
+
+
+@login_required(login_url='login')
+def my_sales(request):
+    """Ventas recibidas (productos del usuario)"""
+    transactions = Transaction.objects.filter(seller=request.user.profile).select_related('product', 'buyer')
+    return render(request, 'marketplace/my_sales.html', {'transactions': transactions})
+
+
+@login_required(login_url='login')
+def transaction_detail(request, transaction_id):
+    """Detalle de una transaccion"""
+    profile = request.user.profile
+    txn = get_object_or_404(Transaction, pk=transaction_id)
+    if txn.buyer != profile and txn.seller != profile:
+        messages.error(request, 'No tienes acceso a esta transaccion.')
+        return redirect('marketplace')
+    bank_acct = BankAccount.objects.filter(seller=txn.seller).first()
+    return render(request, 'marketplace/transaction_detail.html', {'txn': txn, 'bank_acct': bank_acct})
+
+
+@login_required(login_url='login')
+@require_POST
+def confirm_payment(request, transaction_id):
+    """Comprador marca el pago como realizado"""
+    txn = get_object_or_404(Transaction, pk=transaction_id, buyer=request.user.profile)
+    if txn.status == 'pending':
+        txn.status = 'paid'
+        from django.utils import timezone
+        txn.payment_date = timezone.now()
+        txn.save()
+        messages.success(request, 'Pago reportado. El vendedor confirmara la recepcion.')
+    return redirect('transaction_detail', transaction_id=txn.pk)
+
+
+@login_required(login_url='login')
+@require_POST
+def confirm_receipt(request, transaction_id):
+    """Vendedor confirma que recibio el pago"""
+    txn = get_object_or_404(Transaction, pk=transaction_id, seller=request.user.profile)
+    if txn.status == 'paid':
+        txn.status = 'confirmed'
+        txn.save()
+        messages.success(request, 'Pago confirmado. Los fondos estan en tu cuenta.')
+    return redirect('transaction_detail', transaction_id=txn.pk)
+
+
+@login_required(login_url='login')
+@require_POST
+def complete_transaction(request, transaction_id):
+    """Completar transaccion (vendedor)"""
+    txn = get_object_or_404(Transaction, pk=transaction_id, seller=request.user.profile)
+    if txn.status == 'confirmed':
+        txn.status = 'completed'
+        txn.save()
+        messages.success(request, 'Transaccion completada exitosamente.')
+    return redirect('transaction_detail', transaction_id=txn.pk)
+
+
+@login_required(login_url='login')
+@require_POST
+def cancel_transaction(request, transaction_id):
+    """Cancelar transaccion (cualquier parte)"""
+    txn = get_object_or_404(Transaction, pk=transaction_id)
+    if request.user.profile not in (txn.buyer, txn.seller):
+        messages.error(request, 'No tienes permiso.')
+        return redirect('marketplace')
+    if txn.status in ('pending', 'paid'):
+        txn.status = 'cancelled'
+        txn.save()
+        messages.success(request, 'Transaccion cancelada.')
+    return redirect('transaction_detail', transaction_id=txn.pk)
+
+
+@login_required(login_url='login')
+def seller_wallet(request):
+    """Wallet del vendedor - balance y payouts"""
+    profile = request.user.profile
+    sales = Transaction.objects.filter(seller=profile)
+    total_earned = sales.filter(status='completed').aggregate(s=Sum('seller_amount'))['s'] or 0
+    total_commission = sales.filter(status='completed').aggregate(s=Sum('commission_amount'))['s'] or 0
+    pending_sales = sales.filter(status__in=('paid', 'confirmed')).aggregate(s=Sum('amount'))['s'] or 0
+    payouts = PayoutRequest.objects.filter(seller=profile)
+    payouts_total = payouts.filter(status='completed').aggregate(s=Sum('amount'))['s'] or 0
+    available_balance = total_earned - payouts_total
+    bank_acct = BankAccount.objects.filter(seller=profile).first()
+
+    context = {
+        'total_earned': total_earned,
+        'total_commission': total_commission,
+        'pending_sales': pending_sales,
+        'available_balance': available_balance,
+        'payouts': payouts,
+        'bank_acct': bank_acct,
+        'sales_count': sales.filter(status='completed').count(),
+    }
+    return render(request, 'marketplace/seller_wallet.html', context)
+
+
+@login_required(login_url='login')
+def bank_account_view(request):
+    """Administrar cuenta bancaria del vendedor"""
+    profile = request.user.profile
+    acct = BankAccount.objects.filter(seller=profile).first()
+
+    if request.method == 'POST':
+        bank = request.POST.get('bank')
+        account_type = request.POST.get('account_type', 'monetaria')
+        account_number = request.POST.get('account_number', '')
+        account_holder = request.POST.get('account_holder', '')
+        id_number = request.POST.get('id_number', '')
+        phone = request.POST.get('phone', '')
+
+        if acct:
+            acct.bank = bank
+            acct.account_type = account_type
+            acct.account_number = account_number
+            acct.account_holder = account_holder
+            acct.id_number = id_number
+            acct.phone = phone
+            acct.verified = False
+            acct.save()
+        else:
+            BankAccount.objects.create(
+                seller=profile, bank=bank, account_type=account_type,
+                account_number=account_number, account_holder=account_holder,
+                id_number=id_number, phone=phone,
+            )
+        messages.success(request, 'Cuenta bancaria guardada. Nuestro equipo verificara los datos.')
+        return redirect('seller_wallet')
+
+    return render(request, 'marketplace/bank_account.html', {'acct': acct})
+
+
+@login_required(login_url='login')
+@require_POST
+def request_payout(request):
+    """Solicitar retiro de fondos"""
+    profile = request.user.profile
+    amount = request.POST.get('amount', 0)
+    acct = BankAccount.objects.filter(seller=profile, verified=True).first()
+
+    try:
+        amount = float(amount)
+    except (ValueError, TypeError):
+        messages.error(request, 'Monto invalido.')
+        return redirect('seller_wallet')
+
+    if amount <= 0:
+        messages.error(request, 'El monto debe ser mayor a cero.')
+        return redirect('seller_wallet')
+
+    if not acct:
+        messages.error(request, 'Necesitas registrar una cuenta bancaria verificada.')
+        return redirect('bank_account')
+
+    PayoutRequest.objects.create(seller=profile, amount=amount, bank_account=acct)
+    messages.success(request, 'Solicitud de retiro enviada. Procesaremos en 1-3 dias habiles.')
+    return redirect('seller_wallet')
 

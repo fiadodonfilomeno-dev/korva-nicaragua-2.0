@@ -61,6 +61,17 @@
                                 <i class="fas fa-chart-bar"></i> Mis Reportes
                             </a>
                             <hr class="border-korva-dark-alt">
+                            <p class="px-4 py-1 text-xs text-gray-600 uppercase tracking-wider">Marketplace</p>
+                            <a href="{% url 'my_products' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-box"></i> Mis Productos
+                            </a>
+                            <a href="{% url 'my_purchases' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-shopping-bag"></i> Mis Compras
+                            </a>
+                            <a href="{% url 'seller_wallet' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-wallet"></i> Wallet
+                            </a>
+                            <hr class="border-korva-dark-alt">
                             <a href="{% url 'logout' %}" class="block px-4 py-2 text-red-400 hover:bg-korva-dark-alt transition">
                                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                             </a>
