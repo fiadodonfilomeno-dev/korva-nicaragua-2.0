@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from users.models import Profile
+from users.report_views import get_blocked_user_ids
 
 
 def search(request):
@@ -9,6 +10,7 @@ def search(request):
     q = request.GET.get('q', '').strip()
     section = request.GET.get('section', 'all')
     results = {'profiles': [], 'posts': [], 'products': [], 'groups': []}
+    blocked = get_blocked_user_ids(request.user) if request.user.is_authenticated else set()
 
     if q:
         from social.models import Post
@@ -16,24 +18,32 @@ def search(request):
         from groups.models import Group
 
         if section in ('all', 'profiles'):
-            results['profiles'] = Profile.objects.filter(
+            results['profiles'] = Profile.objects.exclude(
+                user__in=blocked
+            ).filter(
                 Q(business_name__icontains=q) | Q(bio__icontains=q) | Q(city__icontains=q) | Q(sector__icontains=q)
             )[:20]
 
         if section in ('all', 'posts'):
             results['posts'] = Post.objects.filter(
                 moderation_status='approved'
+            ).exclude(
+                author__user__in=blocked
             ).filter(
                 Q(title__icontains=q) | Q(content__icontains=q) | Q(tags__name__icontains=q)
             ).distinct()[:20]
 
         if section in ('all', 'products'):
-            results['products'] = Product.objects.filter(is_active=True).filter(
+            results['products'] = Product.objects.filter(is_active=True).exclude(
+                user__user__in=blocked
+            ).filter(
                 Q(name__icontains=q) | Q(description__icontains=q)
             )[:20]
 
         if section in ('all', 'groups'):
-            results['groups'] = Group.objects.filter(
+            results['groups'] = Group.objects.exclude(
+                created_by__user__in=blocked
+            ).filter(
                 Q(name__icontains=q) | Q(description__icontains=q) | Q(sector__icontains=q)
             )[:20]
 

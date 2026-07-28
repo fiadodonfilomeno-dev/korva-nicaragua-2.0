@@ -77,6 +77,10 @@
                                 <i class="fas fa-wallet"></i> Wallet
                             </a>
                             <hr class="border-korva-dark-alt">
+                            <div class="px-4 py-1 text-xs text-gray-600 uppercase tracking-wider">Seguridad</div>
+                            <a href="{% url 'blocked_users_list' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm">
+                                <i class="fas fa-user-slash"></i> Bloqueados
+                            </a>
                             <a href="{% url 'logout' %}" class="block px-4 py-2 text-red-400 hover:bg-korva-dark-alt transition text-sm">
                                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                             </a>
@@ -157,6 +161,11 @@
                     <i class="fas fa-wallet w-6"></i> Wallet
                 </a>
             </div>
+            <hr class="border-korva-dark-alt my-4">
+            <div class="px-4 py-1 text-xs text-gray-600 uppercase tracking-wider">Seguridad</div>
+            <a href="{% url 'blocked_users_list' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-user-slash w-6"></i> Bloqueados
+            </a>
             <hr class="border-korva-dark-alt my-4">
             <a href="{% url 'logout' %}" class="block px-4 py-3 text-red-400 hover:bg-korva-dark-alt rounded-lg transition">
                 <i class="fas fa-sign-out-alt w-6"></i> Cerrar Sesión

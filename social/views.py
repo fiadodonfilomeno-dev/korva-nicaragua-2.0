@@ -8,6 +8,7 @@ from django.utils import timezone
 from .models import Post, Comment, PostImage, Vote, Favorite
 from .forms import PostForm, CommentForm, PostImageForm
 from users.models import Profile
+from users.report_views import get_blocked_user_ids
 from notifications.utils import create_notification
 
 def home(request):
@@ -16,7 +17,8 @@ def home(request):
         return render(request, 'landing.html')
     
     try:
-        posts = Post.objects.select_related('author').filter(moderation_status='approved')
+        blocked = get_blocked_user_ids(request.user) if request.user.is_authenticated else set()
+        posts = Post.objects.select_related('author').filter(moderation_status='approved').exclude(author__user__in=blocked)
         
         # Buscar posts
         search_query = request.GET.get('q')

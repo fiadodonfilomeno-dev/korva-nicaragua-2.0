@@ -135,3 +135,40 @@ class Profile(models.Model):
             self.popularity_score += 1000
             super().save(*args, **kwargs)
 
+
+class Report(models.Model):
+    """Reporte de usuario por contenido inapropiado"""
+    REASON_CHOICES = [
+        ('spam', 'Spam'),
+        ('harassment', 'Acoso'),
+        ('fake', 'Información falsa'),
+        ('inappropriate', 'Contenido inapropiado'),
+        ('scam', 'Estafa'),
+        ('other', 'Otro'),
+    ]
+    reporter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reports_made')
+    reported = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reports_received')
+    reason = models.CharField(max_length=20, choices=REASON_CHOICES)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.reporter.username} reportó a {self.reported.username}"
+
+
+class Block(models.Model):
+    """Bloqueo de usuario"""
+    blocker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocks_made')
+    blocked = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocks_received')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('blocker', 'blocked')
+
+    def __str__(self):
+        return f"{self.blocker.username} bloqueó a {self.blocked.username}"
+

@@ -42,6 +42,19 @@
                     <a href="{% url 'start_conversation' profile.user.username %}" class="korva-btn-primary px-4 py-2 rounded-lg text-sm font-semibold">
                         <i class="fas fa-envelope mr-2"></i> Mensaje
                     </a>
+                    <div class="relative group">
+                        <button class="px-3 py-2 bg-korva-dark-alt rounded-lg text-sm text-gray-300 hover:text-red-400 transition border border-korva-dark-alt">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="absolute right-0 mt-1 w-44 bg-korva-card border border-korva-dark-alt rounded-lg shadow-xl hidden group-hover:block">
+                            <a href="{% url 'report_user' profile.user.username %}" class="block px-4 py-2 text-sm text-gray-300 hover:text-red-400 hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-flag mr-2"></i> Reportar
+                            </a>
+                            <a href="{% url 'block_user' profile.user.username %}" class="block px-4 py-2 text-sm text-red-400 hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-user-slash mr-2"></i> Bloquear
+                            </a>
+                        </div>
+                    </div>
                     {% endif %}
                 </div>
             </div>

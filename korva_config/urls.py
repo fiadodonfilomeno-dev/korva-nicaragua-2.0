@@ -11,6 +11,7 @@ from django.conf.urls.static import static
 
 # Vistas de usuarios
 from users.views import register, login_view, logout_view, profile_view, edit_profile, dashboard, verify_email, pymes_map
+from users.report_views import report_user, block_user, unblock_user, blocked_users_list
 
 # Vistas de muro social
 from social.views import (
@@ -62,6 +63,10 @@ urlpatterns = [
     path('profile/<str:username>/', profile_view, name='profile'),
     path('edit-profile/', edit_profile, name='edit_profile'),
     path('map/', pymes_map, name='pymes_map'),
+    path('report/<str:username>/', report_user, name='report_user'),
+    path('block/<str:username>/', block_user, name='block_user'),
+    path('unblock/<str:username>/', unblock_user, name='unblock_user'),
+    path('blocked-users/', blocked_users_list, name='blocked_users_list'),
     
     # Muro Social
     path('', home, name='home'),
