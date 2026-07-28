@@ -149,3 +149,83 @@ def recommendations(request):
     }
 
     return render(request, 'core/recommendations.html', context)
+
+
+def activity_feed(request):
+    """Feed unificado de actividad reciente en la plataforma"""
+    from social.models import Post
+    from marketplace.models import Product, Review
+    from events.models import Event
+
+    blocked = get_blocked_user_ids(request.user) if request.user.is_authenticated else set()
+
+    activities = []
+
+    # Posts
+    for p in Post.objects.filter(moderation_status='approved').exclude(author__user__in=blocked).select_related('author__user')[:30]:
+        activities.append({
+            'type': 'post',
+            'actor': p.author,
+            'actor_username': p.author.user.username,
+            'title': p.title,
+            'description': p.content[:200],
+            'image': p.image.url if p.image else None,
+            'url': f'/post/{p.id}/',
+            'timestamp': p.timestamp,
+            'icon': 'fa-newspaper',
+            'color': 'text-blue-400',
+        })
+
+    # Products
+    for p in Product.objects.filter(is_active=True).exclude(user__user__in=blocked).select_related('user__user')[:30]:
+        activities.append({
+            'type': 'product',
+            'actor': p.user,
+            'actor_username': p.user.user.username,
+            'title': p.name,
+            'description': f'{p.get_currency_display()} {p.price}',
+            'image': p.image.url if p.image else None,
+            'url': f'/product/{p.id}/',
+            'timestamp': p.created_at,
+            'icon': 'fa-tag',
+            'color': 'text-korva-success',
+        })
+
+    # Reviews
+    for r in Review.objects.exclude(reviewer__user__in=blocked).select_related('reviewer__user', 'seller__user')[:30]:
+        stars = '&#9733;' * r.rating + '&#9734;' * (5 - r.rating)
+        activities.append({
+            'type': 'review',
+            'actor': r.reviewer,
+            'actor_username': r.reviewer.user.username,
+            'title': f'Resena para {r.seller.business_name}',
+            'description': f'{"&#9733;" * r.rating}{"&#9734;" * (5 - r.rating)} {r.comment[:200]}' if r.comment else f'{"&#9733;" * r.rating}',
+            'image': None,
+            'url': f'/reviews/{r.seller.user.username}/',
+            'timestamp': r.created_at,
+            'icon': 'fa-star',
+            'color': 'text-yellow-400',
+        })
+
+    # Events
+    for e in Event.objects.filter(is_active=True).exclude(organizer__user__in=blocked).select_related('organizer__user')[:30]:
+        activities.append({
+            'type': 'event',
+            'actor': e.organizer,
+            'actor_username': e.organizer.user.username,
+            'title': e.title,
+            'description': f'{e.get_category_display()} - {e.city} - {e.date}',
+            'image': e.image.url if hasattr(e, 'image') and e.image else None,
+            'url': f'/events/{e.id}/',
+            'timestamp': e.created_at,
+            'icon': 'fa-calendar-alt',
+            'color': 'text-purple-400',
+        })
+
+    activities.sort(key=lambda a: a['timestamp'], reverse=True)
+
+    context = {
+        'activities': activities[:50],
+        'total': len(activities[:50]),
+    }
+    return render(request, 'core/activity_feed.html', context)

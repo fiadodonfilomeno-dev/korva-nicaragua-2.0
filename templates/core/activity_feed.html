@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Actividad Reciente - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-white">Actividad Reciente</h1>
+            <p class="text-gray-400 mt-1">Todo lo que esta pasando en Korva Nicaragua</p>
+        </div>
+        <span class="text-sm text-gray-500 bg-korva-card px-3 py-1 rounded-full">{{ total }} acciones</span>
+    </div>
+
+    <div class="relative">
+        <div class="absolute left-6 top-0 bottom-0 w-0.5 bg-korva-dark-alt"></div>
+
+        <div class="space-y-6">
+            {% for a in activities %}
+            <div class="relative flex items-start gap-4">
+                <div class="relative z-10 w-12 h-12 rounded-full bg-korva-card border-2 border-korva-dark-alt flex items-center justify-center flex-shrink-0">
+                    <i class="fas {{ a.icon }} {{ a.color }} text-lg"></i>
+                </div>
+                <div class="flex-1 korva-card rounded-lg p-4 border border-korva-dark-alt hover:border-korva-success/30 transition">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                                <a href="{% url 'profile' a.actor_username %}" class="text-korva-success hover:underline font-medium truncate">
+                                    {{ a.actor.business_name }}
+                                </a>
+                                <span>publico</span>
+                            </div>
+                            <a href="{{ a.url }}" class="block">
+                                <h3 class="text-white font-semibold hover:text-korva-success transition truncate">{{ a.title }}</h3>
+                                {% if a.description %}
+                                <p class="text-gray-400 text-sm mt-1 line-clamp-2">{{ a.description|safe }}</p>
+                                {% endif %}
+                            </a>
+                            {% if a.image %}
+                            <div class="mt-3">
+                                <img src="{{ a.image }}" alt="" class="w-full max-h-48 object-cover rounded-lg">
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="flex-shrink-0">
+                            <a href="{% url 'profile' a.actor_username %}">
+                                {% if a.actor.logo %}
+                                <img src="{{ a.actor.logo.url }}" alt="" class="w-10 h-10 rounded-full border border-korva-dark-alt">
+                                {% else %}
+                                <div class="w-10 h-10 rounded-full bg-korva-success flex items-center justify-center text-white text-sm font-bold">
+                                    {{ a.actor.business_name|first }}
+                                </div>
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-600">
+                        <i class="far fa-clock mr-1"></i>{{ a.timestamp|date:"d M Y H:i" }}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-16">
+                <i class="fas fa-stream text-5xl text-korva-dark-alt mb-4"></i>
+                <p class="text-gray-500 text-lg">No hay actividad reciente</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

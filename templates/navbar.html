@@ -25,6 +25,9 @@
                 <a href="{% url 'recommendations' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="Alianzas">
                     <i class="fas fa-handshake"></i>
                 </a>
+                <a href="{% url 'activity_feed' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="Actividad">
+                    <i class="fas fa-stream"></i>
+                </a>
                 <a href="{% url 'messages' %}" class="text-gray-300 hover:text-korva-success transition text-xl" title="Mensajes">
                     <i class="fas fa-envelope"></i>
                 </a>
@@ -61,6 +64,9 @@
                             </a>
                             <a href="{% url 'edit_profile' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm">
                                 <i class="fas fa-edit"></i> Editar Perfil
+                            </a>
+                            <a href="{% url 'activity_feed' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm">
+                                <i class="fas fa-stream"></i> Actividad
                             </a>
                             <a href="{% url 'reports' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition text-sm">
                                 <i class="fas fa-chart-bar"></i> Mis Reportes
@@ -136,6 +142,9 @@
             <a href="{% url 'messages' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
                 <i class="fas fa-envelope w-6"></i> Mensajes
             </a>
+            <a href="{% url 'activity_feed' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-stream w-6"></i> Actividad
+            </a>
             <a href="{% url 'korva_ai' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
                 <i class="fas fa-robot w-6"></i> Korva IA
             </a>
@@ -150,6 +159,9 @@
                 </a>
                 <a href="{% url 'edit_profile' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
                     <i class="fas fa-edit w-6"></i> Editar Perfil
+                </a>
+                <a href="{% url 'activity_feed' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                    <i class="fas fa-stream w-6"></i> Actividad
                 </a>
                 <a href="{% url 'reports' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
                     <i class="fas fa-chart-bar w-6"></i> Mis Reportes
