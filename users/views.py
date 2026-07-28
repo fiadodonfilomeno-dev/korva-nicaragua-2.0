@@ -79,7 +79,7 @@ def register(request):
                 messages.warning(request, 'Cuenta creada, pero no pudimos enviar el email de verificación. Contacta a soporte.')
             
             # Iniciar sesión automáticamente
-            login(request, user, backend=settings.AUTHENTICATION_BACKENDS[0])
+            login(request, user)
             return redirect('home')
     else:
         form = UserRegistrationForm()
@@ -120,7 +120,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request, user, backend=settings.AUTHENTICATION_BACKENDS[0])
+            login(request, user)
             messages.success(request, f'¡Bienvenido {user.username}!')
             return redirect('home')
         else:

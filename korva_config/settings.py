@@ -347,6 +347,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 ACCOUNT_LOGIN_BY_CODE_ENABLED = False
 
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
