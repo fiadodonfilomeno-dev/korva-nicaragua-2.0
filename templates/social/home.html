@@ -48,17 +48,21 @@
         </div>
         
         <!-- Sector Filter -->
-        <form method="get" class="flex items-center gap-3">
+        <form method="get" class="flex flex-wrap items-center gap-2 korva-card rounded-lg p-3 border border-korva-dark-alt">
             {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
-            <label class="text-sm text-gray-400 font-medium">Categoría:</label>
-            <select name="sector" onchange="this.form.submit()" class="korva-input text-sm py-2 px-3 rounded-lg w-auto">
+            <span class="text-sm font-semibold text-korva-success mr-1">
+                <i class="fas fa-tags"></i> Categoría:
+            </span>
+            <select name="sector" onchange="this.form.submit()" class="bg-korva-dark-alt border border-korva-dark-alt text-white text-sm py-2 px-4 rounded-lg focus:outline-none focus:border-korva-success cursor-pointer hover:border-korva-success transition w-auto min-w-[160px]">
                 <option value="">Todas las categorías</option>
                 {% for value, label in sectors %}
                 <option value="{{ value }}" {% if sector_filter == value %}selected{% endif %}>{{ label }}</option>
                 {% endfor %}
             </select>
             {% if sector_filter %}
-            <a href="{% url 'home' %}{% if search_query %}?q={{ search_query }}{% endif %}" class="text-sm text-gray-500 hover:text-white transition">x Limpiar</a>
+            <a href="{% url 'home' %}{% if search_query %}?q={{ search_query }}{% endif %}" class="text-xs text-gray-500 hover:text-white transition ml-1">
+                <i class="fas fa-times-circle"></i> Limpiar
+            </a>
             {% endif %}
         </form>
     </div>
