@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Productos - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-white">Mis Productos</h1>
+            <p class="text-gray-400 mt-1">Gestiona tus productos y servicios publicados</p>
+        </div>
+        <a href="{% url 'create_product' %}" class="korva-btn-primary px-6 py-2.5 rounded-lg font-medium">
+            <i class="fas fa-plus mr-2"></i>Nuevo Producto
+        </a>
+    </div>
+
+    {% if products %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for product in products %}
+        <div class="korva-card rounded-lg border border-korva-dark-alt overflow-hidden hover:border-korva-success/50 transition">
+            <div class="p-5">
+                <div class="flex items-start justify-between mb-3">
+                    <span class="text-xs font-medium px-2 py-1 rounded-full {% if product.category == 'ventas' %}bg-blue-500/20 text-blue-400{% else %}bg-purple-500/20 text-purple-400{% endif %}">
+                        {{ product.get_category_display }}
+                    </span>
+                    <span class="text-sm {% if product.is_active %}text-korva-success{% else %}text-gray-500{% endif %}">
+                        <i class="fas fa-circle text-xs mr-1"></i>{{ product.is_active|yesno:"Activo,Inactivo" }}
+                    </span>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-1 truncate">{{ product.name }}</h3>
+                <p class="text-korva-success font-bold text-xl mb-3">{{ product.price_display }}</p>
+                <p class="text-gray-400 text-sm line-clamp-2 mb-4">{{ product.description }}</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-500">
+                        <i class="far fa-eye mr-1"></i>{{ product.views_count }} vistas
+                    </span>
+                    <div class="flex gap-2">
+                        <a href="{% url 'product_detail' product.id %}" class="text-korva-success hover:underline text-sm">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{% url 'edit_product' product.id %}" class="text-yellow-400 hover:underline text-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16">
+        <i class="fas fa-box-open text-5xl text-korva-dark-alt mb-4"></i>
+        <p class="text-gray-500 text-lg mb-2">No tienes productos publicados</p>
+        <p class="text-gray-600 mb-6">Publica tu primer producto para aparecer en el Marketplace</p>
+        <a href="{% url 'create_product' %}" class="korva-btn-primary px-6 py-2.5 rounded-lg font-medium inline-block">
+            <i class="fas fa-plus mr-2"></i>Publicar Producto
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
