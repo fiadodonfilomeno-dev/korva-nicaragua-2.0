@@ -490,3 +490,124 @@ def request_payout(request):
     messages.success(request, 'Solicitud de retiro enviada. Procesaremos en 1-3 dias habiles.')
     return redirect('seller_wallet')
 
+
+@login_required(login_url='login')
+def download_receipt(request, transaction_id):
+    """Genera y descarga recibo PDF de una transaccion completada"""
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import cm, mm
+    from reportlab.lib import colors
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image as RLImage
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from io import BytesIO
+    from datetime import datetime
+    import os
+
+    txn = get_object_or_404(Transaction, pk=transaction_id)
+    profile = request.user.profile
+
+    if txn.buyer != profile and txn.seller != profile:
+        messages.error(request, 'No tienes acceso a esta transaccion.')
+        return redirect('marketplace')
+
+    if txn.status not in ('confirmed', 'completed'):
+        messages.error(request, 'Solo hay recibo disponible para transacciones confirmadas o completadas.')
+        return redirect('transaction_detail', transaction_id=txn.pk)
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=1.5*cm, bottomMargin=1.5*cm,
+                            leftMargin=1.5*cm, rightMargin=1.5*cm)
+    styles = getSampleStyleSheet()
+
+    title_style = ParagraphStyle('CustomTitle', parent=styles['Title'], fontSize=24, textColor=colors.HexColor('#10b981'), spaceAfter=4)
+    subtitle_style = ParagraphStyle('Sub', parent=styles['Normal'], fontSize=14, textColor=colors.HexColor('#374151'), spaceAfter=20)
+    label_style = ParagraphStyle('Label', parent=styles['Normal'], fontSize=9, textColor=colors.HexColor('#6b7280'))
+    value_style = ParagraphStyle('Value', parent=styles['Normal'], fontSize=11, textColor=colors.HexColor('#111827'))
+    header_style = ParagraphStyle('Header', parent=styles['Normal'], fontSize=10, textColor=colors.HexColor('#374151'), spaceBefore=6, spaceAfter=2)
+    footer_style = ParagraphStyle('Footer', parent=styles['Normal'], fontSize=8, textColor=colors.HexColor('#9ca3af'), alignment=1)
+
+    story = []
+
+    # Logo / Header
+    story.append(Paragraph("KORVA NICARAGUA", title_style))
+    story.append(Paragraph("Recibo de Transaccion", subtitle_style))
+    story.append(Paragraph(f"Recibo #: <b>{txn.reference}</b>", header_style))
+    story.append(Paragraph(f"Fecha: {txn.updated_at.strftime('%d/%m/%Y %I:%M %p')}", header_style))
+    story.append(Paragraph(f"Estado: <b>{txn.get_status_display()}</b>", header_style))
+    story.append(Spacer(1, 0.5*cm))
+
+    # Separator
+    story.append(Table([['']], colWidths=[16*cm], style=TableStyle([('LINEBELOW', (0,0), (-1,-1), 1, colors.HexColor('#e5e7eb'))])))
+    story.append(Spacer(1, 0.3*cm))
+
+    # Producto
+    story.append(Paragraph("<b>Producto</b>", styles['Heading3']))
+    story.append(Paragraph(f"{txn.product.name}", value_style))
+    story.append(Paragraph(f"Vendedor: {txn.seller.business_name}", value_style))
+    story.append(Paragraph(f"Comprador: {txn.buyer.business_name}", value_style))
+    story.append(Spacer(1, 0.5*cm))
+
+    # Detalle financiero
+    story.append(Paragraph("<b>Detalle de Pago</b>", styles['Heading3']))
+    fin_data = [
+        ['Concepto', 'Monto'],
+        ['Monto Total', txn.amount_display],
+        [f'Comision Korva ({txn.commission_percent}%)', f"-{txn.commission_display}"],
+        ['Recibe el Vendedor', txn.seller_amount_display],
+    ]
+    fin_table = Table(fin_data, colWidths=[10*cm, 6*cm])
+    fin_table.setStyle(TableStyle([
+        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0,0), (-1,-1), 10),
+        ('TEXTCOLOR', (0,0), (-1,-1), colors.HexColor('#111827')),
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#10b981')),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+        ('ALIGN', (1,0), (-1,-1), 'RIGHT'),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#e5e7eb')),
+        ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#f9fafb')]),
+        ('LINEBELOW', (0,1), (-1,-2), 0.5, colors.HexColor('#e5e7eb')),
+        ('FONTNAME', (0,-1), (-1,-1), 'Helvetica-Bold'),
+        ('TEXTCOLOR', (0,-1), (-1,-1), colors.HexColor('#059669')),
+    ]))
+    story.append(fin_table)
+    story.append(Spacer(1, 0.7*cm))
+
+    # Datos bancarios
+    acct = txn.seller.bank_account if hasattr(txn.seller, 'bank_account') else None
+    if acct:
+        story.append(Paragraph("<b>Transferencia a</b>", styles['Heading3']))
+        bank_data = [
+            ['Banco', acct.get_bank_display()],
+            ['Titular', acct.account_holder],
+            ['Cuenta', acct.account_number],
+            ['Tipo', acct.get_account_type_display()],
+        ]
+        bank_table = Table(bank_data, colWidths=[4*cm, 12*cm])
+        bank_table.setStyle(TableStyle([
+            ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+            ('FONTSIZE', (0,0), (-1,-1), 10),
+            ('TEXTCOLOR', (0,0), (-1,-1), colors.HexColor('#374151')),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#e5e7eb')),
+            ('ROWBACKGROUNDS', (0,0), (-1,-1), [colors.white, colors.HexColor('#f9fafb')]),
+        ]))
+        story.append(bank_table)
+        story.append(Spacer(1, 0.7*cm))
+
+    # Separator
+    story.append(Table([['']], colWidths=[16*cm], style=TableStyle([('LINEBELOW', (0,0), (-1,-1), 1, colors.HexColor('#e5e7eb'))])))
+    story.append(Spacer(1, 0.3*cm))
+
+    # Footer
+    story.append(Paragraph("Gracias por usar Korva Nicaragua - Red Social para PyMEs", footer_style))
+    story.append(Paragraph("Este recibo es generado automaticamente por el sistema.", footer_style))
+    story.append(Paragraph(f"Recibo #{txn.reference} | {txn.updated_at.strftime('%d/%m/%Y')}", footer_style))
+
+    doc.build(story)
+    buffer.seek(0)
+
+    response = HttpResponse(buffer.read(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="recibo_{txn.reference}_{datetime.now().strftime("%Y%m%d")}.pdf"'
+    return response
+

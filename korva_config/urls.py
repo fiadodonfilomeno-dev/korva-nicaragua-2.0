@@ -25,7 +25,7 @@ from marketplace.views import (
     add_review, seller_reviews, deals_list, create_deal, export_catalog_pdf,
     buy_product, my_purchases, my_sales, transaction_detail,
     confirm_payment, confirm_receipt, complete_transaction, cancel_transaction,
-    seller_wallet, bank_account_view, request_payout,
+    seller_wallet, bank_account_view, request_payout, download_receipt,
 )
 
 # Vistas de rankings
@@ -100,6 +100,7 @@ urlpatterns = [
     path('seller-wallet/', seller_wallet, name='seller_wallet'),
     path('bank-account/', bank_account_view, name='bank_account'),
     path('request-payout/', request_payout, name='request_payout'),
+    path('transaction/<int:transaction_id>/receipt/', download_receipt, name='download_receipt'),
     
     # Rankings
     path('rankings/', rankings, name='rankings'),

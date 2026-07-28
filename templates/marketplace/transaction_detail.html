@@ -71,6 +71,12 @@
 
     <!-- Acciones -->
     <div class="flex flex-wrap gap-4">
+        {% if txn.status == 'confirmed' or txn.status == 'completed' %}
+        <a href="{% url 'download_receipt' txn.id %}" class="korva-btn-primary px-6 py-3 rounded-lg font-semibold">
+            <i class="fas fa-file-pdf mr-2"></i> Descargar Recibo PDF
+        </a>
+        {% endif %}
+
         {% if txn.buyer == user.profile and txn.status == 'pending' %}
         <form method="post" action="{% url 'confirm_payment' txn.id %}">
             {% csrf_token %}
