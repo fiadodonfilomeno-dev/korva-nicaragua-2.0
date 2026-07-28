@@ -24,7 +24,7 @@
                     </a>
                     <p class="text-sm text-gray-500">
                         <i class="fas fa-map-marker-alt text-korva-success mr-1"></i> {{ other_user.get_city_display }}
-                        <span class="mx-2">•</span>
+                        <span class="mx-2">&#8226;</span>
                         <span class="text-korva-success">{{ other_user.get_tier_display }}</span>
                     </p>
                 </div>
@@ -34,7 +34,7 @@
             </a>
         </div>
     </div>
-    
+
     <!-- Chat Messages -->
     <div id="chat-container" class="korva-card rounded-lg border border-korva-dark-alt p-6 mb-6 h-[500px] overflow-y-auto flex flex-col space-y-4">
         {% if chat_messages %}
@@ -46,7 +46,7 @@
                         {{ msg.content }}
                     </div>
                     {% endif %}
-                    
+
                     {% if msg.image %}
                     <div class="mt-2 {% if msg.sender == user.profile %}text-right{% endif %}">
                         <img src="{{ msg.image.url }}" alt="Imagen" 
@@ -54,7 +54,7 @@
                             onclick="window.open('{{ msg.image.url }}', '_blank')">
                     </div>
                     {% endif %}
-                    
+
                     {% if msg.video %}
                     <div class="mt-2">
                         <video controls class="max-w-full rounded-lg border border-korva-dark-alt" style="max-height: 300px;">
@@ -62,12 +62,12 @@
                         </video>
                     </div>
                     {% endif %}
-                    
+
                     <p class="text-xs text-gray-500 mt-1 flex items-center justify-end gap-1 {% if msg.sender != user.profile %}justify-start{% endif %}">
                         <span>{{ msg.timestamp|date:"H:i" }}</span>
                         {% if msg.sender == user.profile %}
                             {% if msg.is_read_by|default:False %}
-                            <i class="fas fa-check-double text-korva-success" title="Leído"></i>
+                            <i class="fas fa-check-double text-korva-success" title="Leido"></i>
                             {% else %}
                             <i class="fas fa-check text-gray-500" title="Entregado"></i>
                             {% endif %}
@@ -77,20 +77,28 @@
             </div>
             {% endfor %}
         {% else %}
-        <div class="flex-1 flex items-center justify-center text-gray-500">
+        <div id="empty-chat" class="flex-1 flex items-center justify-center text-gray-500">
             <div class="text-center">
                 <i class="fas fa-comments text-5xl mb-4 text-korva-dark-alt"></i>
-                <p class="text-lg">No hay mensajes aún</p>
-                <p class="text-sm text-gray-600">Envía un mensaje para comenzar</p>
+                <p class="text-lg">No hay mensajes aun</p>
+                <p class="text-sm text-gray-600">Envia un mensaje para comenzar</p>
             </div>
         </div>
         {% endif %}
+        <div id="typing-indicator" class="hidden justify-start">
+            <div class="bg-korva-dark-alt text-gray-400 text-sm px-4 py-2 rounded-2xl rounded-bl-sm inline-flex items-center gap-2">
+                <span class="flex gap-1">
+                    <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:0ms"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:150ms"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:300ms"></span>
+                </span>
+            </div>
+        </div>
     </div>
-    
+
     <!-- Message Input -->
-    <form method="post" enctype="multipart/form-data" class="space-y-3">
+    <form id="msg-form" method="post" enctype="multipart/form-data" class="space-y-3">
         {% csrf_token %}
-        
         <div class="korva-card rounded-lg p-4 border border-korva-dark-alt">
             <div class="flex items-end gap-3">
                 <div class="flex-1">
@@ -103,7 +111,7 @@
                     <label for="id_video" class="cursor-pointer p-3 rounded-lg bg-korva-dark-alt hover:bg-korva-dark text-gray-400 hover:text-korva-success transition" title="Adjuntar video">
                         <i class="fas fa-video text-lg"></i>
                     </label>
-                    <button type="submit" class="korva-btn-primary p-3 rounded-lg">
+                    <button type="submit" id="msg-send-btn" class="korva-btn-primary p-3 rounded-lg">
                         <i class="fas fa-paper-plane text-lg"></i>
                     </button>
                 </div>
@@ -113,27 +121,144 @@
 </div>
 
 <script>
-// Auto-scroll to bottom on load
 const chatContainer = document.getElementById('chat-container');
-if (chatContainer) {
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+const msgForm = document.getElementById('msg-form');
+const textarea = document.querySelector('textarea[name="content"]');
+const sendBtn = document.getElementById('msg-send-btn');
+const typingIndicator = document.getElementById('typing-indicator');
+const imageInput = document.getElementById('id_image');
+const videoInput = document.getElementById('id_video');
+const currentUserId = {{ user.id }};
+const conversationId = {{ conversation.id }};
+
+let ws = null;
+let typingTimer = null;
+let isTyping = false;
+
+function scrollToBottom() {
+    if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
 }
 
-// Poll for new messages (simple approach)
-setInterval(() => {
-    const lastMsg = document.querySelector('[id^="msg-"]:last-child');
-    if (lastMsg) {
-        const lastMsgId = lastMsg.id.replace('msg-', '');
-        // Check for new messages via AJAX
-        fetch(`?last_msg_id=${lastMsgId}`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        }).then(response => response.json()).then(data => {
-            if (data.new_messages) {
-                // Reload page to show new messages
-                window.location.reload();
-            }
-        }).catch(() => {});
+scrollToBottom();
+
+function appendMessage(msg) {
+    const emptyEl = document.getElementById('empty-chat');
+    if (emptyEl) emptyEl.remove();
+
+    const isMine = msg.sender_id === currentUserId;
+    const div = document.createElement('div');
+    div.className = `flex ${isMine ? 'justify-end' : 'justify-start'}`;
+    div.id = `msg-${msg.id}`;
+
+    let readIcon = '';
+    if (isMine) {
+        readIcon = '<i class="fas fa-check text-gray-500" title="Entregado"></i>';
     }
-}, 5000);
+
+    div.innerHTML = `
+        <div class="max-w-[70%]">
+            <div class="px-4 py-2 rounded-2xl ${isMine ? 'bg-korva-success text-white rounded-br-sm' : 'bg-korva-dark-alt text-gray-200 rounded-bl-sm'}">
+                ${escapeHtml(msg.content)}
+            </div>
+            <p class="text-xs text-gray-500 mt-1 flex items-center ${isMine ? 'justify-end' : 'justify-start'} gap-1">
+                <span>${msg.created_at ? new Date(msg.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}</span>
+                ${readIcon}
+            </p>
+        </div>
+    `;
+    chatContainer.appendChild(div);
+    scrollToBottom();
+}
+
+function updateReadStatus(messageId) {
+    const el = document.getElementById(`msg-${messageId}`);
+    if (el) {
+        const icon = el.querySelector('.fa-check, .fa-check-double');
+        if (icon) {
+            icon.className = 'fas fa-check-double text-korva-success';
+            icon.title = 'Leido';
+        }
+    }
+}
+
+function escapeHtml(text) {
+    const d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
+}
+
+function connectWebSocket() {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    ws = new WebSocket(`${protocol}//${window.location.host}/ws/chat/${conversationId}/`);
+
+    ws.onopen = function() {
+        console.log('WebSocket conectado');
+    };
+
+    ws.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+
+        if (data.type === 'chat_message') {
+            appendMessage(data.message);
+        } else if (data.type === 'typing') {
+            typingIndicator.classList.remove('hidden');
+            typingIndicator.classList.add('flex');
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                typingIndicator.classList.add('hidden');
+                typingIndicator.classList.remove('flex');
+            }, 2000);
+        } else if (data.type === 'read_receipt') {
+            updateReadStatus(data.message_id);
+        }
+    };
+
+    ws.onclose = function() {
+        console.log('WebSocket desconectado, reconectando en 3s...');
+        setTimeout(connectWebSocket, 3000);
+    };
+
+    ws.onerror = function(err) {
+        console.error('WebSocket error:', err);
+    };
+}
+
+connectWebSocket();
+
+textarea.addEventListener('input', function() {
+    if (!isTyping && this.value.trim()) {
+        isTyping = true;
+        ws.send(JSON.stringify({ type: 'typing' }));
+        setTimeout(() => { isTyping = false; }, 3000);
+    }
+});
+
+msgForm.addEventListener('submit', function(e) {
+    const hasFiles = imageInput.files.length > 0 || videoInput.files.length > 0;
+    const text = textarea.value.trim();
+
+    if (hasFiles) {
+        return;
+    }
+
+    e.preventDefault();
+
+    if (!text) return;
+    if (!ws || ws.readyState !== WebSocket.OPEN) return;
+
+    ws.send(JSON.stringify({
+        type: 'chat_message',
+        content: text
+    }));
+
+    textarea.value = '';
+    textarea.style.height = 'auto';
+});
+
+window.addEventListener('beforeunload', function() {
+    if (ws) ws.close();
+});
 </script>
 {% endblock %}
