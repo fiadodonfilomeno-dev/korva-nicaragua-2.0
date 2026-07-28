@@ -37,6 +37,14 @@ users_data = [
         'ruc': 'J0310000000004',
         'city': 'managua',
         'sector': 'tecnologia'
+    },
+    {
+        'username': 'evaluador',
+        'email': 'evaluador@gmail.com',
+        'business_name': 'Evaluador Korva',
+        'ruc': 'J0310000000005',
+        'city': 'managua',
+        'sector': 'tecnologia'
     }
 ]
 
@@ -112,3 +120,4 @@ print("  admin / admin123 (Administrador)")
 print("  panaderia_nicaraguena / admin123")
 print("  artesanias_esteli / admin123")
 print("  tech_solutions / admin123")
+print("  evaluador / Evaluador2026! (Correo: evaluador@gmail.com)")
