@@ -46,7 +46,7 @@
         <div class="korva-card rounded-lg border border-korva-dark-alt overflow-hidden hover:border-korva-success transition">
             <!-- Image -->
             {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition" onclick="openLightbox(this.src, '{{ product.name|escapejs }}')">
             {% else %}
             <div class="w-full h-48 bg-korva-dark-alt flex items-center justify-center">
                 <i class="fas fa-image text-gray-600 text-4xl"></i>
