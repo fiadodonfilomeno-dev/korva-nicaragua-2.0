@@ -107,6 +107,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'korva_config.context_processors.i18n_processor',
+                'korva_config.context_processors.social_providers_processor',
             ],
         },
     },
@@ -373,7 +374,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'INIT_PARAMS': {'cookie': True},
         'FIELDS': [
             'id', 'email', 'name', 'first_name', 'last_name',
-            'verified', 'locale', 'timezone', 'link', 'picture',
+            'verified', 'locale', 'timezone', 'link',
         ],
         'EXCHANGE_TOKEN': True,
         'VERIFIED_EMAIL': False,

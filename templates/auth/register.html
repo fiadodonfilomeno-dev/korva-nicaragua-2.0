@@ -21,22 +21,30 @@
                 {% endfor %}
             {% endif %}
             
-            <!-- Botones de redes sociales -->
+            {% if enabled_providers %}
             <div class="mb-6">
                 <p class="text-gray-400 text-sm mb-3 text-center">O regístrate con:</p>
                 <div class="grid grid-cols-2 gap-3">
+                    {% if 'google' in enabled_providers %}
                     <a href="{% provider_login_url 'google' %}" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-gray-600 hover:border-red-500 hover:bg-red-500/10 transition text-white text-sm font-medium">
                         <i class="fab fa-google text-red-500"></i> Google
                     </a>
+                    {% endif %}
+                    {% if 'facebook' in enabled_providers %}
                     <a href="{% provider_login_url 'facebook' %}" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-gray-600 hover:border-blue-500 hover:bg-blue-500/10 transition text-white text-sm font-medium">
                         <i class="fab fa-facebook text-blue-500"></i> Facebook
                     </a>
+                    {% endif %}
+                    {% if 'twitter' in enabled_providers %}
                     <a href="{% provider_login_url 'twitter' %}" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-gray-600 hover:border-sky-500 hover:bg-sky-500/10 transition text-white text-sm font-medium">
                         <i class="fab fa-x-twitter text-sky-500"></i> X
                     </a>
+                    {% endif %}
+                    {% if 'instagram' in enabled_providers %}
                     <a href="{% provider_login_url 'instagram' %}" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-gray-600 hover:border-pink-500 hover:bg-pink-500/10 transition text-white text-sm font-medium">
                         <i class="fab fa-instagram text-pink-500"></i> Instagram
                     </a>
+                    {% endif %}
                 </div>
                 
                 <div class="relative my-6">
@@ -48,6 +56,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             
             <form method="post" class="space-y-6" id="register-form">
                 {% csrf_token %}
