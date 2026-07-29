@@ -113,7 +113,7 @@ def send_ai_message(request, conversation_id):
         
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(
-            'gemini-pro',
+            'gemini-1.5-flash',
             system_instruction="""Eres Korva IA, un asistente virtual especializado en negocios y emprendimiento para PyMEs en Nicaragua. 
             SOLO puedes responder sobre: planes de negocio, marketing, finanzas, impuestos, registro de empresas, RUC, 
             estrategias de ventas, atención al cliente, productos, servicios, y temas relacionados con el mundo empresarial nicaragüense.
