@@ -30,12 +30,9 @@ for user_data in users_data:
         user = User.objects.create_user(username=user_data['username'], email=user_data['email'], password=password)
         profile = Profile.objects.create(user=user, business_name=user_data['business_name'], ruc=user_data['ruc'], city=user_data['city'], sector=user_data['sector'], verified=True, popularity_score=2000 if user_data['username'] == 'evaluador' else 1500, followers_count=100 if user_data['username'] == 'evaluador' else 50, associates_count=50 if user_data['username'] == 'evaluador' else 25, collaborations_count=15 if user_data['username'] == 'evaluador' else 8)
         KorvaAIConfig.objects.create(user=profile)
-        print(f"  [OK] Usuario '{user_data['username']}' creado")
+        print(f"  [OK] Usuario '{user_data['username']}' creado (password: {password})")
     else:
-        user = User.objects.get(username=user_data['username'])
-        user.set_password(password)
-        user.save()
-        print(f"  [OK] Usuario '{user_data['username']}' actualizado (password: {password})")
+        print(f"  [SKIP] Usuario '{user_data['username']}' ya existe, se conserva su contraseña")
 
 profiles = list(Profile.objects.filter(user__username__in=[u['username'] for u in users_data]))
 
