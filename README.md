@@ -92,3 +92,19 @@ media/              - Subidas de usuarios
 | `/export-catalog/` | Exportar catálogo PDF |
 | `/ai/` | Korva IA |
 | `/reports/` | Reportes y analytics |
+
+## Changelog
+
+### 2026-07-29
+- **Menú móvil limpio** — Drawer con avatar, nombre de negocio, secciones (Navegación / Mi Cuenta / Seguridad)
+- **Simplificación Gemini** — Eliminado `system_instruction` (incompatible con SDK 0.8.6), instrucciones en el mensaje directo
+- **Error amigable IA** — Mensaje claro cuando se envían imágenes al chat de texto
+- **Registro estable** — `create_user()` → `authenticate()` → `login()` (no crashea)
+- **Responsive móvil** — 9 plantillas corregidas para pantallas chicas
+- **CSS `bg-korva-dark-alt`** — Definido el color que faltaba
+- **Filtro sector Muro** — Dropdown para filtrar publicaciones por categoría
+- **Preservar contraseñas** — `load_test_data.py` no resetea passwords de usuarios existentes
+- **Login redirect** — `LOGIN_URL = '/login/'` + backend hardcode eliminado
+- **Botones sociales ocultos** — No se muestran si no hay credenciales API configuradas
+- **Imágenes Unsplash** — Todos los productos de prueba tienen imágenes reales
+- **Datos de prueba completos** — Productos, conversaciones, reseñas, eventos, grupos
