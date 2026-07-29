@@ -6,7 +6,7 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-4xl font-bold text-white mb-2">
+        <h1 class="text-2xl sm:text-4xl font-bold text-white mb-2">
             <i class="fas fa-handshake text-korva-success"></i> Alianzas Recomendadas
         </h1>
         <p class="text-gray-400">Empresas, emprendedores y proveedores compatibles con tu perfil</p>
@@ -14,7 +14,7 @@
 
     <!-- Filtros -->
     <div class="korva-card rounded-lg p-4 border border-korva-dark-alt mb-8">
-        <form method="get" class="flex flex-wrap gap-3 items-center">
+        <form method="get" class="flex flex-wrap gap-2 sm:gap-3 items-center">
             <span class="text-gray-400 text-sm">Filtrar por sector:</span>
             <a href="{% url 'recommendations' %}" class="px-4 py-2 rounded-lg text-sm font-medium transition
                 {% if not sector_filter %}bg-korva-success text-white{% else %}bg-korva-dark-alt text-gray-400 hover:text-white{% endif %}">
@@ -33,7 +33,7 @@
     {% if recommendations %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for rec in recommendations %}
-        <div class="korva-card rounded-lg border border-korva-dark-alt p-6 hover:border-korva-success transition">
+        <div class="korva-card rounded-lg border border-korva-dark-alt p-4 sm:p-6 hover:border-korva-success transition">
             <!-- Header -->
             <div class="flex items-center space-x-4 mb-4">
                 {% if rec.profile.logo %}
@@ -41,7 +41,7 @@
                     class="w-14 h-14 rounded-full border border-korva-success">
                 {% else %}
                 <div class="w-14 h-14 rounded-full bg-korva-success flex items-center justify-center">
-                    <i class="fas fa-building text-white text-xl"></i>
+                    <i class="fas fa-building text-white text-base sm:text-xl"></i>
                 </div>
                 {% endif %}
                 <div class="flex-1 min-w-0">
@@ -94,11 +94,11 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="text-center py-16 korva-card rounded-lg border border-korva-dark-alt">
-        <i class="fas fa-search text-5xl text-gray-600 mb-4"></i>
+    <div class="text-center py-8 sm:py-16 korva-card rounded-lg border border-korva-dark-alt">
+        <i class="fas fa-search text-3xl sm:text-5xl text-gray-600 mb-4"></i>
         <h3 class="text-xl font-semibold text-gray-400 mb-2">No hay recomendaciones</h3>
         <p class="text-gray-500 mb-4">Completa tu perfil y publica contenido para obtener mejores sugerencias</p>
-        <a href="{% url 'edit_profile' %}" class="korva-btn-primary px-6 py-2 rounded-lg inline-block">
+        <a href="{% url 'edit_profile' %}" class="korva-btn-primary px-4 py-2 sm:px-6 rounded-lg inline-block">
             <i class="fas fa-edit mr-2"></i> Editar Perfil
         </a>
     </div>

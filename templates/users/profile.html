@@ -14,16 +14,16 @@
         </div>
         
         <!-- Profile Info -->
-        <div class="px-8 pb-8">
+        <div class="px-4 sm:px-8 pb-8">
             <!-- Avatar and Actions -->
-            <div class="flex items-end justify-between -mt-16 mb-6">
+            <div class="flex items-end justify-between -mt-12 sm:-mt-16 mb-6">
                 <div class="relative">
                     {% if profile.logo %}
                     <img src="{{ profile.logo.url }}" alt="{{ profile.business_name }}" 
-                        class="w-32 h-32 rounded-full border-4 border-korva-card">
+                        class="w-20 sm:w-32 h-20 sm:h-32 rounded-full border-4 border-korva-card">
                     {% else %}
-                    <div class="w-32 h-32 rounded-full border-4 border-korva-card bg-korva-dark-alt flex items-center justify-center">
-                        <i class="fas fa-building text-korva-success text-4xl"></i>
+                    <div class="w-20 sm:w-32 h-20 sm:h-32 rounded-full border-4 border-korva-card bg-korva-dark-alt flex items-center justify-center">
+                        <i class="fas fa-building text-korva-success text-2xl sm:text-4xl"></i>
                     </div>
                     {% endif %}
                     {% if profile.verified %}
@@ -62,7 +62,7 @@
             <!-- Name and Info -->
             <div class="mb-6">
                 <div class="flex items-center gap-3 mb-1">
-                    <h1 class="text-3xl font-bold text-white">{{ profile.business_name }}</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white">{{ profile.business_name }}</h1>
                     <span class="px-3 py-1 text-xs font-semibold rounded-full 
                         {% if profile.tier == 'vip' %}bg-purple-500 text-white
                         {% elif profile.tier == 'oro' %}bg-yellow-500 text-black
@@ -71,7 +71,7 @@
                         {{ profile.tier_display }}
                     </span>
                 </div>
-                <div class="flex items-center gap-4 text-gray-400 text-sm">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-gray-400 text-sm">
                     <span><i class="fas fa-map-marker-alt text-korva-success mr-1"></i>{{ profile.get_city_display }}</span>
                     <span><i class="fas fa-briefcase text-korva-success mr-1"></i>{{ profile.get_sector_display }}</span>
                     <span><i class="fas fa-calendar text-korva-success mr-1"></i>Miembro desde {{ profile.created_at|date:"M Y" }}</span>
@@ -89,19 +89,19 @@
             <!-- Stats Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div class="text-center p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt">
-                    <p class="text-2xl font-bold text-white">{{ profile.popularity_score }}</p>
+                    <p class="text-xl sm:text-2xl font-bold text-white">{{ profile.popularity_score }}</p>
                     <p class="text-xs text-gray-500">Puntos</p>
                 </div>
                 <div class="text-center p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt">
-                    <p class="text-2xl font-bold text-white">{{ profile.followers_count }}</p>
+                    <p class="text-xl sm:text-2xl font-bold text-white">{{ profile.followers_count }}</p>
                     <p class="text-xs text-gray-500">Seguidores</p>
                 </div>
                 <div class="text-center p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt">
-                    <p class="text-2xl font-bold text-white">{{ posts|length }}</p>
+                    <p class="text-xl sm:text-2xl font-bold text-white">{{ posts|length }}</p>
                     <p class="text-xs text-gray-500">Publicaciones</p>
                 </div>
                 <div class="text-center p-4 bg-korva-dark-alt rounded-lg border border-korva-dark-alt">
-                    <p class="text-2xl font-bold text-white">{{ products|length }}</p>
+                    <p class="text-xl sm:text-2xl font-bold text-white">{{ products|length }}</p>
                     <p class="text-xs text-gray-500">Productos</p>
                 </div>
             </div>
@@ -135,7 +135,7 @@
             
             <!-- Tabs -->
             <div class="border-t border-korva-dark-alt pt-6">
-                <div class="flex gap-6 mb-6">
+                <div class="flex flex-wrap gap-4 sm:gap-6 mb-6">
                     <button onclick="showTab('posts')" class="tab-btn active pb-2 font-semibold text-white border-b-2 border-korva-success">
                         <i class="fas fa-pen mr-2"></i>Publicaciones ({{ posts|length }})
                     </button>
