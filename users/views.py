@@ -79,7 +79,10 @@ def register(request):
                 messages.warning(request, 'Cuenta creada, pero no pudimos enviar el email de verificación. Contacta a soporte.')
             
             # Iniciar sesión automáticamente
-            login(request, user)
+            from django.contrib.auth import authenticate
+            user = authenticate(request, username=user.username, password=form.cleaned_data['password'])
+            if user:
+                login(request, user)
             return redirect('home')
     else:
         form = UserRegistrationForm()
