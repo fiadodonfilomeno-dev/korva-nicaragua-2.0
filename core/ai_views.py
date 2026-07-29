@@ -104,15 +104,14 @@ def send_ai_message(request, conversation_id):
         if ai_config.uses_personal_key and ai_config.user_api_key:
             api_key = ai_config.user_api_key
         else:
-            # Usar clave del servidor (deberías configurarla en settings)
             from django.conf import settings
             api_key = getattr(settings, 'GEMINI_API_KEY', None)
             
             if not api_key:
-                raise ValueError("No hay clave de API configurada")
+                raise ValueError("No hay clave de API configurada. Para usar Korva IA, ve a Configuración y agrega tu clave.")
         
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel(
+        genai_model = genai.GenerativeModel(
             'gemini-1.5-flash',
             system_instruction="""Eres Korva IA, un asistente virtual especializado en negocios y emprendimiento para PyMEs en Nicaragua. 
             SOLO puedes responder sobre: planes de negocio, marketing, finanzas, impuestos, registro de empresas, RUC, 
@@ -136,24 +135,20 @@ def send_ai_message(request, conversation_id):
                 'parts': [msg.content]
             })
         
-        # Añadir el nuevo mensaje
         history.append({
             'role': 'user',
             'parts': [content]
         })
         
-        # Obtener respuesta de IA
-        chat = model.start_chat(history=history)
+        chat = genai_model.start_chat(history=history)
         response = chat.send_message(content)
         
-        # Guardar respuesta de IA
         ai_response = AIMessage.objects.create(
             conversation=conversation,
             role='assistant',
             content=response.text
         )
         
-        # Actualizar conversación
         conversation.updated_at = ai_response.timestamp
         conversation.save()
         
@@ -167,7 +162,11 @@ def send_ai_message(request, conversation_id):
         return redirect('conversation_chat', conversation_id=conversation.pk)
         
     except Exception as e:
-        error_message = f"Error al procesar tu solicitud: {str(e)}"
+        error_msg = str(e)
+        if 'image input' in error_msg.lower() or 'image' in error_msg.lower() and 'not support' in error_msg.lower():
+            error_message = "Korva IA solo procesa texto. Los archivos de imagen no son compatibles."
+        else:
+            error_message = f"Error: {error_msg}"
         
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({'error': error_message}, status=500)
