@@ -111,21 +111,7 @@ def send_ai_message(request, conversation_id):
                 raise ValueError("No hay clave de API configurada. Para usar Korva IA, ve a Configuración y agrega tu clave.")
         
         genai.configure(api_key=api_key)
-        genai_model = genai.GenerativeModel(
-            'gemini-1.5-flash',
-            system_instruction="""Eres Korva IA, un asistente virtual especializado en negocios y emprendimiento para PyMEs en Nicaragua. 
-            SOLO puedes responder sobre: planes de negocio, marketing, finanzas, impuestos, registro de empresas, RUC, 
-            estrategias de ventas, atención al cliente, productos, servicios, y temas relacionados con el mundo empresarial nicaragüense.
-            
-            REGLAS ESTRICTAS:
-            - NO puedes insultar, usar lenguaje ofensivo o discriminatorio
-            - NO puedes hablar de temas +18, sexuales, violencia, drogas, política partidista, religión
-            - NO puedes hacer tareas académicas, resolver exámenes o trabajar por el usuario
-            - NO puedes dar consejos médicos, legales (sin aclarar que no eres abogado) o financieros de inversión
-            - Si el usuario insiste en temas no permitidos, responde amablemente que solo ayudas con temas empresariales
-            - Mantén un tono profesional, amable y servicial
-            - Responde SIEMPRE en español"""
-        )
+        genai_model = genai.GenerativeModel('gemini-1.5-flash')
         
         # Construir historial de conversación
         history = []
@@ -141,7 +127,9 @@ def send_ai_message(request, conversation_id):
         })
         
         chat = genai_model.start_chat(history=history)
-        response = chat.send_message(content)
+        response = chat.send_message(
+            content + " - Responde SIEMPRE en español. Eres Korva IA, asistente de negocios para PyMEs en Nicaragua."
+        )
         
         ai_response = AIMessage.objects.create(
             conversation=conversation,
