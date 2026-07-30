@@ -53,37 +53,36 @@ def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            # Crear usuario manualmente (el formulario es forms.Form, no ModelForm)
-            user = User.objects.create_user(
-                username=form.cleaned_data['username'],
-                email=form.cleaned_data['email'],
-                password=form.cleaned_data['password']
-            )
-            
-            # Crear perfil automáticamente
-            profile = Profile.objects.create(
-                user=user,
-                business_name=form.cleaned_data['business_name'],
-                city=form.cleaned_data['city'],
-                sector=form.cleaned_data['sector'],
-                ruc=form.cleaned_data['ruc']
-            )
-            
-            # Crear configuración de IA
-            KorvaAIConfig.objects.create(user=profile)
-            
-            # Enviar email de verificación
-            if send_verification_email(user, request):
-                messages.success(request, 'Cuenta creada exitosamente. Hemos enviado un correo de verificación a tu email.')
-            else:
-                messages.warning(request, 'Cuenta creada, pero no pudimos enviar el email de verificación. Contacta a soporte.')
-            
-            # Iniciar sesión automáticamente
-            from django.contrib.auth import authenticate
-            user = authenticate(request, username=user.username, password=form.cleaned_data['password'])
-            if user:
-                login(request, user)
-            return redirect('home')
+            try:
+                user = User.objects.create_user(
+                    username=form.cleaned_data['username'],
+                    email=form.cleaned_data['email'],
+                    password=form.cleaned_data['password']
+                )
+                
+                profile = Profile.objects.create(
+                    user=user,
+                    business_name=form.cleaned_data['business_name'],
+                    city=form.cleaned_data['city'],
+                    sector=form.cleaned_data['sector'],
+                    ruc=form.cleaned_data['ruc']
+                )
+                
+                KorvaAIConfig.objects.create(user=profile)
+                
+                if send_verification_email(user, request):
+                    messages.success(request, 'Cuenta creada exitosamente. Hemos enviado un correo de verificación a tu email.')
+                else:
+                    messages.warning(request, 'Cuenta creada, pero no pudimos enviar el email de verificación. Contacta a soporte.')
+                
+                from django.contrib.auth import authenticate
+                user = authenticate(request, username=user.username, password=form.cleaned_data['password'])
+                if user:
+                    login(request, user)
+                return redirect('home')
+            except Exception as e:
+                messages.error(request, f'Error al crear la cuenta: {str(e)}')
+                return redirect('register')
     else:
         form = UserRegistrationForm()
     
