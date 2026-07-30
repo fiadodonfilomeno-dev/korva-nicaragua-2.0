@@ -5,21 +5,21 @@
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 py-8">
     <!-- Header -->
-    <div class="korva-card rounded-lg p-4 sm:p-6 border border-korva-dark-alt mb-6">
+    <div class="korva-card rounded-lg p-6 border border-korva-dark-alt mb-6">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
                 <a href="{% url 'profile' other_user.user.username %}">
                     {% if other_user.logo %}
                     <img src="{{ other_user.logo.url }}" alt="{{ other_user.business_name }}" 
-                        class="w-12 sm:w-14 h-12 sm:h-14 rounded-full border-2 border-korva-success hover:opacity-80 transition">
+                        class="w-14 h-14 rounded-full border-2 border-korva-success hover:opacity-80 transition">
                     {% else %}
-                    <div class="w-12 sm:w-14 h-12 sm:h-14 rounded-full bg-korva-success flex items-center justify-center text-white hover:opacity-80 transition">
-                        <i class="fas fa-building text-lg sm:text-xl"></i>
+                    <div class="w-14 h-14 rounded-full bg-korva-success flex items-center justify-center text-white hover:opacity-80 transition">
+                        <i class="fas fa-building text-xl"></i>
                     </div>
                     {% endif %}
                 </a>
                 <div>
-                    <a href="{% url 'profile' other_user.user.username %}" class="text-lg sm:text-xl font-bold text-white hover:text-korva-success">
+                    <a href="{% url 'profile' other_user.user.username %}" class="text-xl font-bold text-white hover:text-korva-success">
                         {{ other_user.business_name }}
                     </a>
                     <p class="text-sm text-gray-500">
@@ -29,14 +29,14 @@
                     </p>
                 </div>
             </div>
-            <a href="{% url 'messages' %}" class="text-gray-400 hover:text-white transition p-2">
-                <i class="fas fa-arrow-left text-lg sm:text-xl"></i>
+            <a href="{% url 'messages' %}" class="text-gray-400 hover:text-white transition">
+                <i class="fas fa-arrow-left text-xl"></i>
             </a>
         </div>
     </div>
 
     <!-- Chat Messages -->
-    <div id="chat-container" class="korva-card rounded-lg border border-korva-dark-alt p-3 sm:p-6 mb-6 h-[500px] overflow-y-auto flex flex-col space-y-4">
+    <div id="chat-container" class="korva-card rounded-lg border border-korva-dark-alt p-6 mb-6 h-[500px] overflow-y-auto flex flex-col space-y-4">
         {% if chat_messages %}
             {% for msg in chat_messages %}
             <div class="flex {% if msg.sender == user.profile %}justify-end{% else %}justify-start{% endif %}" id="msg-{{ msg.id }}">
@@ -79,8 +79,8 @@
         {% else %}
         <div id="empty-chat" class="flex-1 flex items-center justify-center text-gray-500">
             <div class="text-center">
-                <i class="fas fa-comments text-3xl sm:text-5xl mb-4 text-korva-dark-alt"></i>
-                <p class="text-base sm:text-lg">No hay mensajes aun</p>
+                <i class="fas fa-comments text-5xl mb-4 text-korva-dark-alt"></i>
+                <p class="text-lg">No hay mensajes aun</p>
                 <p class="text-sm text-gray-600">Envia un mensaje para comenzar</p>
             </div>
         </div>
@@ -99,20 +99,20 @@
     <!-- Message Input -->
     <form id="msg-form" method="post" enctype="multipart/form-data" class="space-y-3">
         {% csrf_token %}
-        <div class="korva-card rounded-lg p-3 sm:p-4 border border-korva-dark-alt">
-            <div class="flex items-end gap-2 sm:gap-3">
+        <div class="korva-card rounded-lg p-4 border border-korva-dark-alt">
+            <div class="flex items-end gap-3">
                 <div class="flex-1">
                     {{ form.content }}
                 </div>
-                <div class="flex items-center gap-1 sm:gap-2">
-                    <label for="id_image" class="cursor-pointer p-2 sm:p-3 rounded-lg bg-korva-dark-alt hover:bg-korva-dark text-gray-400 hover:text-korva-success transition" title="Adjuntar imagen">
-                        <i class="fas fa-image text-base sm:text-lg"></i>
+                <div class="flex items-center gap-2">
+                    <label for="id_image" class="cursor-pointer p-3 rounded-lg bg-korva-dark-alt hover:bg-korva-dark text-gray-400 hover:text-korva-success transition" title="Adjuntar imagen">
+                        <i class="fas fa-image text-lg"></i>
                     </label>
-                    <label for="id_video" class="cursor-pointer p-2 sm:p-3 rounded-lg bg-korva-dark-alt hover:bg-korva-dark text-gray-400 hover:text-korva-success transition" title="Adjuntar video">
-                        <i class="fas fa-video text-base sm:text-lg"></i>
+                    <label for="id_video" class="cursor-pointer p-3 rounded-lg bg-korva-dark-alt hover:bg-korva-dark text-gray-400 hover:text-korva-success transition" title="Adjuntar video">
+                        <i class="fas fa-video text-lg"></i>
                     </label>
-                    <button type="submit" id="msg-send-btn" class="korva-btn-primary p-2 sm:p-3 rounded-lg">
-                        <i class="fas fa-paper-plane text-base sm:text-lg"></i>
+                    <button type="submit" id="msg-send-btn" class="korva-btn-primary p-3 rounded-lg">
+                        <i class="fas fa-paper-plane text-lg"></i>
                     </button>
                 </div>
             </div>

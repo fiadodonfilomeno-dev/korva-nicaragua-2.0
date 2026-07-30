@@ -8,7 +8,7 @@ echo   Iniciando Servidor...
 echo ====================================
 echo.
 
-cd /d "%~dp0"
+cd /d "C:\Users\harif\Desktop\Korva2.0"
 
 echo [*] Verificando conexion a base de datos...
 python manage.py migrate --run-syncdb > nul 2>&1

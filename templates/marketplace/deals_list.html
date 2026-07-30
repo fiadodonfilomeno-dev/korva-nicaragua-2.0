@@ -14,8 +14,6 @@
         <a href="{% url 'product_detail' deal.product.id %}" class="korva-card rounded-lg border border-korva-warning overflow-hidden hover:border-korva-success transition block">
             {% if deal.product.image %}
             <img src="{{ deal.product.image.url }}" class="w-full h-40 object-cover">
-            {% elif deal.product.image_url %}
-            <img src="{{ deal.product.image_url }}" class="w-full h-40 object-cover">
             {% else %}
             <div class="w-full h-40 bg-korva-dark-alt flex items-center justify-center">
                 <i class="fas fa-image text-gray-600 text-3xl"></i>

@@ -9,7 +9,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" {% if posts %}data-last-post-id="{{ posts.0.id }}"{% endif %}>
     <!-- Header Section -->
     <div class="mb-8">
-        <h1 class="text-2xl sm:text-4xl font-bold text-white mb-2">
+        <h1 class="text-4xl font-bold text-white mb-2">
             <i class="fas fa-home text-korva-success"></i> Muro Social
         </h1>
         <p class="text-gray-400">Conecta con otras PyMEs, comparte ideas y encuentra oportunidades de negocio</p>
@@ -22,56 +22,34 @@
         {% endif %}
     </div>
     
-    <!-- Search and Filters Section -->
-    <div class="mb-8 space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="md:col-span-2">
-                <form method="get" class="flex">
-                    {% if sector_filter %}<input type="hidden" name="sector" value="{{ sector_filter }}">{% endif %}
-                    <input type="text" name="q" placeholder="Buscar publicaciones..." value="{{ search_query }}"
-                        class="korva-input flex-1 rounded-l-lg" />
-                    <button type="submit" class="korva-btn-primary px-6 rounded-r-lg font-medium">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-            </div>
-            
-            {% if user.is_authenticated %}
-            <a href="{% url 'create_post' %}" class="korva-btn-primary px-6 py-3 rounded-lg font-medium text-center">
-                <i class="fas fa-plus"></i> Crear Post
-            </a>
-            {% else %}
-            <a href="{% url 'login' %}" class="korva-btn-primary px-6 py-3 rounded-lg font-medium text-center">
-                <i class="fas fa-sign-in-alt"></i> Inicia sesión
-            </a>
-            {% endif %}
+    <!-- Search and Create Post Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="md:col-span-2">
+            <form method="get" class="flex">
+                <input type="text" name="q" placeholder="Buscar publicaciones..." value="{{ search_query }}"
+                    class="korva-input flex-1 rounded-l-lg" />
+                <button type="submit" class="korva-btn-primary px-6 rounded-r-lg font-medium">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
         </div>
         
-        <!-- Sector Filter -->
-        <form method="get" class="flex flex-wrap items-center gap-2" style="background:#1a1a1d;border:1px solid #2d2d33;border-radius:0.5rem;padding:0.75rem">
-            {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
-            <span class="text-sm font-bold text-korva-success mr-1">
-                <i class="fas fa-tags"></i> Categoría:
-            </span>
-            <select name="sector" onchange="this.form.submit()" style="background:#0c0c0e;border:1px solid #10b981;color:#e5e7eb;padding:0.5rem 1rem;border-radius:0.5rem;min-width:170px;cursor:pointer;font-size:0.875rem">
-                <option value="">Todas las categorías</option>
-                {% for value, label in sectors %}
-                <option value="{{ value }}" {% if sector_filter == value %}selected{% endif %}>{{ label }}</option>
-                {% endfor %}
-            </select>
-            {% if sector_filter %}
-            <a href="{% url 'home' %}{% if search_query %}?q={{ search_query }}{% endif %}" class="text-xs text-gray-500 hover:text-white transition ml-1">
-                <i class="fas fa-times-circle"></i> Limpiar
-            </a>
-            {% endif %}
-        </form>
+        {% if user.is_authenticated %}
+        <a href="{% url 'create_post' %}" class="korva-btn-primary px-6 py-3 rounded-lg font-medium text-center">
+            <i class="fas fa-plus"></i> Crear Post
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}" class="korva-btn-primary px-6 py-3 rounded-lg font-medium text-center">
+            <i class="fas fa-sign-in-alt"></i> Inicia sesión
+        </a>
+        {% endif %}
     </div>
     
     <!-- Posts Grid -->
     {% if posts %}
     <div class="space-y-4">
         {% for post in posts %}
-        <div class="korva-card rounded-lg p-4 sm:p-6 hover:border-korva-success transition">
+        <div class="korva-card rounded-lg p-6 hover:border-korva-success transition">
             <!-- Post Header -->
             <div class="flex items-center space-x-4 mb-4">
                 {% if post.author.logo %}
@@ -103,7 +81,7 @@
             
             <!-- Post Content -->
             <div class="mb-4">
-                <h3 class="text-lg sm:text-xl font-bold text-white mb-2">{{ post.title }}</h3>
+                <h3 class="text-xl font-bold text-white mb-2">{{ post.title }}</h3>
                 <p class="text-gray-300 line-clamp-3">{{ post.content }}</p>
                 {% if post.image %}
                 <div class="mt-3">
@@ -135,30 +113,30 @@
             <div class="flex items-center justify-between pt-4 border-t border-korva-dark-alt">
                 <div class="flex space-x-4">
                     {% if user.is_authenticated %}
-                    <button onclick="vote({{ post.id }}, 'up', this)" class="flex items-center gap-1 text-gray-400 hover:text-korva-success transition p-2 -ml-2">
-                        <i class="fas fa-thumbs-up text-lg sm:text-base"></i>
+                    <button onclick="vote({{ post.id }}, 'up', this)" class="text-gray-400 hover:text-korva-success transition">
+                        <i class="fas fa-thumbs-up"></i>
                         <span class="text-xs code-font vote-count-up">{{ post.upvotes }}</span>
                     </button>
                     
-                    <button onclick="vote({{ post.id }}, 'down', this)" class="flex items-center gap-1 text-gray-400 hover:text-red-500 transition p-2">
-                        <i class="fas fa-thumbs-down text-lg sm:text-base"></i>
+                    <button onclick="vote({{ post.id }}, 'down', this)" class="text-gray-400 hover:text-red-500 transition">
+                        <i class="fas fa-thumbs-down"></i>
                         <span class="text-xs code-font vote-count-down">{{ post.downvotes }}</span>
                     </button>
                     {% else %}
-                    <span class="flex items-center gap-1 text-gray-400 cursor-not-allowed p-2 -ml-2">
-                        <i class="fas fa-thumbs-up text-lg sm:text-base"></i>
+                    <span class="text-gray-400 cursor-not-allowed">
+                        <i class="fas fa-thumbs-up"></i>
                         <span class="text-xs code-font">{{ post.upvotes }}</span>
                     </span>
                     
-                    <span class="flex items-center gap-1 text-gray-400 cursor-not-allowed p-2">
-                        <i class="fas fa-thumbs-down text-lg sm:text-base"></i>
+                    <span class="text-gray-400 cursor-not-allowed">
+                        <i class="fas fa-thumbs-down"></i>
                         <span class="text-xs code-font">{{ post.downvotes }}</span>
                     </span>
                     {% endif %}
                 </div>
                 
-                <a href="{% url 'post_detail' post.id %}" class="text-gray-400 hover:text-korva-success transition p-2">
-                    <i class="fas fa-comment-dots text-lg sm:text-base"></i>
+                <a href="{% url 'post_detail' post.id %}" class="text-gray-400 hover:text-korva-success transition">
+                    <i class="fas fa-comment-dots"></i>
                 </a>
             </div>
         </div>

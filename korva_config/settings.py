@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'channels',
+    'rosetta',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -107,7 +108,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'korva_config.context_processors.i18n_processor',
-                'korva_config.context_processors.social_providers_processor',
             ],
         },
     },
@@ -347,7 +347,6 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 ACCOUNT_LOGIN_BY_CODE_ENABLED = False
 
-LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
@@ -375,7 +374,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'INIT_PARAMS': {'cookie': True},
         'FIELDS': [
             'id', 'email', 'name', 'first_name', 'last_name',
-            'verified', 'locale', 'timezone', 'link',
+            'verified', 'locale', 'timezone', 'link', 'picture',
         ],
         'EXCHANGE_TOKEN': True,
         'VERIFIED_EMAIL': False,

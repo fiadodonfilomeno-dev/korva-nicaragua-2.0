@@ -10,8 +10,8 @@ import subprocess
 from pathlib import Path
 
 def main():
-    # Directorio del proyecto (se usa el directorio actual)
-    project_dir = Path(__file__).resolve().parent
+    # Directorio del proyecto
+    project_dir = Path("C:\\Users\\harif\\Desktop\\Korva2.0")
     
     if not project_dir.exists():
         print("[ERROR] Directorio del proyecto no encontrado")

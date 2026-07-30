@@ -10,7 +10,6 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 # Vistas de usuarios
 from users.views import register, login_view, logout_view, profile_view, edit_profile, dashboard, verify_email, pymes_map
 from users.report_views import report_user, block_user, unblock_user, blocked_users_list
@@ -155,6 +154,9 @@ urlpatterns = [
 
     # API REST
     path('api/', include('api.urls')),
+
+    # Rosetta (traducciones)
+    path('rosetta/', include('rosetta.urls')),
 
     # Cambio de idioma
     path('i18n/', include('django.conf.urls.i18n')),

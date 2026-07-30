@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 py-8">
-    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-8">
+    <h1 class="text-4xl font-bold text-white mb-8">
         <i class="fas fa-envelope text-korva-success"></i> Mis Mensajes
     </h1>
     
@@ -63,15 +63,15 @@
         </div>
         
         <div class="lg:col-span-2">
-            <div class="korva-card rounded-lg border border-korva-dark-alt p-4 sm:p-6 text-center">
-                <i class="fas fa-comments text-2xl sm:text-4xl text-gray-600 mb-4"></i>
+            <div class="korva-card rounded-lg border border-korva-dark-alt p-6 text-center">
+                <i class="fas fa-comments text-4xl text-gray-600 mb-4"></i>
                 <p class="text-gray-400">Selecciona una conversación para empezar a chatear</p>
             </div>
         </div>
     </div>
     {% else %}
-    <div class="text-center py-8 sm:py-12 korva-card rounded-lg border border-korva-dark-alt">
-        <i class="fas fa-inbox text-2xl sm:text-4xl text-gray-600 mb-4"></i>
+    <div class="text-center py-12 korva-card rounded-lg border border-korva-dark-alt">
+        <i class="fas fa-inbox text-4xl text-gray-600 mb-4"></i>
         <h3 class="text-xl font-semibold text-gray-400 mb-2">No hay conversaciones</h3>
         <p class="text-gray-500 mb-4">Comienza a chatear con otras empresas</p>
         <a href="{% url 'rankings' %}" class="korva-btn-primary px-6 py-2 rounded-lg inline-block">

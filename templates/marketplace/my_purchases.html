@@ -21,8 +21,6 @@
                 <div class="flex items-center space-x-4">
                     {% if txn.product.image %}
                     <img src="{{ txn.product.image.url }}" class="w-14 h-14 rounded-lg object-cover">
-                    {% elif txn.product.image_url %}
-                    <img src="{{ txn.product.image_url }}" class="w-14 h-14 rounded-lg object-cover">
                     {% else %}
                     <div class="w-14 h-14 rounded-lg bg-korva-dark-alt flex items-center justify-center">
                         <i class="fas fa-box text-gray-500"></i>

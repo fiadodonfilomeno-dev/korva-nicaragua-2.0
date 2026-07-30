@@ -6,19 +6,19 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4">
+        <h1 class="text-4xl font-bold text-white mb-4">
             <i class="fas fa-shopping-bag text-korva-success"></i> Marketplace
         </h1>
         
         {% if user.is_authenticated %}
-        <a href="{% url 'create_product' %}" class="korva-btn-primary px-4 py-2 sm:px-6 sm:py-3 rounded-lg inline-block font-semibold">
+        <a href="{% url 'create_product' %}" class="korva-btn-primary px-6 py-3 rounded-lg inline-block font-semibold">
             <i class="fas fa-plus mr-2"></i> Publicar Producto
         </a>
         {% endif %}
     </div>
     
     <!-- Search and Filter -->
-    <div class="korva-card rounded-lg p-4 sm:p-6 border border-korva-dark-alt mb-8">
+    <div class="korva-card rounded-lg p-6 border border-korva-dark-alt mb-8">
         <form method="get" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -33,7 +33,7 @@
                     </select>
                 </div>
             </div>
-            <button type="submit" class="korva-btn-primary px-4 py-2 sm:px-6 rounded-lg font-semibold">
+            <button type="submit" class="korva-btn-primary px-6 py-2 rounded-lg font-semibold">
                 <i class="fas fa-search mr-2"></i> Buscar
             </button>
         </form>
@@ -47,8 +47,6 @@
             <!-- Image -->
             {% if product.image %}
             <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition" onclick="openLightbox(this.src, '{{ product.name|escapejs }}')">
-            {% elif product.image_url %}
-            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition" onclick="openLightbox(this.src, '{{ product.name|escapejs }}')">
             {% else %}
             <div class="w-full h-48 bg-korva-dark-alt flex items-center justify-center">
                 <i class="fas fa-image text-gray-600 text-4xl"></i>
@@ -93,8 +91,8 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="text-center py-8 sm:py-12 korva-card rounded-lg border border-korva-dark-alt">
-        <i class="fas fa-inbox text-2xl sm:text-4xl text-gray-600 mb-4"></i>
+    <div class="text-center py-12 korva-card rounded-lg border border-korva-dark-alt">
+        <i class="fas fa-inbox text-4xl text-gray-600 mb-4"></i>
         <h3 class="text-xl font-semibold text-gray-400 mb-2">No hay productos</h3>
         <p class="text-gray-500">Intenta con otra búsqueda o categoría</p>
     </div>

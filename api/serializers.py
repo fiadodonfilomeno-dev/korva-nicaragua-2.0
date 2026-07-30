@@ -49,7 +49,7 @@ class PostSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     user = ProfileSerializer(read_only=True)
     user_name = serializers.CharField(source='user.business_name', read_only=True)
-    price_display = serializers.CharField(source='price_display', read_only=True)
+    price_display = serializers.CharField(read_only=True)
 
     class Meta:
         model = Product
