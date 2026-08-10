@@ -229,45 +229,48 @@
         const html = document.getElementById('html-root');
         const toggleBtn = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
-        
-        // Check for saved theme preference or default to light
-        const savedTheme = localStorage.getItem('theme');
-        
-        if (savedTheme !== 'dark') {
-            html.classList.add('light');
-            themeIcon.classList.remove('fa-sun');
-            themeIcon.classList.add('fa-moon');
-        }
-        
-        toggleBtn.addEventListener('click', function() {
-            html.classList.toggle('light');
-            const isLight = html.classList.contains('light');
-            
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            
-            if (isLight) {
+        if (!html || !toggleBtn || !themeIcon) return;
+
+        const applyIcon = function() {
+            if (html.classList.contains('light')) {
                 themeIcon.classList.remove('fa-sun');
                 themeIcon.classList.add('fa-moon');
             } else {
                 themeIcon.classList.remove('fa-moon');
                 themeIcon.classList.add('fa-sun');
             }
+        };
+
+        // Check for saved theme preference or default to light
+        let savedTheme = null;
+        try { savedTheme = localStorage.getItem('theme'); } catch (e) {}
+
+        // El head script ya aplicó la clase; sincroniza el ícono.
+        if (savedTheme !== 'dark') {
+            html.classList.add('light');
+        }
+        applyIcon();
+
+        toggleBtn.addEventListener('click', function() {
+            html.classList.toggle('light');
+            const isLight = html.classList.contains('light');
+
+            try { localStorage.setItem('theme', isLight ? 'light' : 'dark'); } catch (e) {}
+
+            applyIcon();
         });
         
         // Listen for system theme changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-            if (!localStorage.getItem('theme')) {
-                if (e.matches) {
-                    html.classList.remove('light');
-                    themeIcon.classList.remove('fa-moon');
-                    themeIcon.classList.add('fa-sun');
-                } else {
-                    html.classList.add('light');
-                    themeIcon.classList.remove('fa-sun');
-                    themeIcon.classList.add('fa-moon');
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                let stored = null;
+                try { stored = localStorage.getItem('theme'); } catch (err) {}
+                if (!stored) {
+                    if (e.matches) { html.classList.remove('light'); } else { html.classList.add('light'); }
+                    applyIcon();
                 }
-            }
-        });
+            });
+        }
     })();
 
     // User Menu Toggle — solo se cierra al hacer click en el boton nuevamente

@@ -20,6 +20,21 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <script>
+    // Tema: se aplica ANTES de pintar la página para evitar parpadeo.
+    // El modo claro es el predeterminado. Seguro aunque localStorage falle.
+    (function() {
+        var isLight = true;
+        try {
+            var t = localStorage.getItem('theme');
+            if (t === 'dark') isLight = false;
+        } catch (e) { isLight = true; }
+        var h = document.documentElement;
+        if (isLight) { h.classList.add('light'); }
+        else { h.classList.remove('light'); }
+    })();
+    </script>
+    
         <script>
         tailwind.config = {
             darkMode: 'class',
