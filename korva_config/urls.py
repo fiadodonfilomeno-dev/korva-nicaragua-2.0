@@ -5,10 +5,12 @@ The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.0/topics/http/urls/
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.contrib.auth import views as auth_views
 from django.conf import settings
-from django.conf.urls.static import static
+from django.http import FileResponse, Http404
+import os
+import re
 
 # Vistas de usuarios
 from users.views import register, login_view, logout_view, profile_view, edit_profile, dashboard, verify_email, pymes_map
@@ -159,7 +161,17 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 
-# Servir archivos de media y estaticos (staticfiles recopilados por collectstatic en el build)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# Servir estaticos y media en cualquier entorno (DEBUG True o False),
+# a diferencia de django.views.static.serve que solo sirve con DEBUG=True.
+def serve_file(request, path, root):
+    safe_root = os.path.realpath(root)
+    full = os.path.realpath(os.path.join(safe_root, path))
+    if (full != safe_root and not full.startswith(safe_root + os.sep)) or not os.path.isfile(full):
+        raise Http404
+    return FileResponse(open(full, 'rb'))
+
+urlpatterns += [
+    re_path(r'^%s(?P<path>.*)$' % re.escape(settings.STATIC_URL.lstrip('/')), serve_file, kwargs={'root': settings.STATIC_ROOT}),
+    re_path(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')), serve_file, kwargs={'root': settings.MEDIA_ROOT}),
+]
 
