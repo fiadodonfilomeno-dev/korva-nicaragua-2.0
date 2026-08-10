@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from users.models import Profile
@@ -111,7 +112,11 @@ def compute_relevance(profile, user_profile=None):
 @login_required(login_url='login')
 def recommendations(request):
     """Muestra empresas recomendadas para alianzas"""
-    user_profile = request.user.profile
+    try:
+        user_profile = request.user.profile
+    except Profile.DoesNotExist:
+        messages.error(request, 'Completa tu perfil para ver alianzas recomendadas.')
+        return redirect('edit_profile')
 
     # Obtener todos los perfiles excepto el propio
     all_profiles = Profile.objects.exclude(pk=user_profile.pk).select_related('user')

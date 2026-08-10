@@ -16,12 +16,22 @@ python manage.py migrate --no-input
 echo "=== Creando superusuario si no existe ==="
 python manage.py shell -c "
 from django.contrib.auth import get_user_model
+from users.models import Profile
 User = get_user_model()
 if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'admin@korva.ni', 'admin123')
-    print('Superusuario admin creado')
+    admin = User.objects.create_superuser('admin', 'admin@korva.ni', 'admin123')
+    Profile.objects.get_or_create(
+        user=admin,
+        defaults={'business_name': 'Korva Nicaragua (Admin)', 'ruc': 'J0310000000001', 'city': 'managua', 'sector': 'servicios', 'verified': True}
+    )
+    print('Superusuario admin creado con perfil')
 else:
-    print('Superusuario admin ya existe')
+    admin = User.objects.get(username='admin')
+    if not hasattr(admin, 'profile'):
+        Profile.objects.create(user=admin, business_name='Korva Nicaragua (Admin)', ruc='J0310000000001', city='managua', sector='servicios', verified=True)
+        print('Perfil de admin creado (faltaba)')
+    else:
+        print('Superusuario admin ya existe con perfil')
 "
 
 echo "=== Cargando datos de prueba ==="

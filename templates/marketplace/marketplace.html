@@ -63,7 +63,9 @@
             <div class="p-5">
                 <div class="flex items-center gap-2 mb-3">
                     {% if product.user.logo %}
-                    <img src="{{ product.user.logo.url }}" class="w-6 h-6 rounded-full ring-2 ring-custom-forest/30">
+                    <img src="{{ product.user.logo.url }}" class="w-6 h-6 rounded-full ring-2 ring-custom-forest/30 object-cover">
+                    {% elif product.user.logo_url %}
+                    <img src="{{ product.user.logo_url }}" class="w-6 h-6 rounded-full ring-2 ring-custom-forest/30 object-cover">
                     {% else %}
                     <div class="w-6 h-6 bg-custom-lime rounded-full flex items-center justify-center">
                         <span class="material-symbols-outlined text-white text-sm">domain</span>

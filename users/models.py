@@ -60,6 +60,7 @@ class Profile(models.Model):
     business_name = models.CharField(max_length=200)
     logo = models.ImageField(upload_to='logos/', null=True, blank=True)
     banner = models.ImageField(upload_to='banners/', null=True, blank=True)
+    logo_url = models.URLField(blank=True, null=True, help_text="URL externa del logo (ej. Unsplash)")
     ruc = models.CharField(
         max_length=17,
         unique=True,

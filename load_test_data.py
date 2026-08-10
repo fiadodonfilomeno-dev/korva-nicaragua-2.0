@@ -17,10 +17,10 @@ from groups.models import Group, GroupPost
 from core.models import KorvaAIConfig
 
 users_data = [
-    {'username': 'panaderia_nicaraguena', 'email': 'panaderia@korva.com', 'business_name': 'Panadería Nicaragüeña', 'ruc': 'J0310000000002', 'city': 'managua', 'sector': 'alimentos'},
-    {'username': 'artesanias_esteli', 'email': 'artesanias@korva.com', 'business_name': 'Artesanías Estelí', 'ruc': 'J0310000000003', 'city': 'esteli', 'sector': 'artesanias'},
-    {'username': 'tech_solutions', 'email': 'tech@korva.com', 'business_name': 'Tech Solutions Nicaragua', 'ruc': 'J0310000000004', 'city': 'managua', 'sector': 'tecnologia'},
-    {'username': 'evaluador', 'email': 'evaluador@gmail.com', 'business_name': 'Evaluador Korva', 'ruc': 'J0310000000005', 'city': 'managua', 'sector': 'tecnologia'},
+    {'username': 'panaderia_nicaraguena', 'email': 'panaderia@korva.com', 'business_name': 'Panadería Nicaragüeña', 'ruc': 'J0310000000002', 'city': 'managua', 'sector': 'alimentos', 'logo_url': 'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=200&h=200&fit=crop'},
+    {'username': 'artesanias_esteli', 'email': 'artesanias@korva.com', 'business_name': 'Artesanías Estelí', 'ruc': 'J0310000000003', 'city': 'esteli', 'sector': 'artesanias', 'logo_url': 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=200&h=200&fit=crop'},
+    {'username': 'tech_solutions', 'email': 'tech@korva.com', 'business_name': 'Tech Solutions Nicaragua', 'ruc': 'J0310000000004', 'city': 'managua', 'sector': 'tecnologia', 'logo_url': 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=200&h=200&fit=crop'},
+    {'username': 'evaluador', 'email': 'evaluador@gmail.com', 'business_name': 'Evaluador Korva', 'ruc': 'J0310000000005', 'city': 'managua', 'sector': 'tecnologia', 'logo_url': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop'},
 ]
 
 print("[*] Creando usuarios de prueba...")
@@ -28,11 +28,27 @@ for user_data in users_data:
     password = user_data['username'].replace('_', '')
     if not User.objects.filter(username=user_data['username']).exists():
         user = User.objects.create_user(username=user_data['username'], email=user_data['email'], password=password)
-        profile = Profile.objects.create(user=user, business_name=user_data['business_name'], ruc=user_data['ruc'], city=user_data['city'], sector=user_data['sector'], verified=True, popularity_score=2000 if user_data['username'] == 'evaluador' else 1500, followers_count=100 if user_data['username'] == 'evaluador' else 50, associates_count=50 if user_data['username'] == 'evaluador' else 25, collaborations_count=15 if user_data['username'] == 'evaluador' else 8)
+        profile = Profile.objects.create(user=user, business_name=user_data['business_name'], ruc=user_data['ruc'], city=user_data['city'], sector=user_data['sector'], verified=True, popularity_score=2000 if user_data['username'] == 'evaluador' else 1500, followers_count=100 if user_data['username'] == 'evaluador' else 50, associates_count=50 if user_data['username'] == 'evaluador' else 25, collaborations_count=15 if user_data['username'] == 'evaluador' else 8, logo_url=user_data['logo_url'])
         KorvaAIConfig.objects.create(user=profile)
         print(f"  [OK] Usuario '{user_data['username']}' creado (password: {password})")
     else:
         print(f"  [SKIP] Usuario '{user_data['username']}' ya existe, se conserva su contraseña")
+
+print("[*] Actualizando logos reales en perfiles existentes...")
+for user_data in users_data:
+    profile = Profile.objects.filter(user__username=user_data['username']).first()
+    if profile:
+        profile.logo_url = user_data['logo_url']
+        profile.save(update_fields=['logo_url'])
+        print(f"  [OK] logo_url actualizado para '{user_data['username']}'")
+
+print("[*] Verificando perfil de admin...")
+admin_user = User.objects.filter(username='admin').first()
+if admin_user and not Profile.objects.filter(user=admin_user).exists():
+    Profile.objects.create(user=admin_user, business_name='Korva Nicaragua (Admin)', ruc='J0310000000001', city='managua', sector='servicios', verified=True, logo_url='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop')
+    print("  [OK] Perfil de admin creado (faltaba)")
+elif admin_user:
+    print("  [SKIP] Perfil de admin ya existe")
 
 profiles = list(Profile.objects.filter(user__username__in=[u['username'] for u in users_data]))
 
