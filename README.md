@@ -95,6 +95,18 @@ media/              - Subidas de usuarios
 
 ## Changelog
 
+### 2026-08-10 — Forest Tech: Rediseño visual + animaciones
+- **Tema Forest Tech aplicado al sitio completo** — Paleta oscura forestal (`#0c1012` fondo, `#15191c` tarjetas, `#167208` primario, `#7ddf55` acentos/lima)
+- **Tipografía profesional** — Montserrat para títulos (h1–h5), Inter para cuerpo
+- **Iconografía** — Material Symbols Outlined en toda la interfaz
+- **Marketplace rediseñado** — Tarjetas con imagen, logo del vendedor, precio en lima, grid responsive 1/2/3 columnas, búsqueda y filtros en fila en desktop
+- **Landing page rediseñada** — Hero con gradiente, icono animado, gradiente de texto, stats y features con nuevo estilo
+- **Animaciones en todo el sitio** — Tarjetas con reveal al hacer scroll (IntersectionObserver), títulos con fade-up, delay escalonado
+- **Hover profesional** — Tarjetas se elevan con glow verde, imágenes del marketplace con zoom, botones con glow
+- **Navbar glass** — Efecto glassmorphism (blur) + logo con gradiente lima→verde
+- **Fondo ambiental** — Glow radial verde sutil en todo el sitio
+- **Responsive total** — Marketplace y landing adaptados a móvil y desktop
+
 ### 2026-07-29
 - **Menú móvil limpio** — Drawer con avatar, nombre de negocio, secciones (Navegación / Mi Cuenta / Seguridad)
 - **Simplificación Gemini** — Eliminado `system_instruction` (incompatible con SDK 0.8.6), instrucciones en el mensaje directo
