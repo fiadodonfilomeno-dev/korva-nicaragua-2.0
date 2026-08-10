@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{% block title %}Korva Nicaragua - Red Social para PyMEs{% endblock %}</title>
     
-    <meta name="theme-color" content="#09090b">
+    <meta name="theme-color" content="#0c1012">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
@@ -26,32 +26,41 @@
             theme: {
                 extend: {
                     colors: {
-                        'korva-primary': '#10b981',
-                        'korva-success': '#10b981',
+                        'korva-primary': '#7ddf55',
+                        'korva-success': '#7ddf55',
                         'korva-warning': '#f59e0b',
                         'korva-danger': '#ef4444',
+                        'korva-dark': '#0c1012',
+                        'korva-dark-alt': '#2a2d30',
+                        'korva-card': '#15191c',
+                        'custom-forest': '#167208',
+                        'custom-lime': '#7ddf55',
+                        'custom-light': '#f4feeb',
+                        'custom-dark-card': '#0c1517',
+                        'custom-input-bg': '#202528'
                     }
                 }
             }
         }
     </script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        * { scrollbar-width: thin; scrollbar-color: #10b981 #1a1a1d; }
+        * { scrollbar-width: thin; scrollbar-color: #167208 #0c1012; }
         
         :root {
-            --bg-primary: #09090b;
-            --bg-secondary: #0c0c0e;
-            --bg-tertiary: #1a1a1d;
-            --text-primary: #e5e7eb;
-            --text-secondary: #9ca3af;
-            --border-color: #1a1a1d;
-            --border-hover: #2d2d33;
-            --btn-primary: #10b981;
-            --btn-primary-hover: #059669;
+            --bg-primary: #0c1012;
+            --bg-secondary: #15191c;
+            --bg-tertiary: #202528;
+            --text-primary: #ffffff;
+            --text-secondary: #a3adaf;
+            --border-color: #2a2d30;
+            --border-hover: #3a4045;
+            --btn-primary: #167208;
+            --btn-primary-hover: #106e03;
             --btn-secondary: #f59e0b;
         }
         
@@ -63,8 +72,8 @@
             --text-secondary: #64748b;
             --border-color: #e2e8f0;
             --border-hover: #cbd5e1;
-            --btn-primary: #10b981;
-            --btn-primary-hover: #059669;
+            --btn-primary: #167208;
+            --btn-primary-hover: #106e03;
             --btn-secondary: #f59e0b;
         }
         
@@ -75,7 +84,13 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         
-        ::selection { background: rgba(16, 185, 129, 0.3); }
+        ::selection { background: rgba(125, 223, 85, 0.3); }
+        
+        h1, h2, h3, h4, h5 { font-family: 'Montserrat', sans-serif; }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
         
         .korva-card {
             background-color: var(--bg-secondary);
@@ -92,7 +107,7 @@
         .korva-btn-primary:hover {
             background-color: var(--btn-primary-hover);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 12px rgba(22, 114, 8, 0.35);
         }
         
         .korva-btn-secondary {
@@ -116,7 +131,7 @@
         .korva-input:focus {
             outline: none;
             border-color: var(--btn-primary);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+            box-shadow: 0 0 0 3px rgba(22, 114, 8, 0.15);
         }
         .korva-input::placeholder { color: var(--text-secondary); }
         
