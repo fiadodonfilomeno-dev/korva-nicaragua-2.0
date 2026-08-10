@@ -159,8 +159,7 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 
-# Servir archivos de media en desarrollo
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# Servir archivos de media y estaticos (staticfiles recopilados por collectstatic en el build)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
