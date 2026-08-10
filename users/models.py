@@ -173,3 +173,14 @@ class Block(models.Model):
     def __str__(self):
         return f"{self.blocker.username} bloqueó a {self.blocked.username}"
 
+
+# Crear automáticamente la config de Korva IA para cada perfil (evita "Profile has no ai_config")
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+@receiver(post_save, sender=Profile)
+def ensure_ai_config(sender, instance, created, **kwargs):
+    from core.models import KorvaAIConfig
+    KorvaAIConfig.objects.get_or_create(user=instance)
+
