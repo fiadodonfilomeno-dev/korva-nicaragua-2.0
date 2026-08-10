@@ -56,7 +56,10 @@ python manage.py runserver
 
 Credenciales de prueba:
 - Admin: `admin` / `admin123`
-- PyME: `panaderia_nicaraguica` / `test1234`
+- PyME: `panaderia_nicaraguena` / `panaderianicaraguena`
+- PyME: `artesanias_esteli` / `artesaniasesteli`
+- PyME: `tech_solutions` / `techsolutions`
+- Evaluador: `evaluador` / `evaluador`
 
 ## Estructura del proyecto
 
@@ -94,6 +97,16 @@ media/              - Subidas de usuarios
 | `/reports/` | Reportes y analytics |
 
 ## Changelog
+
+### 2026-08-10 — Deploy estable en Render + identidad visual
+- **Build estable en Render** — `SECRET_KEY` con valor por defecto + versiones fijadas de paquetes `google-*` en `requirements.txt` (sin backtracking de pip); eliminado el servicio duplicado roto `korva-nicaragua-2.0`
+- **Fix error 500 en Alianzas (`/recommendations/`)** — El superusuario `admin` se creaba sin perfil; ahora `build.sh` crea su perfil y la vista redirige amablemente si faltara
+- **Fix "User has no profile" en Mensajes** — Mismo origen (perfil de admin faltante), resuelto en el build
+- **Fix "Profile has no ai_config"** — `KorvaAIConfig` se crea automáticamente para todo perfil (signal `post_save`)
+- **Servir estáticos y media en producción** — Vista propia con `FileResponse` en `urls.py` (Django solo sirve estáticos con DEBUG=True)
+- **Logos reales de empresas** — Nuevo campo `logo_url` en `Profile` (migración `0005`) con fotos Unsplash para las empresas demo; se muestran en Alianzas, Marketplace, y perfiles
+- **Logo Korva** — Imagen del cliente en navbar, landing (hero) y login (en grande)
+- **Perfil sin placeholder** — El perfil del admin ya no muestra el avatar genérico de edificio
 
 ### 2026-08-10 — Forest Tech: Rediseño visual + animaciones
 - **Tema Forest Tech aplicado al sitio completo** — Paleta oscura forestal (`#0c1012` fondo, `#15191c` tarjetas, `#167208` primario, `#7ddf55` acentos/lima)
