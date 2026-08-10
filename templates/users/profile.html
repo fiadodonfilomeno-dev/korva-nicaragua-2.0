@@ -20,11 +20,12 @@
                 <div class="relative">
                     {% if profile.logo %}
                     <img src="{{ profile.logo.url }}" alt="{{ profile.business_name }}" 
-                        class="w-32 h-32 rounded-full border-4 border-korva-card">
+                        class="w-32 h-32 rounded-full border-4 border-korva-card object-cover">
+                    {% elif profile.logo_url %}
+                    <img src="{{ profile.logo_url }}" alt="{{ profile.business_name }}" 
+                        class="w-32 h-32 rounded-full border-4 border-korva-card object-cover">
                     {% else %}
-                    <div class="w-32 h-32 rounded-full border-4 border-korva-card bg-korva-dark-alt flex items-center justify-center">
-                        <i class="fas fa-building text-korva-success text-4xl"></i>
-                    </div>
+                    <div class="w-32 h-32"></div>
                     {% endif %}
                     {% if profile.verified %}
                     <span class="absolute -bottom-1 -right-1 bg-korva-success rounded-full p-1 border-4 border-korva-card">
