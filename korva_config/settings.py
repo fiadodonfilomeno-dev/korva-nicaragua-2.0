@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'channels',
-    'rosetta',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
