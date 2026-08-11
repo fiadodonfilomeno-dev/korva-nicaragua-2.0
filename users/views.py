@@ -137,8 +137,8 @@ def logout_view(request):
     if request.method == 'POST':
         logout(request)
         messages.success(request, 'Sesion cerrada correctamente.')
-        return redirect('home')
-    return redirect('home')
+        return redirect('login')
+    return redirect('login')
 
 
 def profile_view(request, username):
