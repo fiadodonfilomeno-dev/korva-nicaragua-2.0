@@ -1,0 +1,16 @@
+name: Keep Render awake
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Korva site
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://korva-nicaragua-2-0-1.onrender.com/)
+          echo "Korva responded: $code"
+          if [ "$code" != "200" ]; then exit 1; fi
