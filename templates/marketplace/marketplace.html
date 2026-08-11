@@ -48,10 +48,10 @@
         <a href="{% url 'product_detail' product.id %}" class="stagger-in tilt-card block bg-custom-card rounded-xl overflow-hidden border border-korva-dark-alt hover:border-custom-forest hover-lift hover-glow transition-all group">
             <!-- Image -->
             <div class="h-48 w-full bg-[#2a2d30] relative overflow-hidden">
-                {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onclick="event.preventDefault(); openLightbox(this.src, '{{ product.name|escapejs }}')">
-                {% elif product.image_url %}
+                {% if product.image_url %}
                 <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onclick="event.preventDefault(); openLightbox(this.src, '{{ product.name|escapejs }}')">
+                {% elif product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onclick="event.preventDefault(); openLightbox(this.src, '{{ product.name|escapejs }}')">
                 {% else %}
                 <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#0c1517] to-[#202528]">
                     <span class="material-symbols-outlined text-custom-lime text-5xl">image</span>
@@ -59,12 +59,7 @@
                 {% endif %}
                 <div class="img-shine"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <a href="{{ product.whatsapp_message_url }}" target="_blank" rel="noopener"
-                    onclick="event.preventDefault(); event.stopPropagation(); window.open(this.href, '_blank')"
-                    class="absolute top-2 right-2 z-10 w-9 h-9 rounded-full bg-[#25D366] flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-transform"
-                    title="Contactar por WhatsApp">
-                    <i class="fab fa-whatsapp text-white text-lg"></i>
-                </a>
+            </div>
             </div>
             <!-- Content -->
             <div class="p-5">
