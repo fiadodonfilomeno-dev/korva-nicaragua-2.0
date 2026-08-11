@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="es" id="html-root">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +10,11 @@
     <meta name="theme-color" content="#0c1012">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <link rel="apple-touch-icon" href="{% static 'icons/icon-192.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'img/korva-logo.png' %}">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -347,6 +352,13 @@
         html { scroll-behavior: smooth; }
         .nav-icon { transition: transform 0.2s ease, color 0.2s ease; }
         .nav-icon:hover { transform: translateY(-2px) scale(1.12); }
+
+        /* ===== Ticker en vivo ===== */
+        @keyframes liveDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+        .live-dot { animation: liveDot 1.2s ease-in-out infinite; }
+        .ticker-item { transition: opacity 0.4s ease, transform 0.4s ease; }
+        .ticker-fade { opacity: 0; transform: translateY(-6px); }
+        #live-ticker a { text-decoration: none; }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -354,6 +366,20 @@
 <body class="bg-korva-dark text-gray-200">
     
     {% include 'navbar.html' %}
+    
+    {% if user.is_authenticated %}
+    <div id="live-ticker" class="bg-korva-dark-alt border-b hidden" style="border-color: rgba(42,45,48,0.6);">
+        <div class="max-w-7xl mx-auto px-4 py-1.5 flex items-center gap-3 text-sm">
+            <span class="flex items-center gap-1.5 font-bold text-korva-success shrink-0">
+                <span class="live-dot inline-block w-2 h-2 rounded-full bg-korva-success"></span> EN VIVO
+            </span>
+            <a id="ticker-link" href="/activity/" class="flex-1 min-w-0">
+                <span id="ticker-text" class="block truncate text-gray-300 ticker-item"></span>
+            </a>
+            <a href="/activity/" class="text-gray-500 hover:text-korva-success text-xs shrink-0 font-medium">Ver todo →</a>
+        </div>
+    </div>
+    {% endif %}
     
     <main class="min-h-screen pt-16">
         {% if messages %}
@@ -484,6 +510,56 @@
                 });
             }, { threshold: 0.4 });
             counters.forEach(el => co.observe(el));
+        }
+    </script>
+    
+    <script>
+        // Ticker en vivo: carga actividad reciente cada 15s y rota mensajes cada 4.5s
+        (function () {
+            const bar = document.getElementById('live-ticker');
+            if (!bar) return;
+            const textEl = document.getElementById('ticker-text');
+            const linkEl = document.getElementById('ticker-link');
+            let items = [], idx = 0, len = 0;
+
+            function show() {
+                if (!items.length) { bar.classList.add('hidden'); return; }
+                bar.classList.remove('hidden');
+                const it = items[idx % items.length];
+                textEl.classList.add('ticker-fade');
+                setTimeout(() => {
+                    textEl.textContent = '[' + it.business + '] ' + it.text;
+                    linkEl.href = it.url;
+                    textEl.classList.remove('ticker-fade');
+                }, 400);
+                idx++;
+            }
+
+            function load() {
+                fetch('/api/activity-ticker/', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(r => r.ok ? r.json() : { items: [] })
+                    .then(d => {
+                        items = d.items || [];
+                        if (!items.length) return;
+                        if (items.length !== len) idx = 0;
+                        len = items.length;
+                        show();
+                    })
+                    .catch(() => {});
+            }
+
+            load();
+            setInterval(load, 15000);
+            setInterval(show, 4500);
+        })();
+    </script>
+
+    <script>
+        // PWA: registro del service worker (en la raiz) para instalacion y cache offline
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
         }
     </script>
     

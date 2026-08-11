@@ -234,3 +234,48 @@ def activity_feed(request):
         'total': len(activities[:50]),
     }
     return render(request, 'core/activity_feed.html', context)
+
+
+def activity_ticker(request):
+    """Endpoint JSON ligero para el ticker 'en vivo' de la barra superior"""
+    from django.http import JsonResponse
+    from social.models import Post
+    from marketplace.models import Product
+    from events.models import Event
+
+    blocked = get_blocked_user_ids(request.user) if request.user.is_authenticated else set()
+
+    items = []
+    for p in Post.objects.filter(moderation_status='approved').exclude(author__user__in=blocked).select_related('author__user')[:15]:
+        items.append({
+            'icon': 'fa-newspaper',
+            'color': '#60a5fa',
+            'actor': p.author.user.username,
+            'business': p.author.business_name,
+            'text': f'publico: {p.title}',
+            'url': f'/post/{p.id}/',
+            'ts': int(p.timestamp.timestamp()),
+        })
+    for pr in Product.objects.filter(is_active=True).exclude(user__user__in=blocked).select_related('user__user')[:15]:
+        items.append({
+            'icon': 'fa-tag',
+            'color': '#7ddf55',
+            'actor': pr.user.user.username,
+            'business': pr.user.business_name,
+            'text': f'ofrece: {pr.name}',
+            'url': f'/product/{pr.id}/',
+            'ts': int(pr.created_at.timestamp()),
+        })
+    for e in Event.objects.filter(is_active=True).exclude(organizer__user__in=blocked).select_related('organizer__user')[:15]:
+        items.append({
+            'icon': 'fa-calendar-alt',
+            'color': '#a78bfa',
+            'actor': e.organizer.user.username,
+            'business': e.organizer.business_name,
+            'text': f'evento: {e.title}',
+            'url': f'/events/{e.id}/',
+            'ts': int(e.created_at.timestamp()),
+        })
+
+    items.sort(key=lambda i: i['ts'], reverse=True)
+    return JsonResponse({'items': items[:8], 'total': len(items[:8])})

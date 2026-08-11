@@ -60,9 +60,10 @@ class Product(models.Model):
     @property
     def whatsapp_message_url(self):
         """Genera URL para enviar mensaje directo en WhatsApp"""
+        from urllib.parse import quote
         phone = self.contact_whatsapp.replace('+', '').replace(' ', '').replace('-', '')
         message = f"Hola, estoy interesado en: {self.name} de {self.user.business_name}"
-        return f"https://wa.me/{phone}?text={message}"
+        return f"https://wa.me/{phone}?text={quote(message)}"
     
     @property
     def price_display(self):

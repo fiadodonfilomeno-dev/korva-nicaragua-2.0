@@ -36,7 +36,7 @@ from marketplace.views import (
 from core.rankings_views import rankings
 
 # Vistas de recomendaciones
-from core.views import recommendations, search, activity_feed
+from core.views import recommendations, search, activity_feed, activity_ticker
 
 # Vistas de mensajería
 from messaging.views import (
@@ -123,6 +123,7 @@ urlpatterns = [
     # Busqueda Avanzada
     path('search/', search, name='search'),
     path('activity/', activity_feed, name='activity_feed'),
+    path('api/activity-ticker/', activity_ticker, name='activity_ticker'),
     
     # Mensajería
     path('messages/', messages_view, name='messages'),
@@ -171,6 +172,7 @@ def serve_file(request, path, root):
     return FileResponse(open(full, 'rb'))
 
 urlpatterns += [
+    path('sw.js', serve_file, {'path': 'sw.js', 'root': settings.STATIC_ROOT}),
     re_path(r'^%s(?P<path>.*)$' % re.escape(settings.STATIC_URL.lstrip('/')), serve_file, kwargs={'root': settings.STATIC_ROOT}),
     re_path(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')), serve_file, kwargs={'root': settings.MEDIA_ROOT}),
 ]

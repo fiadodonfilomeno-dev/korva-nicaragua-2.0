@@ -59,6 +59,12 @@
                 {% endif %}
                 <div class="img-shine"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <a href="{{ product.whatsapp_message_url }}" target="_blank" rel="noopener"
+                    onclick="event.preventDefault(); event.stopPropagation(); window.open(this.href, '_blank')"
+                    class="absolute top-2 right-2 z-10 w-9 h-9 rounded-full bg-[#25D366] flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-transform"
+                    title="Contactar por WhatsApp">
+                    <i class="fab fa-whatsapp text-white text-lg"></i>
+                </a>
             </div>
             <!-- Content -->
             <div class="p-5">

@@ -98,6 +98,11 @@ media/              - Subidas de usuarios
 
 ## Changelog
 
+### 2026-08-11 — Hackathon: PWA, WhatsApp y actividad en vivo
+- **App instalable (PWA)** — `manifest.json` + service worker en `/sw.js` con iconos 192/512/maskable generados desde el logo; Korva se instala en el celular/PC y funciona con cache offline (network-first)
+- **Botón WhatsApp en Marketplace** — Cada producto tiene botón verde flotante que abre `wa.me` con mensaje precargado del vendedor (URL-encoded); click no navega la tarjeta
+- **Ticker "EN VIVO"** — Barra bajo el navbar para usuarios logueados que rota las últimas publicaciones/productos/eventos cada 4.5s; endpoint JSON ligero `/api/activity-ticker/` consultado cada 15s
+
 ### 2026-08-10 — Sitio más vivo: animaciones y micro-interacciones
 - **Fondo ambiental** — Orbes verdes flotantes animados en todo el sitio (sutiles en modo claro)
 - **Fade-in escalonado** — Las tarjetas aparecen en cascada al hacer scroll
