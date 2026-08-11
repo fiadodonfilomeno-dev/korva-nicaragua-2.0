@@ -26,6 +26,15 @@ self.addEventListener('activate', function (event) {
         );
       })
       .then(function () { return self.clients.claim(); })
+      .then(function () {
+        // Al actualizar el SW, recarga las pestañas abiertas para quitar cache viejo
+        return self.clients.matchAll({ type: 'window', includeUncontrolled: true })
+          .then(function (clients) {
+            clients.forEach(function (client) {
+              try { client.navigate(client.url); } catch (e) {}
+            });
+          });
+      })
   );
 });
 
