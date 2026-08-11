@@ -1,4 +1,4 @@
-var CACHE = 'korva-v1';
+var CACHE = 'korva-v2';
 
 var CORE = [
   '/',
@@ -33,20 +33,43 @@ self.addEventListener('fetch', function (event) {
   var req = event.request;
   if (req.method !== 'GET' || req.url.indexOf(self.location.origin) !== 0) return;
 
+  // Navegacion: red primero con timeout de 8s; si falla/tarda, sirve cache
+  if (req.mode === 'navigate') {
+    event.respondWith(
+      Promise.race([
+        fetch(req),
+        new Promise(function (resolve) {
+          setTimeout(function () {
+            caches.match(req).then(function (m) { resolve(m || null); });
+          }, 8000);
+        })
+      ]).then(function (res) {
+        if (res && res.status === 200) {
+          var copy = res.clone();
+          caches.open(CACHE).then(function (c) { c.put(req, copy); }).catch(function () {});
+          return res;
+        }
+        if (res) return res;
+        return caches.match('/');
+      }).catch(function () {
+        return caches.match('/');
+      })
+    );
+    return;
+  }
+
+  // Estaticos: cache-first con respaldo a red. Las API pasan directo (datos frescos).
+  if (req.url.indexOf('/api/') !== -1) return;
   event.respondWith(
-    fetch(req)
-      .then(function (res) {
+    caches.match(req).then(function (m) {
+      if (m) return m;
+      return fetch(req).then(function (res) {
         if (res && res.status === 200 && res.type === 'basic') {
           var copy = res.clone();
-          caches.open(CACHE).then(function (cache) { cache.put(req, copy); }).catch(function () {});
+          caches.open(CACHE).then(function (c) { c.put(req, copy); }).catch(function () {});
         }
         return res;
-      })
-      .catch(function () {
-        return caches.match(req).then(function (m) {
-          if (m) return m;
-          if (req.mode === 'navigate') return caches.match('/');
-        });
-      })
+      });
+    })
   );
 });
