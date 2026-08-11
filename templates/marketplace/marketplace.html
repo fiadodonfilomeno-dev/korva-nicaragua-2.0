@@ -48,10 +48,10 @@
         <a href="{% url 'product_detail' product.id %}" class="stagger-in tilt-card block bg-custom-card rounded-xl overflow-hidden border border-korva-dark-alt hover:border-custom-forest hover-lift hover-glow transition-all group">
             <!-- Image -->
             <div class="h-48 w-full bg-[#2a2d30] relative overflow-hidden">
-                {% if product.image_url %}
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style="background-image: url('{{ product.image_url }}')"></div>
-                {% elif product.image %}
+                {% if product.image %}
                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onclick="event.preventDefault(); openLightbox(this.src, '{{ product.name|escapejs }}')">
+                {% elif product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onclick="event.preventDefault(); openLightbox(this.src, '{{ product.name|escapejs }}')">
                 {% else %}
                 <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#0c1517] to-[#202528]">
                     <span class="material-symbols-outlined text-custom-lime text-5xl">image</span>
