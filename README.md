@@ -98,6 +98,13 @@ media/              - Subidas de usuarios
 
 ## Changelog
 
+### 2026-08-11 — Imágenes reales locales
+- **Fotos reales descargadas y alojadas en el proyecto** (`static/img/real/`) — pan, tres leches, café, cerámica, hamacas, computación, apps y eventos; ya no dependen de enlaces externos que puedan fallar
+- **Logos de empresas reales** — Panadería, Artesanías, Tech Solutions, Evaluador y Admin con foto local en lugar de URL externa
+- **Posts con imagen** — Los 6 posts del muro ahora muestran foto real (antes no tenían)
+- **Eventos con imagen** — Los 4 eventos ahora muestran foto real (antes no tenían)
+- Los productos guardan tanto `image_url` (tarjetas) como `image` (detalle y transacciones)
+
 ### 2026-08-11 — Hackathon: PWA, WhatsApp y actividad en vivo
 - **App instalable (PWA)** — `manifest.json` + service worker en `/sw.js` con iconos 192/512/maskable generados desde el logo; Korva se instala en el celular/PC y funciona con cache offline (network-first)
 - **Botón WhatsApp en Marketplace** — Cada producto tiene botón verde flotante que abre `wa.me` con mensaje precargado del vendedor (URL-encoded); click no navega la tarjeta

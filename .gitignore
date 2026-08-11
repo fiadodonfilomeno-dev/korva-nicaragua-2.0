@@ -12,3 +12,4 @@ build/
 *.pyo
 __pycache__
 staticfiles/
+media/

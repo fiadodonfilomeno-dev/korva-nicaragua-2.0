@@ -7,6 +7,8 @@ from datetime import date, time
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'korva_config.settings')
 django.setup()
 
+from django.conf import settings
+from django.core.files.base import ContentFile
 from django.contrib.auth.models import User
 from users.models import Profile
 from social.models import Post, Comment
@@ -16,11 +18,27 @@ from events.models import Event
 from groups.models import Group, GroupPost
 from core.models import KorvaAIConfig
 
+
+def _img_bytes(fname):
+    """Lee una imagen real de static/img/real/"""
+    path = os.path.join(settings.STATICFILES_DIRS[0], 'img', 'real', fname)
+    with open(path, 'rb') as f:
+        return f.read()
+
+
+def _set_img(instance, field_name, fname):
+    """Guarda una imagen local en un ImageField del modelo (sin duplicar)"""
+    field = getattr(instance, field_name)
+    if field and field.name == fname:
+        return
+    data = _img_bytes(fname)
+    field.save(fname, ContentFile(data), save=True)
+
 users_data = [
-    {'username': 'panaderia_nicaraguena', 'email': 'panaderia@korva.com', 'business_name': 'Panadería Nicaragüeña', 'ruc': 'J0310000000002', 'city': 'managua', 'sector': 'alimentos', 'logo_url': 'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=200&h=200&fit=crop'},
-    {'username': 'artesanias_esteli', 'email': 'artesanias@korva.com', 'business_name': 'Artesanías Estelí', 'ruc': 'J0310000000003', 'city': 'esteli', 'sector': 'artesanias', 'logo_url': 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=200&h=200&fit=crop'},
-    {'username': 'tech_solutions', 'email': 'tech@korva.com', 'business_name': 'Tech Solutions Nicaragua', 'ruc': 'J0310000000004', 'city': 'managua', 'sector': 'tecnologia', 'logo_url': 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=200&h=200&fit=crop'},
-    {'username': 'evaluador', 'email': 'evaluador@gmail.com', 'business_name': 'Evaluador Korva', 'ruc': 'J0310000000005', 'city': 'managua', 'sector': 'tecnologia', 'logo_url': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop'},
+    {'username': 'panaderia_nicaraguena', 'email': 'panaderia@korva.com', 'business_name': 'Panadería Nicaragüeña', 'ruc': 'J0310000000002', 'city': 'managua', 'sector': 'alimentos', 'logo_url': '/static/img/real/logo-panaderia.jpg'},
+    {'username': 'artesanias_esteli', 'email': 'artesanias@korva.com', 'business_name': 'Artesanías Estelí', 'ruc': 'J0310000000003', 'city': 'esteli', 'sector': 'artesanias', 'logo_url': '/static/img/real/logo-artesanias.jpg'},
+    {'username': 'tech_solutions', 'email': 'tech@korva.com', 'business_name': 'Tech Solutions Nicaragua', 'ruc': 'J0310000000004', 'city': 'managua', 'sector': 'tecnologia', 'logo_url': '/static/img/real/logo-tech.jpg'},
+    {'username': 'evaluador', 'email': 'evaluador@gmail.com', 'business_name': 'Evaluador Korva', 'ruc': 'J0310000000005', 'city': 'managua', 'sector': 'tecnologia', 'logo_url': '/static/img/real/logo-evaluador.jpg'},
 ]
 
 print("[*] Creando usuarios de prueba...")
@@ -45,11 +63,14 @@ for user_data in users_data:
 print("[*] Verificando perfil de admin...")
 admin_user = User.objects.filter(username='admin').first()
 if admin_user and not Profile.objects.filter(user=admin_user).exists():
-    profile = Profile.objects.create(user=admin_user, business_name='Korva Nicaragua (Admin)', ruc='J0310000000001', city='managua', sector='servicios', verified=True, logo_url='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop')
+    profile = Profile.objects.create(user=admin_user, business_name='Korva Nicaragua (Admin)', ruc='J0310000000001', city='managua', sector='servicios', verified=True, logo_url='/static/img/real/logo-admin.jpg')
     KorvaAIConfig.objects.get_or_create(user=profile)
     print("  [OK] Perfil de admin creado (faltaba)")
 elif admin_user:
     profile = Profile.objects.get(user=admin_user)
+    if profile.logo_url != '/static/img/real/logo-admin.jpg':
+        profile.logo_url = '/static/img/real/logo-admin.jpg'
+        profile.save(update_fields=['logo_url'])
     KorvaAIConfig.objects.get_or_create(user=profile)
     print("  [SKIP] Perfil de admin ya existe")
 
@@ -61,12 +82,12 @@ def get_profile(username):
 # POSTS
 print("\n[*] Creando posts de prueba...")
 posts_data = [
-    {'title': 'Buscamos alianza para distribución de productos', 'content': 'Somos una pequeña panadería en Managua buscando socios para ampliar nuestra red de distribución. Ofrecemos productos frescos de calidad.', 'author': 'panaderia_nicaraguena', 'tags': ['negocio', 'alianza', 'distribucion']},
-    {'title': 'Ofertas de artesanías tradicionales', 'content': 'Vendemos artesanías hechas a mano en Estelí. Ideales para regalos corporativos y souvenirs turísticos. Hacemos envíos a todo el país.', 'author': 'artesanias_esteli', 'tags': ['artesanias', 'ventas', 'esteli']},
-    {'title': 'Servicios de desarrollo web y consultoría IT', 'content': 'Ofrecemos servicios profesionales de desarrollo web, aplicaciones móviles y consultoría tecnológica para PyMEs nicaragüenses.', 'author': 'tech_solutions', 'tags': ['tecnologia', 'desarrollo', 'consultoria']},
-    {'title': 'Pan artesanal para tus eventos', 'content': 'Ahora ofrecemos pan artesanal para bodas, cumpleaños y eventos corporativos. Pedidos con 48 hrs de anticipación.', 'author': 'panaderia_nicaraguena', 'tags': ['panaderia', 'eventos', 'managua']},
-    {'title': 'Cerámica pintada a mano - Nueva colección', 'content': 'Lanzamos nuestra nueva colección de cerámica pintada a mano con diseños tradicionales nicaragüenses. Piezas únicas.', 'author': 'artesanias_esteli', 'tags': ['ceramica', 'arte', 'nicaragua']},
-    {'title': '¿Tu PyME necesita una app móvil?', 'content': 'Desarrollamos apps Android e iOS para negocios. Cotización sin compromiso. Clientes en Managua, León y Granada.', 'author': 'tech_solutions', 'tags': ['apps', 'movil', 'pymes']},
+    {'title': 'Buscamos alianza para distribución de productos', 'content': 'Somos una pequeña panadería en Managua buscando socios para ampliar nuestra red de distribución. Ofrecemos productos frescos de calidad.', 'author': 'panaderia_nicaraguena', 'tags': ['negocio', 'alianza', 'distribucion'], 'image': 'post-alianza-pan.jpg'},
+    {'title': 'Ofertas de artesanías tradicionales', 'content': 'Vendemos artesanías hechas a mano en Estelí. Ideales para regalos corporativos y souvenirs turísticos. Hacemos envíos a todo el país.', 'author': 'artesanias_esteli', 'tags': ['artesanias', 'ventas', 'esteli'], 'image': 'post-artesanias.jpg'},
+    {'title': 'Servicios de desarrollo web y consultoría IT', 'content': 'Ofrecemos servicios profesionales de desarrollo web, aplicaciones móviles y consultoría tecnológica para PyMEs nicaragüenses.', 'author': 'tech_solutions', 'tags': ['tecnologia', 'desarrollo', 'consultoria'], 'image': 'post-tech.jpg'},
+    {'title': 'Pan artesanal para tus eventos', 'content': 'Ahora ofrecemos pan artesanal para bodas, cumpleaños y eventos corporativos. Pedidos con 48 hrs de anticipación.', 'author': 'panaderia_nicaraguena', 'tags': ['panaderia', 'eventos', 'managua'], 'image': 'post-pan-eventos.jpg'},
+    {'title': 'Cerámica pintada a mano - Nueva colección', 'content': 'Lanzamos nuestra nueva colección de cerámica pintada a mano con diseños tradicionales nicaragüenses. Piezas únicas.', 'author': 'artesanias_esteli', 'tags': ['ceramica', 'arte', 'nicaragua'], 'image': 'post-ceramica.jpg'},
+    {'title': '¿Tu PyME necesita una app móvil?', 'content': 'Desarrollamos apps Android e iOS para negocios. Cotización sin compromiso. Clientes en Managua, León y Granada.', 'author': 'tech_solutions', 'tags': ['apps', 'movil', 'pymes'], 'image': 'post-app.jpg'},
 ]
 
 for p in posts_data:
@@ -74,9 +95,14 @@ for p in posts_data:
     if not Post.objects.filter(title=p['title'], author=profile).exists():
         post = Post.objects.create(title=p['title'], content=p['content'], author=profile, moderation_status='approved', upvotes=15, downvotes=2)
         post.tags.add(*p['tags'])
+        if p.get('image'):
+            _set_img(post, 'image', p['image'])
         print(f"  [OK] Post '{p['title'][:40]}...'")
     else:
-        print(f"  [SKIP] Post '{p['title'][:40]}...' ya existe")
+        post = Post.objects.filter(title=p['title'], author=profile).first()
+        if p.get('image'):
+            _set_img(post, 'image', p['image'])
+        print(f"  [SKIP] Post '{p['title'][:40]}...' ya existe (imagen actualizada)")
 
 # COMMENTS
 print("\n[*] Creando comentarios...")
@@ -96,24 +122,29 @@ for c in comments_data:
 # PRODUCTS
 print("\n[*] Creando productos en marketplace...")
 products_data = [
-    {'name': 'Pan de yema (docena)', 'description': 'Pan de yema artesanal, horneado diariamente. Ingredientes naturales, sin preservantes.', 'price': 80, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena', 'image_url': 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=400'},
-    {'name': 'Pastel de tres leches', 'description': 'Pastel de tres leches tradicional, disponible en tamaños personalizados. Ideal para cumpleaños y eventos.', 'price': 450, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena', 'image_url': 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400'},
-    {'name': 'Café artesanal molido (1lb)', 'description': 'Café 100% nicaragüense, tostado artesanalmente. Disponible en presentación de 1 libra.', 'price': 180, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena', 'image_url': 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400'},
-    {'name': 'Jarra de cerámica pintada a mano', 'description': 'Jarra decorativa de cerámica, pintada a mano con diseños tradicionales de Nicaragua. Capacidad 1.5 litros.', 'price': 350, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli', 'image_url': 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=400'},
-    {'name': 'Set de tazas artesanales (6 pzs)', 'description': 'Set de 6 tazas de cerámica hechas a mano, cada una con diseño único. Perfectas para cafetería.', 'price': 600, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli', 'image_url': 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400'},
-    {'name': 'Hamaca nicaragüense tejida', 'description': 'Hamaca tradicional tejida a mano en Estelí. Algodón de alta resistencia. Colores variados.', 'price': 1200, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli', 'image_url': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400'},
-    {'name': 'Desarrollo de sitio web corporativo', 'description': 'Sitio web profesional con panel administrativo, diseño responsivo y optimización SEO. Incluye hosting 1 año.', 'price': 300, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions', 'image_url': 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400'},
-    {'name': 'App móvil para PyMEs', 'description': 'Aplicación móvil Android/iOS para tu negocio. Incluye catálogo de productos, carrito de compras y notificaciones.', 'price': 800, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions', 'image_url': 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400'},
-    {'name': 'Consultoría en transformación digital', 'description': 'Asesoría personalizada para digitalizar tu PyME. Incluye diagnóstico, plan de acción y acompañamiento.', 'price': 200, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions', 'image_url': 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400'},
+    {'name': 'Pan de yema (docena)', 'description': 'Pan de yema artesanal, horneado diariamente. Ingredientes naturales, sin preservantes.', 'price': 80, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena', 'image_url': '/static/img/real/product-pan-yema.jpg', 'image': 'product-pan-yema.jpg'},
+    {'name': 'Pastel de tres leches', 'description': 'Pastel de tres leches tradicional, disponible en tamaños personalizados. Ideal para cumpleaños y eventos.', 'price': 450, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena', 'image_url': '/static/img/real/product-tres-leches.jpg', 'image': 'product-tres-leches.jpg'},
+    {'name': 'Café artesanal molido (1lb)', 'description': 'Café 100% nicaragüense, tostado artesanalmente. Disponible en presentación de 1 libra.', 'price': 180, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587654321', 'owner': 'panaderia_nicaraguena', 'image_url': '/static/img/real/product-cafe.jpg', 'image': 'product-cafe.jpg'},
+    {'name': 'Jarra de cerámica pintada a mano', 'description': 'Jarra decorativa de cerámica, pintada a mano con diseños tradicionales de Nicaragua. Capacidad 1.5 litros.', 'price': 350, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli', 'image_url': '/static/img/real/product-jarra-ceramica.jpg', 'image': 'product-jarra-ceramica.jpg'},
+    {'name': 'Set de tazas artesanales (6 pzs)', 'description': 'Set de 6 tazas de cerámica hechas a mano, cada una con diseño único. Perfectas para cafetería.', 'price': 600, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli', 'image_url': '/static/img/real/product-tazas.jpg', 'image': 'product-tazas.jpg'},
+    {'name': 'Hamaca nicaragüense tejida', 'description': 'Hamaca tradicional tejida a mano en Estelí. Algodón de alta resistencia. Colores variados.', 'price': 1200, 'currency': 'NIO', 'category': 'ventas', 'whatsapp': '+50587123456', 'owner': 'artesanias_esteli', 'image_url': '/static/img/real/product-hamaca.jpg', 'image': 'product-hamaca.jpg'},
+    {'name': 'Desarrollo de sitio web corporativo', 'description': 'Sitio web profesional con panel administrativo, diseño responsivo y optimización SEO. Incluye hosting 1 año.', 'price': 300, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions', 'image_url': '/static/img/real/product-web.jpg', 'image': 'product-web.jpg'},
+    {'name': 'App móvil para PyMEs', 'description': 'Aplicación móvil Android/iOS para tu negocio. Incluye catálogo de productos, carrito de compras y notificaciones.', 'price': 800, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions', 'image_url': '/static/img/real/product-app.jpg', 'image': 'product-app.jpg'},
+    {'name': 'Consultoría en transformación digital', 'description': 'Asesoría personalizada para digitalizar tu PyME. Incluye diagnóstico, plan de acción y acompañamiento.', 'price': 200, 'currency': 'USD', 'category': 'ventas', 'whatsapp': '+50588887777', 'owner': 'tech_solutions', 'image_url': '/static/img/real/product-consultoria.jpg', 'image': 'product-consultoria.jpg'},
 ]
 for p in products_data:
     profile = get_profile(p['owner'])
     if not Product.objects.filter(name=p['name'], user=profile).exists():
-        Product.objects.create(name=p['name'], description=p['description'], price=p['price'], currency=p['currency'], category=p['category'], contact_whatsapp=p['whatsapp'], image_url=p.get('image_url', ''), user=profile, is_active=True)
+        product = Product.objects.create(name=p['name'], description=p['description'], price=p['price'], currency=p['currency'], category=p['category'], contact_whatsapp=p['whatsapp'], image_url=p.get('image_url', ''), user=profile, is_active=True)
+        if p.get('image'):
+            _set_img(product, 'image', p['image'])
         print(f"  [OK] Producto '{p['name']}'")
     else:
         Product.objects.filter(name=p['name'], user=profile).update(image_url=p.get('image_url', ''))
-        print(f"  [OK] Producto '{p['name']}' actualizado (image_url)")
+        product = Product.objects.filter(name=p['name'], user=profile).first()
+        if p.get('image'):
+            _set_img(product, 'image', p['image'])
+        print(f"  [OK] Producto '{p['name']}' actualizado (image_url + imagen)")
 
 # REVIEWS
 print("\n[*] Creando reseñas...")
@@ -165,18 +196,23 @@ for user1, user2, msgs in conv_pairs:
 # EVENTS
 print("\n[*] Creando eventos...")
 events_data = [
-    {'title': 'Feria de la PyME 2026', 'description': 'Evento anual para pequeñas y medianas empresas nicaragüenses. Habrá expositores, charlas y networking.', 'category': 'feria', 'organizer': 'tech_solutions', 'date': date.today() + timedelta(days=30), 'time': time(9, 0), 'location': 'Centro de Convenciones Olof Palme', 'city': 'managua'},
-    {'title': 'Taller de panadería artesanal', 'description': 'Aprende a hacer pan artesanal desde cero. Incluye ingredientes y herramientas. Cupo limitado.', 'category': 'taller', 'organizer': 'panaderia_nicaraguena', 'date': date.today() + timedelta(days=15), 'time': time(14, 0), 'location': 'Panadería Nicaragüeña - Managua', 'city': 'managua'},
-    {'title': 'Charla: Transformación digital para PyMEs', 'description': 'Conferencia gratuita sobre cómo digitalizar tu negocio. Casos de éxito y herramientas prácticas.', 'category': 'conferencia', 'organizer': 'tech_solutions', 'date': date.today() + timedelta(days=7), 'time': time(10, 0), 'location': 'Coworking Meta, Managua', 'city': 'managua'},
-    {'title': 'Expo Artesanías Estelí', 'description': 'Exposición y venta de artesanías tradicionales de Estelí. Productos únicos hechos a mano.', 'category': 'feria', 'organizer': 'artesanias_esteli', 'date': date.today() + timedelta(days=45), 'time': time(8, 0), 'location': 'Parque Central de Estelí', 'city': 'esteli'},
+    {'title': 'Feria de la PyME 2026', 'description': 'Evento anual para pequeñas y medianas empresas nicaragüenses. Habrá expositores, charlas y networking.', 'category': 'feria', 'organizer': 'tech_solutions', 'date': date.today() + timedelta(days=30), 'time': time(9, 0), 'location': 'Centro de Convenciones Olof Palme', 'city': 'managua', 'image': 'event-feria-pyme.jpg'},
+    {'title': 'Taller de panadería artesanal', 'description': 'Aprende a hacer pan artesanal desde cero. Incluye ingredientes y herramientas. Cupo limitado.', 'category': 'taller', 'organizer': 'panaderia_nicaraguena', 'date': date.today() + timedelta(days=15), 'time': time(14, 0), 'location': 'Panadería Nicaragüeña - Managua', 'city': 'managua', 'image': 'event-taller-pan.jpg'},
+    {'title': 'Charla: Transformación digital para PyMEs', 'description': 'Conferencia gratuita sobre cómo digitalizar tu negocio. Casos de éxito y herramientas prácticas.', 'category': 'conferencia', 'organizer': 'tech_solutions', 'date': date.today() + timedelta(days=7), 'time': time(10, 0), 'location': 'Coworking Meta, Managua', 'city': 'managua', 'image': 'event-charla-tech.jpg'},
+    {'title': 'Expo Artesanías Estelí', 'description': 'Exposición y venta de artesanías tradicionales de Estelí. Productos únicos hechos a mano.', 'category': 'feria', 'organizer': 'artesanias_esteli', 'date': date.today() + timedelta(days=45), 'time': time(8, 0), 'location': 'Parque Central de Estelí', 'city': 'esteli', 'image': 'event-expo-artesanias.jpg'},
 ]
 for e in events_data:
     org = get_profile(e['organizer'])
     if not Event.objects.filter(title=e['title'], organizer=org).exists():
         event = Event.objects.create(title=e['title'], description=e['description'], category=e['category'], organizer=org, date=e['date'], time=e['time'], location=e['location'], city=e['city'], is_active=True)
+        if e.get('image'):
+            _set_img(event, 'image', e['image'])
         print(f"  [OK] Evento '{e['title']}'")
     else:
-        print(f"  [SKIP] Evento '{e['title']}' ya existe")
+        event = Event.objects.filter(title=e['title'], organizer=org).first()
+        if e.get('image'):
+            _set_img(event, 'image', e['image'])
+        print(f"  [SKIP] Evento '{e['title']}' ya existe (imagen actualizada)")
 
 # GROUPS
 print("\n[*] Creando grupos...")
