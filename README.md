@@ -98,16 +98,21 @@ media/              - Subidas de usuarios
 
 ## Changelog
 
-### 2026-08-11 — Imágenes reales locales
-- **Fotos reales descargadas y alojadas en el proyecto** (`static/img/real/`) — pan, tres leches, café, cerámica, hamacas, computación, apps y eventos; ya no dependen de enlaces externos que puedan fallar
-- **Logos de empresas reales** — Panadería, Artesanías, Tech Solutions, Evaluador y Admin con foto local en lugar de URL externa
-- **Posts con imagen** — Los 6 posts del muro ahora muestran foto real (antes no tenían)
-- **Eventos con imagen** — Los 4 eventos ahora muestran foto real (antes no tenían)
-- Los productos guardan tanto `image_url` (tarjetas) como `image` (detalle y transacciones)
+### 2026-08-11 — Fixes de renderizado y tema claro/oscuro
+- **Imágenes del marketplace arregladas** — Cambiadas de `background-image` CSS a etiqueta `<img>` para que rendericen correctamente (antes salían negras)
+- **Tema claro/oscuro funcional** — Toggle ☀️/🌙 en el navbar para cambiar entre fondo blanco y oscuro (antes se quedaba negro sin opción visible)
+- **Service worker eliminado** — Removido el SW que servía páginas cacheadas en negro; la página siempre carga fresca
+- **Animación CSS nativa** — `.stagger-in` y `.reveal` usan `@keyframes` en vez de `opacity:0` inicial que ocultaba tarjetas si JS fallaba
+- **Keep-alive con GitHub Actions** — Ping cada 5 min para evitar que Render Free duerma el sitio (cold start de 30-60s)
 
-### 2026-08-11 — Hackathon: PWA, WhatsApp y actividad en vivo
-- **App instalable (PWA)** — `manifest.json` + service worker en `/sw.js` con iconos 192/512/maskable generados desde el logo; Korva se instala en el celular/PC y funciona con cache offline (network-first)
-- **Botón WhatsApp en Marketplace** — Cada producto tiene botón verde flotante que abre `wa.me` con mensaje precargado del vendedor (URL-encoded); click no navega la tarjeta
+### 2026-08-11 — Imágenes reales locales
+- **Fotos reales alojadas en el proyecto** (`static/img/real/`) — pan, tres leches, café, cerámica, hamacas, computación, apps y eventos; sin dependencia de enlaces externos
+- **Logos de empresas reales** — Panadería, Artesanías, Tech Solutions, Evaluador y Admin con foto local
+- **Posts con imagen** — Los 6 posts del muro muestran foto real
+- **Eventos con imagen** — Los 4 eventos muestran foto real
+- Los productos priorizan `image_url` (estáticas) sobre ImageField para máxima confiabilidad
+
+### 2026-08-11 — Hackathon: PWA y actividad en vivo
 - **Ticker "EN VIVO"** — Barra bajo el navbar para usuarios logueados que rota las últimas publicaciones/productos/eventos cada 4.5s; endpoint JSON ligero `/api/activity-ticker/` consultado cada 15s
 
 ### 2026-08-10 — Sitio más vivo: animaciones y micro-interacciones
