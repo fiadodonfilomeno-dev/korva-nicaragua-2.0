@@ -98,6 +98,14 @@ media/              - Subidas de usuarios
 
 ## Changelog
 
+### 2026-08-10 — Sitio más vivo: animaciones y micro-interacciones
+- **Fondo ambiental** — Orbes verdes flotantes animados en todo el sitio (sutiles en modo claro)
+- **Fade-in escalonado** — Las tarjetas aparecen en cascada al hacer scroll
+- **Marketplace vivo** — Tarjetas con tilt 3D al pasar el mouse, brillo (shine) que barre la imagen, y precio con pulso sutil
+- **Contadores animados** — Las stats del landing cuentan de 0 al valor al entrar en pantalla
+- **Navbar con micro-interacciones** — Iconos que suben y crecen al hover; scroll suave en toda la página
+- **Logout** — Tras cerrar sesión redirige a `/login/` en lugar de la portada
+
 ### 2026-08-10 — Deploy estable en Render + identidad visual
 - **Build estable en Render** — `SECRET_KEY` con valor por defecto + versiones fijadas de paquetes `google-*` en `requirements.txt` (sin backtracking de pip); eliminado el servicio duplicado roto `korva-nicaragua-2.0`
 - **Fix error 500 en Alianzas (`/recommendations/`)** — El superusuario `admin` se creaba sin perfil; ahora `build.sh` crea su perfil y la vista redirige amablemente si faltara
