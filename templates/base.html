@@ -555,10 +555,10 @@
     </script>
 
     <script>
-        // PWA: registro del service worker (en la raiz) para instalacion y cache offline
+        // Desactivar service workers viejos que pueden estar sirviendo paginas cacheadas en negro
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+                regs.forEach(function (r) { r.unregister(); });
             });
         }
     </script>
