@@ -299,6 +299,54 @@
         
         /* Scrollbar for light mode */
         html.light * { scrollbar-color: var(--btn-primary) var(--bg-tertiary); }
+
+        /* ===== Sitio mas vivo: ambiente, entradas, micro-interacciones ===== */
+        @keyframes floatY {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(35px, -30px) scale(1.1); }
+            66% { transform: translate(-25px, 22px) scale(0.94); }
+        }
+        .ambient-orb {
+            position: fixed; border-radius: 9999px; filter: blur(90px);
+            opacity: 0.30; pointer-events: none; z-index: 0;
+            animation: floatY 18s ease-in-out infinite;
+        }
+        html.light .ambient-orb { opacity: 0.13; }
+
+        @keyframes floatUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: none; }
+        }
+        .float-in { animation: floatUp 0.7s ease both; }
+
+        .stagger-in { opacity: 0; transform: translateY(20px); }
+        .stagger-in.on { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.6s ease; }
+
+        .tilt-card { transition: transform 0.18s ease, box-shadow 0.25s ease, border-color 0.25s ease; will-change: transform; }
+        .tilt-card:hover { box-shadow: 0 18px 40px rgba(22, 114, 8, 0.35); border-color: rgba(125, 223, 85, 0.5) !important; }
+
+        @keyframes shimmerSweep {
+            0% { transform: translateX(-130%) skewX(-20deg); }
+            100% { transform: translateX(230%) skewX(-20deg); }
+        }
+        .img-shine { position: absolute; top: 0; bottom: 0; width: 40%; left: 0; pointer-events: none;
+            background: linear-gradient(105deg, transparent, rgba(255,255,255,0.18), transparent);
+            transform: translateX(-130%) skewX(-20deg); }
+        .group:hover .img-shine { animation: shimmerSweep 0.9s ease; }
+
+        @keyframes softPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+        .price-live { animation: softPulse 2.4s ease-in-out infinite; }
+
+        @keyframes wiggle { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-6deg)} 75%{transform:rotate(6deg)} }
+        .hover-wiggle:hover i { display:inline-block; animation: wiggle 0.4s ease; }
+
+        /* Scroll suave + hover navbar */
+        html { scroll-behavior: smooth; }
+        .nav-icon { transition: transform 0.2s ease, color 0.2s ease; }
+        .nav-icon:hover { transform: translateY(-2px) scale(1.12); }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -376,6 +424,67 @@
             });
         }, { threshold: 0.08 });
         document.querySelectorAll('.reveal, .korva-card, .glass-card').forEach(el => revealObserver.observe(el));
+    </script>
+
+    <script>
+        // Fondo ambiental con orbes flotantes (sitio mas vivo)
+        (function () {
+            if (document.getElementById('ambient-bg')) return;
+            const b = document.createElement('div');
+            b.id = 'ambient-bg';
+            b.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;';
+            b.innerHTML =
+                '<div class="ambient-orb" style="width:420px;height:420px;top:-90px;left:-110px;background:radial-gradient(circle,#7ddf55,#0a0e10)"></div>' +
+                '<div class="ambient-orb" style="width:340px;height:340px;top:38%;right:-130px;background:radial-gradient(circle,#22b14c,#0a0e10);animation-delay:-6s"></div>' +
+                '<div class="ambient-orb" style="width:300px;height:300px;bottom:-70px;left:32%;background:radial-gradient(circle,#c1e9f5,#0a0e10);animation-delay:-11s"></div>';
+            document.body.insertBefore(b, document.body.firstChild);
+        })();
+
+        // Entrada escalonada para elementos .stagger-in (marketplace y secciones)
+        const staggerEls = document.querySelectorAll('.stagger-in');
+        if (staggerEls.length) {
+            const so = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) { e.target.classList.add('on'); so.unobserve(e.target); }
+                });
+            }, { threshold: 0.06 });
+            staggerEls.forEach((el, i) => {
+                el.style.transitionDelay = (Math.min(i % 8, 7) * 70) + 'ms';
+                so.observe(el);
+            });
+        }
+
+        // Tilt 3D sutil en tarjetas del marketplace
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const r = card.getBoundingClientRect();
+                const x = (e.clientX - r.left) / r.width - 0.5;
+                const y = (e.clientY - r.top) / r.height - 0.5;
+                card.style.transform = 'perspective(700px) rotateY(' + (x * 5).toFixed(2) + 'deg) rotateX(' + (-y * 5).toFixed(2) + 'deg) translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+        });
+
+        // Contadores animados con data-count
+        const counters = document.querySelectorAll('[data-count]');
+        if (counters.length) {
+            const co = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (!e.isIntersecting) return;
+                    const el = e.target, target = parseInt(el.dataset.count, 10);
+                    if (isNaN(target)) { co.unobserve(el); return; }
+                    const dur = 1200, t0 = performance.now();
+                    const step = now => {
+                        const p = Math.min((now - t0) / dur, 1);
+                        el.textContent = Math.floor(target * (1 - Math.pow(1 - p, 3))).toLocaleString('es');
+                        if (p < 1) requestAnimationFrame(step);
+                    };
+                    requestAnimationFrame(step);
+                    co.unobserve(el);
+                });
+            }, { threshold: 0.4 });
+            counters.forEach(el => co.observe(el));
+        }
     </script>
     
     {% block extra_js %}{% endblock %}

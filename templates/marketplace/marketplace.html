@@ -45,7 +45,7 @@
     {% if products %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for product in products %}
-        <a href="{% url 'product_detail' product.id %}" class="reveal block bg-custom-card rounded-xl overflow-hidden border border-korva-dark-alt hover:border-custom-forest hover-lift hover-glow transition-all delay-{{ forloop.counter|add:-1|divisibleby:5 }} group">
+        <a href="{% url 'product_detail' product.id %}" class="stagger-in tilt-card block bg-custom-card rounded-xl overflow-hidden border border-korva-dark-alt hover:border-custom-forest hover-lift hover-glow transition-all group">
             <!-- Image -->
             <div class="h-48 w-full bg-[#2a2d30] relative overflow-hidden">
                 {% if product.image_url %}
@@ -57,6 +57,7 @@
                     <span class="material-symbols-outlined text-custom-lime text-5xl">image</span>
                 </div>
                 {% endif %}
+                <div class="img-shine"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
             <!-- Content -->
@@ -76,7 +77,7 @@
                 <h2 class="text-lg font-bold text-white mb-2 leading-tight group-hover:text-custom-lime transition-colors">{{ product.name }}</h2>
                 <p class="text-sm text-gray-400 line-clamp-2">{{ product.description }}</p>
                 <div class="mt-4 flex items-center justify-between">
-                    <span class="text-lg font-bold text-custom-lime">{{ product.price_display }}</span>
+                    <span class="text-lg font-bold text-custom-lime price-live">{{ product.price_display }}</span>
                     <span class="bg-custom-forest text-white text-xs font-semibold px-3 py-1.5 rounded-md group-hover:bg-custom-lime group-hover:text-black transition-colors">Ver Detalles</span>
                 </div>
             </div>
