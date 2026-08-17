@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load allauth %}
+{% block title %}{% trans "Sign Up" %} - Korva Nicaragua{% endblock %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md bg-korva-card rounded-2xl shadow-xl p-8">
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-korva-success rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-user-plus text-white text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-white">Completa tu registro</h1>
+            <p class="text-gray-400 text-sm mt-1">
+                Usa tu cuenta de {{ account.get_provider.name }} para registrarte en Korva Nicaragua.
+            </p>
+        </div>
+        <form method="post" action="{% url 'socialaccount_signup' %}" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-red-400 text-sm mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            {{ redirect_field }}
+            <button type="submit" class="korva-btn-primary w-full py-3 rounded-lg font-semibold">
+                <i class="fas fa-user-plus mr-2"></i> Crear Cuenta
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

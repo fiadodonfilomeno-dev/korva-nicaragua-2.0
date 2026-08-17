@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Korva - Muro Social</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "inverse-surface": "#dee5d5",
+                "on-primary-fixed": "#062100",
+                "on-tertiary-fixed": "#001f26",
+                "surface-bright": "#353b30",
+                "surface-container-high": "#262c22",
+                "on-surface": "#dee5d5",
+                "secondary-container": "#0b6b00",
+                "on-primary-container": "#1e6100",
+                "surface-container": "#1b2118",
+                "error-container": "#93000a",
+                "error": "#ffb4ab",
+                "on-surface-variant": "#bfcab4",
+                "on-tertiary-container": "#335963",
+                "surface-container-low": "#171d14",
+                "surface-variant": "#30372c",
+                "inverse-primary": "#236d00",
+                "secondary-fixed": "#9cf983",
+                "on-tertiary-fixed-variant": "#254c56",
+                "on-primary": "#0e3900",
+                "surface-container-highest": "#30372c",
+                "background": "#002f38",
+                "primary-fixed": "#96fb6d",
+                "inverse-on-surface": "#2c3228",
+                "on-secondary-fixed": "#012200",
+                "tertiary-fixed-dim": "#a5cdd8",
+                "secondary": "#81dc6a",
+                "on-background": "#dee5d5",
+                "secondary-fixed-dim": "#81dc6a",
+                "on-secondary-container": "#8fea77",
+                "tertiary-fixed": "#c1e9f5",
+                "surface-container-lowest": "#0a1007",
+                "tertiary": "#c3ebf7",
+                "surface-tint": "#7bdd53",
+                "primary": "#98fc6e",
+                "outline-variant": "#404a39",
+                "surface": "#002f38",
+                "on-tertiary": "#08353f",
+                "on-error": "#690005",
+                "on-secondary": "#033900",
+                "on-error-container": "#ffdad6",
+                "primary-container": "#7ddf55",
+                "on-primary-fixed-variant": "#185200",
+                "surface-dim": "#002f38",
+                "on-secondary-fixed-variant": "#075300",
+                "primary-fixed-dim": "#7bdd53",
+                "tertiary-container": "#a7cfda",
+                "outline": "#899480"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "base": "4px",
+                "margin": "32px",
+                "gutter": "24px",
+                "sm": "16px",
+                "xl": "80px",
+                "md": "24px",
+                "xs": "8px",
+                "lg": "48px"
+        },
+        "fontFamily": {
+                "body-md": ["Manrope"],
+                "headline-lg-mobile": ["Manrope"],
+                "headline-xl": ["Manrope"],
+                "headline-md": ["Manrope"],
+                "label-sm": ["Manrope"],
+                "label-md": ["Manrope"],
+                "headline-lg": ["Manrope"]
+        },
+        "fontSize": {
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { background-color: #002f38; color: #dee5d5; }
+        .glass-card { background-color: #171d14; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s ease; }
+        .glass-card:hover { box-shadow: 0 0 15px rgba(125,223,85,0.15); }
+        .btn-primary { background-color: #7ddf55; color: #062100; transition: background-color 0.2s; }
+        .btn-primary:hover { background-color: #98fc6e; }
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #002f38; }
+        ::-webkit-scrollbar-thumb { background: #1b2118; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #30372c; }
+</style>
+<style>body { min-height: max(884px, 100dvh); }</style>
+</head>
+<body class="antialiased min-h-screen flex flex-col pb-24 md:pb-0 pt-[72px]">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm shadow-primary/5 flex justify-between items-center px-md py-sm">
+<div class="flex items-center gap-4">
+<button aria-label="Menu" class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-100 flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu</span>
+</button>
+<h1 class="font-bold text-primary tracking-tighter">KORVA</h1>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Notifications" class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-100 flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-highest text-primary border border-primary/20 hover:bg-surface-container-high transition-colors ml-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+</button>
+</div>
+</header>
+<!-- Navigation Drawer -->
+<aside class="fixed left-0 top-0 h-full w-80 z-[60] bg-surface-container border-r border-white/5 shadow-2xl shadow-black transform -translate-x-full transition-transform duration-300 flex flex-col" id="nav-drawer">
+<div class="px-lg pb-lg border-b border-white/5 mb-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center text-primary font-bold text-xl">EN</div>
+<div>
+<h2 class="text-on-surface font-semibold">Empresa Nicaragua</h2>
+<p class="text-on-surface-variant text-xs">Plan Premium</p>
+</div>
+</div>
+<p class="text-on-surface-variant mt-4 opacity-50 text-xs">v1.0.4</p>
+</div>
+<nav class="flex-1 overflow-y-auto flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:text-on-surface mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Panel de Control</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg mx-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dynamic_feed</span>
+<span class="font-medium">Muro Social</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:text-on-surface mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Configuración</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:text-on-surface mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span>Ayuda Korva</span>
+</a>
+</nav>
+<div class="mt-auto px-2 pt-4 border-t border-white/5">
+<a class="flex items-center gap-4 px-4 py-3 text-error hover:bg-error-container/10 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Cerrar Sesión</span>
+</a>
+</div>
+</aside>
+<!-- Overlay -->
+<div class="fixed inset-0 bg-black/50 z-[55] hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm" id="drawer-overlay"></div>
+<!-- Main Canvas -->
+<main class="flex-1 w-full max-w-3xl mx-auto px-4 md:px-lg py-lg flex flex-col gap-lg">
+<section class="flex flex-col gap-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#167208] text-3xl" style="font-variation-settings: 'FILL' 1;">home</span>
+<h2 class="font-bold text-[#167208]">Muro Social</h2>
+</div>
+<p class="text-on-surface-variant">Conecta con otras PyMEs, comparte ideas y encuentra oportunidades de negocio</p>
+</section>
+<!-- Search -->
+<section class="flex flex-col sm:flex-row gap-4">
+<div class="flex-1 flex bg-surface-container-high rounded-xl overflow-hidden border border-white/5 focus-within:border-primary/50 transition-colors">
+<input class="w-full bg-transparent border-none text-on-surface placeholder:text-on-surface-variant px-4 py-3 focus:ring-0" placeholder="Buscar posts, empresas..." type="text"/>
+<button class="bg-[#167208] hover:opacity-90 text-white px-4 py-3 flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+</button>
+</div>
+</section>
+<button class="w-full btn-primary rounded-xl py-4 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-[0.98]">
+<span class="material-symbols-outlined">add</span>
+Crear Post
+</button>
+<!-- Filter Bar -->
+<section class="glass-card rounded-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-2 text-[#167208]">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">sell</span>
+<span>Categoría:</span>
+</div>
+<select class="bg-surface-container text-on-surface border border-white/10 rounded-lg px-3 py-1.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none cursor-pointer appearance-none pr-8">
+<option value="all">Todas las categorías</option>
+<option value="tech">Tecnología</option>
+<option value="services">Servicios</option>
+<option value="commerce">Comercio</option>
+</select>
+</section>
+<!-- Feed -->
+<section class="flex flex-col gap-6">
+<article class="glass-card rounded-xl p-6 flex flex-col gap-4">
+<header class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-[#167208]/20 flex items-center justify-center text-[#167208] shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">business</span>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex items-center flex-wrap gap-x-2 gap-y-1">
+<h3 class="font-semibold text-on-surface">Tech Solutions Nicaragua</h3>
+<div class="flex items-center gap-1 bg-surface-container-highest px-2 py-0.5 rounded-full border border-white/5">
+<span class="material-symbols-outlined text-[#167208] text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-wider">PyME Nivel Plata</span>
+</div>
+</div>
+<span class="text-on-surface-variant opacity-70 text-xs">hace 1 día</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<div class="flex flex-col gap-3">
+<h4 class="font-bold text-on-surface">¿Tu PyME necesita una app móvil?</h4>
+<p class="text-on-surface-variant leading-relaxed">
+Desarrollamos apps Android e iOS para negocios. Cotización sin compromiso. Clientes en Managua, León y Granada. Impulsa tu presencia digital con soluciones a medida.
+</p>
+<div class="flex gap-2 mt-2 flex-wrap">
+<span class="text-sm bg-[#167208]/10 text-[#167208] px-2.5 py-1 rounded-md border border-[#167208]/20">#tecnología</span>
+<span class="text-sm bg-surface-container-highest text-on-surface-variant px-2.5 py-1 rounded-md border border-white/5">#appsmoviles</span>
+<span class="text-sm bg-surface-container-highest text-on-surface-variant px-2.5 py-1 rounded-md border border-white/5">#pymesni</span>
+</div>
+</div>
+<footer class="flex items-center gap-6 pt-4 border-t border-white/5 mt-2">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">thumb_up</span>
+<span class="font-medium text-xs">24</span>
+</button>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-error transition-colors group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">thumb_down</span>
+<span class="font-medium text-xs">1</span>
+</button>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-[#167208] transition-colors group ml-auto">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">chat_bubble</span>
+<span class="font-medium text-xs">5</span>
+</button>
+</footer>
+</article>
+<article class="glass-card rounded-xl p-6 flex flex-col gap-4">
+<header class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-[#167208]/20 flex items-center justify-center text-[#167208] shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">storefront</span>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex items-center flex-wrap gap-x-2 gap-y-1">
+<h3 class="font-semibold text-on-surface">Artesanías Estelí</h3>
+<div class="flex items-center gap-1 bg-surface-container-highest px-2 py-0.5 rounded-full border border-white/5">
+<span class="material-symbols-outlined text-[#167208] text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-wider">PyME Nivel Oro</span>
+</div>
+</div>
+<span class="text-on-surface-variant opacity-70 text-xs">hace 3 horas</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<div class="flex flex-col gap-3">
+<h4 class="font-bold text-on-surface">Nueva colección de cerámica</h4>
+<p class="text-on-surface-variant leading-relaxed">
+Cerámica pintada a mano. Perfecta para decoración de oficinas o regalos corporativos. Descuentos especiales para compras al por mayor.
+</p>
+</div>
+<footer class="flex items-center gap-6 pt-4 border-t border-white/5 mt-2">
+<button class="flex items-center gap-2 text-primary hover:text-primary-fixed transition-colors group">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+<span class="font-medium text-xs text-primary">89</span>
+</button>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-error transition-colors group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">thumb_down</span>
+<span class="font-medium text-xs">0</span>
+</button>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-[#167208] transition-colors group ml-auto">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">chat_bubble</span>
+<span class="font-medium text-xs">12</span>
+</button>
+</footer>
+</article>
+</section>
+<div class="h-8 md:h-0"></div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-low border-t border-white/5 shadow-[0_-4px_20px_rgba(0,0,0,0.4)] flex justify-around items-center h-16 px-4 md:hidden">
+<a class="flex flex-col items-center justify-center text-primary font-bold bg-primary-container/10 rounded-xl px-4 py-1 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dynamic_feed</span>
+<span class="text-[10px] mt-1">Muro</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="text-[10px] mt-1">Mercado</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-[10px] mt-1">Ranking</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] mt-1">Perfil</span>
+</a>
+</nav>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const menuBtn = document.querySelector('header button[aria-label="Menu"]');
+    const drawer = document.getElementById('nav-drawer');
+    const overlay = document.getElementById('drawer-overlay');
+    function toggleDrawer() {
+        const isClosed = drawer.classList.contains('-translate-x-full');
+        if (isClosed) {
+            drawer.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+        } else {
+            drawer.classList.add('-translate-x-full');
+            overlay.classList.add('opacity-0');
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+        }
+    }
+    menuBtn.addEventListener('click', toggleDrawer);
+    overlay.addEventListener('click', toggleDrawer);
+});
+</script>
+</body></html>

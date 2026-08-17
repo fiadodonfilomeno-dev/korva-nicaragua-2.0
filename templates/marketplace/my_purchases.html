@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load time_filters %}
+
+{% block title %}Mis Compras - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-white mb-8"><i class="fas fa-shopping-bag text-korva-success"></i> Mis Compras</h1>
+
+    <div class="mb-6 flex gap-3">
+        <a href="{% url 'my_purchases' %}" class="px-4 py-2 bg-korva-success text-white rounded-lg text-sm font-medium">Compras</a>
+        <a href="{% url 'my_sales' %}" class="px-4 py-2 bg-korva-dark-alt text-gray-400 hover:text-white rounded-lg text-sm font-medium">Ventas</a>
+        <a href="{% url 'seller_wallet' %}" class="px-4 py-2 bg-korva-dark-alt text-gray-400 hover:text-white rounded-lg text-sm font-medium">Wallet</a>
+    </div>
+
+    {% if transactions %}
+    <div class="space-y-4">
+        {% for txn in transactions %}
+        <a href="{% url 'transaction_detail' txn.id %}" class="korva-card rounded-lg p-5 border border-korva-dark-alt hover:border-korva-success transition block">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    {% if txn.product.image %}
+                    <img src="{{ txn.product.image.url }}" class="w-14 h-14 rounded-lg object-cover">
+                    {% else %}
+                    <div class="w-14 h-14 rounded-lg bg-korva-dark-alt flex items-center justify-center">
+                        <i class="fas fa-box text-gray-500"></i>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <p class="font-semibold text-white">{{ txn.product.name }}</p>
+                        <p class="text-sm text-gray-500">{{ txn.seller.business_name }} - {{ txn.amount_display }}</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span class="inline-block px-3 py-1 rounded-lg text-xs font-medium
+                        {% if txn.status == 'pending' %}bg-yellow-600 text-white
+                        {% elif txn.status == 'paid' %}bg-blue-600 text-white
+                        {% elif txn.status == 'confirmed' %}bg-green-600 text-white
+                        {% elif txn.status == 'completed' %}bg-korva-success text-white
+                        {% elif txn.status == 'cancelled' %}bg-red-600 text-white{% endif %}">
+                        {{ txn.get_status_display }}
+                    </span>
+                    <p class="text-xs text-gray-500 mt-1">#{{ txn.reference }}</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16 korva-card rounded-lg border border-korva-dark-alt">
+        <i class="fas fa-shopping-bag text-5xl text-gray-600 mb-4"></i>
+        <p class="text-gray-400">No has realizado compras aun.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

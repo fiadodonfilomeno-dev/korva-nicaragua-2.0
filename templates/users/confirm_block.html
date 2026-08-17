@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{% if action == 'bloquear' %}Bloquear{% else %}Desbloquear{% endif %} Usuario - Korva Nicaragua{% endblock %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-md bg-korva-card rounded-2xl shadow-xl p-8 text-center">
+        <div class="w-16 h-16 {% if action == 'bloquear' %}bg-red-500{% else %}bg-korva-success{% endif %} rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas {% if action == 'bloquear' %}fa-user-slash{% else %}fa-user-check{% endif %} text-white text-2xl"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-white mb-2">
+            {% if action == 'bloquear' %}Bloquear{% else %}Desbloquear{% endif %} Usuario
+        </h1>
+        <p class="text-gray-400 mb-6">
+            {% if action == 'bloquear' %}
+                ¿Estás seguro de bloquear a <strong>{{ to_block.profile.business_name|default:to_block.username }}</strong>?
+                No podrá ver tu perfil ni contactarte.
+            {% else %}
+                ¿Estás seguro de desbloquear a <strong>{{ to_block.profile.business_name|default:to_block.username }}</strong>?
+            {% endif %}
+        </p>
+        <form method="POST" class="flex justify-center gap-4">
+            {% csrf_token %}
+            <a href="{% url 'profile' to_block.username %}" class="px-6 py-2.5 bg-korva-dark-alt text-gray-300 rounded-lg hover:bg-gray-600 transition">Cancelar</a>
+            <button type="submit" class="px-6 py-2.5 {% if action == 'bloquear' %}bg-red-500 hover:bg-red-600{% else %}bg-korva-success hover:opacity-90{% endif %} text-white rounded-lg font-medium transition">
+                {% if action == 'bloquear' %}Bloquear{% else %}Desbloquear{% endif %}
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

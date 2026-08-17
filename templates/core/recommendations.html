@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Alianzas Recomendadas - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-white mb-2">
+            <i class="fas fa-handshake text-korva-success"></i> Alianzas Recomendadas
+        </h1>
+        <p class="text-gray-400">Empresas, emprendedores y proveedores compatibles con tu perfil</p>
+    </div>
+
+    <!-- Filtros -->
+    <div class="korva-card rounded-lg p-4 border border-korva-dark-alt mb-8">
+        <form method="get" class="flex flex-wrap gap-3 items-center">
+            <span class="text-gray-400 text-sm">Filtrar por sector:</span>
+            <a href="{% url 'recommendations' %}" class="px-4 py-2 rounded-lg text-sm font-medium transition
+                {% if not sector_filter %}bg-korva-success text-white{% else %}bg-korva-dark-alt text-gray-400 hover:text-white{% endif %}">
+                Todos
+            </a>
+            {% for value, label in sectors %}
+            <a href="{% url 'recommendations' %}?sector={{ value }}" class="px-4 py-2 rounded-lg text-sm font-medium transition
+                {% if sector_filter == value %}bg-korva-success text-white{% else %}bg-korva-dark-alt text-gray-400 hover:text-white{% endif %}">
+                {{ label }}
+            </a>
+            {% endfor %}
+        </form>
+    </div>
+
+    <!-- Recomendaciones -->
+    {% if recommendations %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for rec in recommendations %}
+        <div class="korva-card rounded-lg border border-korva-dark-alt p-6 hover:border-korva-success transition">
+            <!-- Header -->
+            <div class="flex items-center space-x-4 mb-4">
+                {% if rec.profile.logo %}
+                <img src="{{ rec.profile.logo.url }}" alt="{{ rec.profile.business_name }}"
+                    class="w-14 h-14 rounded-full border border-korva-success object-cover">
+                {% elif rec.profile.logo_url %}
+                <img src="{{ rec.profile.logo_url }}" alt="{{ rec.profile.business_name }}"
+                    class="w-14 h-14 rounded-full border border-korva-success object-cover">
+                {% else %}
+                <div class="w-14 h-14 rounded-full bg-korva-success flex items-center justify-center">
+                    <i class="fas fa-building text-white text-xl"></i>
+                </div>
+                {% endif %}
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center space-x-2">
+                        <a href="{% url 'profile' rec.profile.user.username %}" class="font-bold text-white hover:text-korva-success truncate">
+                            {{ rec.profile.business_name }}
+                        </a>
+                        {% if rec.profile.verified %}
+                        <span class="text-korva-success"><i class="fas fa-check-circle"></i></span>
+                        {% endif %}
+                    </div>
+                    <p class="text-xs text-gray-500">{{ rec.profile.get_city_display }} - {{ rec.profile.get_sector_display }}</p>
+                </div>
+            </div>
+
+            <!-- Score -->
+            <div class="flex items-center space-x-2 mb-3">
+                <div class="flex-1 bg-korva-dark-alt rounded-full h-2">
+                    <div class="bg-korva-success h-2 rounded-full" style="width: {{ rec.score }}%"></div>
+                </div>
+                <span class="text-xs text-korva-success font-bold code-font">{{ rec.score }}%</span>
+            </div>
+
+            <!-- Razones -->
+            <div class="flex flex-wrap gap-1 mb-4">
+                {% for reason in rec.reasons %}
+                <span class="text-xs bg-korva-dark-alt px-2 py-1 rounded text-gray-400">
+                    {{ reason }}
+                </span>
+                {% endfor %}
+            </div>
+
+            <!-- Stats -->
+            <div class="flex justify-between text-xs text-gray-500 mb-4 pb-4 border-b border-korva-dark-alt">
+                <span><i class="fas fa-star text-korva-warning mr-1"></i> {{ rec.profile.popularity_score }} pts</span>
+                <span><i class="fas fa-layer-group mr-1"></i> {{ rec.profile.tier_display }}</span>
+                <span><i class="fas fa-file-alt mr-1"></i> {{ rec.profile.posts.count }} posts</span>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3">
+                <a href="{% url 'profile' rec.profile.user.username %}" class="flex-1 text-center px-4 py-2 bg-korva-dark-alt rounded-lg text-sm text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
+                    <i class="fas fa-user mr-1"></i> Ver Perfil
+                </a>
+                <a href="{% url 'start_conversation' rec.profile.user.username %}" class="flex-1 text-center px-4 py-2 korva-btn-primary rounded-lg text-sm font-semibold">
+                    <i class="fas fa-envelope mr-1"></i> Mensaje
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16 korva-card rounded-lg border border-korva-dark-alt">
+        <i class="fas fa-search text-5xl text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-400 mb-2">No hay recomendaciones</h3>
+        <p class="text-gray-500 mb-4">Completa tu perfil y publica contenido para obtener mejores sugerencias</p>
+        <a href="{% url 'edit_profile' %}" class="korva-btn-primary px-6 py-2 rounded-lg inline-block">
+            <i class="fas fa-edit mr-2"></i> Editar Perfil
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

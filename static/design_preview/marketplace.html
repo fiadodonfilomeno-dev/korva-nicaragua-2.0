@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Korva Nicaragua - Mercado</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+        body { background-color: #002f38; color: #dee5d5; }
+        .forest-card { background-color: #002f38; border: 1px solid #167208; }
+        .forest-card-header { border-bottom: 1px solid rgba(22, 114, 8, 0.3); }
+        .forest-input { background-color: rgba(0, 47, 56, 0.5); border: 1px solid #167208; transition: border-color 0.2s; }
+        .forest-input:focus { border-color: #7ddf55; outline: none; }
+        .forest-btn-primary { background-color: #7ddf55; color: #000; border: none; }
+        .forest-btn-secondary { background-color: transparent; border: 1px solid #7ddf55; color: #7ddf55; }
+        .forest-chip { background-color: rgba(125, 223, 85, 0.2); color: #dee5d5; border-radius: 4px; }
+</style>
+<style>body { min-height: max(884px, 100dvh); }</style>
+</head>
+<body class="antialiased pb-24 md:pb-0">
+<!-- Desktop Header -->
+<header class="hidden md:flex justify-between items-center px-6 py-3 w-full max-w-7xl mx-auto top-0 sticky z-50 bg-[#002f38] shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:bg-surface-container-high transition-colors duration-200 p-2 rounded-full" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="text-2xl font-bold text-primary tracking-tight">Korva Nicaragua</span>
+</div>
+<nav class="flex gap-6">
+<a class="flex flex-col items-center justify-center px-4 py-2 hover:bg-surface-container-high transition-colors duration-200 text-on-surface-variant rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1">hub</span>
+<span class="text-xs">Muro</span>
+</a>
+<a class="flex flex-col items-center justify-center px-4 py-2 bg-secondary-container text-on-secondary-container rounded-xl transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">storefront</span>
+<span class="text-xs">Mercado</span>
+</a>
+<a class="flex flex-col items-center justify-center px-4 py-2 hover:bg-surface-container-high transition-colors duration-200 text-on-surface-variant rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1">military_tech</span>
+<span class="text-xs">Ranking</span>
+</a>
+<a class="flex flex-col items-center justify-center px-4 py-2 hover:bg-surface-container-high transition-colors duration-200 text-on-surface-variant rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1">account_circle</span>
+<span class="text-xs">Perfil</span>
+</a>
+</nav>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:bg-surface-container-high transition-colors duration-200 p-2 rounded-full">notifications</span>
+</header>
+<!-- Mobile Header -->
+<header class="md:hidden flex justify-between items-center px-4 py-3 w-full top-0 sticky z-50 bg-[#002f38] shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+<span class="material-symbols-outlined text-primary p-2" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="text-xl font-bold text-primary tracking-tight">Korva Nicaragua</span>
+<span class="material-symbols-outlined text-on-surface-variant p-2">notifications</span>
+</header>
+<!-- Main -->
+<main class="max-w-7xl mx-auto px-6 mt-12 flex flex-col gap-12">
+<!-- Hero Search -->
+<section class="flex flex-col items-center text-center gap-6 relative w-full rounded-2xl overflow-hidden p-12">
+<div class="absolute inset-0 bg-gradient-to-br from-[#002f38] to-[#0a1007] opacity-80 z-0"></div>
+<div class="z-10 relative max-w-2xl w-full flex flex-col gap-4">
+<h1 class="text-5xl font-extrabold text-on-surface mb-4">Soluciones B2B Integradas</h1>
+<p class="text-lg text-on-surface-variant mb-6">Explora el mercado de herramientas y servicios para potenciar tu infraestructura empresarial.</p>
+<div class="relative w-full flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-outline z-20">search</span>
+<input class="forest-input w-full py-3 pl-12 pr-4 rounded-lg text-on-surface placeholder:text-outline shadow-lg relative z-10" placeholder="Buscar productos, servicios, software..." type="text"/>
+<button class="forest-btn-primary absolute right-2 py-1 px-4 rounded-md z-20 hover:opacity-90 transition-opacity">Buscar</button>
+</div>
+<div class="flex flex-wrap justify-center gap-2 mt-4">
+<span class="forest-chip px-3 py-1 text-xs cursor-pointer">ERP</span>
+<span class="forest-chip px-3 py-1 text-xs cursor-pointer">Facturación</span>
+<span class="forest-chip px-3 py-1 text-xs cursor-pointer">Consultoría IT</span>
+<span class="forest-chip px-3 py-1 text-xs cursor-pointer">Cloud</span>
+</div>
+</div>
+</section>
+<!-- Categories -->
+<section class="flex flex-col gap-6">
+<h2 class="text-2xl font-semibold text-primary">Categorías Destacadas</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="forest-card rounded-xl p-6 flex flex-col gap-4 hover:shadow-[0_0_15px_rgba(125,223,85,0.15)] transition-shadow cursor-pointer group">
+<div class="flex items-center justify-between forest-card-header pb-4">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">memory</span>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<h3 class="text-xl font-semibold text-on-surface mt-4">Software & SaaS</h3>
+<p class="text-on-surface-variant">Herramientas de gestión y automatización.</p>
+</div>
+<div class="forest-card rounded-xl p-6 flex flex-col gap-4 hover:shadow-[0_0_15px_rgba(125,223,85,0.15)] transition-shadow cursor-pointer group">
+<div class="flex items-center justify-between forest-card-header pb-4">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">support_agent</span>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<h3 class="text-xl font-semibold text-on-surface mt-4">Servicios Profesionales</h3>
+<p class="text-on-surface-variant">Consultoría técnica y soporte especializado.</p>
+</div>
+<div class="forest-card rounded-xl p-6 flex flex-col gap-4 hover:shadow-[0_0_15px_rgba(125,223,85,0.15)] transition-shadow cursor-pointer group">
+<div class="flex items-center justify-between forest-card-header pb-4">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">router</span>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<h3 class="text-xl font-semibold text-on-surface mt-4">Hardware & Infra.</h3>
+<p class="text-on-surface-variant">Equipos de red y servidores para centros de datos.</p>
+</div>
+</div>
+</section>
+<!-- Products -->
+<section class="flex flex-col gap-6 mb-12">
+<h2 class="text-2xl font-semibold text-primary">Nuevos Servicios Disponibles</h2>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<article class="forest-card rounded-xl overflow-hidden flex flex-col sm:flex-row group">
+<div class="sm:w-1/3 relative min-h-[150px] bg-[#052026]">
+<div class="absolute inset-0 bg-[#052026] flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined text-primary text-5xl">receipt_long</span>
+</div>
+</div>
+<div class="p-6 flex flex-col gap-2 sm:w-2/3">
+<div class="flex justify-between items-start mb-2">
+<span class="forest-chip px-2 py-0.5 text-xs">Finanzas</span>
+<span class="text-sm text-primary">Verificado</span>
+</div>
+<h3 class="text-xl font-semibold text-on-surface leading-tight">Sistema de Facturación Electrónica DGI</h3>
+<p class="text-on-surface-variant line-clamp-2 mt-2 mb-4">Integración completa con los servicios de la Dirección General de Ingresos para automatización de facturas.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-sm text-on-surface">Desde $120/mes</span>
+<button class="forest-btn-secondary px-4 py-2 rounded-md text-sm hover:bg-[rgba(125,223,85,0.1)] transition-colors">Ver Detalles</button>
+</div>
+</div>
+</article>
+<article class="forest-card rounded-xl overflow-hidden flex flex-col sm:flex-row group">
+<div class="sm:w-1/3 relative min-h-[150px] bg-[#052026]">
+<div class="absolute inset-0 bg-[#052026] flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined text-primary text-5xl">query_stats</span>
+</div>
+</div>
+<div class="p-6 flex flex-col gap-2 sm:w-2/3">
+<div class="flex justify-between items-start mb-2">
+<span class="forest-chip px-2 py-0.5 text-xs">Consultoría</span>
+<span class="material-symbols-outlined text-outline text-sm">bookmark_border</span>
+</div>
+<h3 class="text-xl font-semibold text-on-surface leading-tight">Consultoría en Transformación Digital</h3>
+<p class="text-on-surface-variant line-clamp-2 mt-2 mb-4">Análisis de infraestructura y plan estratégico para migración a servicios cloud y optimización de procesos.</p>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-sm text-on-surface">Cotización a medida</span>
+<button class="forest-btn-secondary px-4 py-2 rounded-md text-sm hover:bg-[rgba(125,223,85,0.1)] transition-colors">Contactar</button>
+</div>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-4 bg-[#171d14] z-50">
+<a class="flex flex-col items-center justify-center text-[#bfcab4] px-4 py-1 hover:text-primary transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="text-xs mt-1">Muro</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#0b6b00] text-[#8fea77] rounded-xl px-4 py-1 transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">storefront</span>
+<span class="text-xs mt-1">Mercado</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#bfcab4] px-4 py-1 hover:text-primary transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span class="text-xs mt-1">Ranking</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#bfcab4] px-4 py-1 hover:text-primary transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-xs mt-1">Perfil</span>
+</a>
+</nav>
+</body></html>

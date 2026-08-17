@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load time_filters %}
+
+{% block title %}{{ group.name }} - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="korva-card rounded-lg p-6 border border-korva-dark-alt mb-6">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                {% if group.image %}
+                <img src="{{ group.image.url }}" class="w-16 h-16 rounded-full object-cover">
+                {% else %}
+                <div class="w-16 h-16 rounded-full bg-korva-success flex items-center justify-center">
+                    <i class="fas fa-users text-white text-xl"></i>
+                </div>
+                {% endif %}
+                <div>
+                    <h1 class="text-2xl font-bold text-white">{{ group.name }}</h1>
+                    <p class="text-gray-400 text-sm">{{ group.get_sector_display }} - {{ group.member_count }} miembros</p>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'toggle_group_member' group.id %}">
+                {% csrf_token %}
+                <button type="submit" class="px-6 py-2 rounded-lg font-semibold transition
+                    {% if is_member %}bg-red-600 text-white hover:bg-red-700{% else %}korva-btn-primary{% endif %}">
+                    {% if is_member %}Salir{% else %}Unirse{% endif %}
+                </button>
+            </form>
+            {% endif %}
+        </div>
+        <p class="text-gray-300 mt-4">{{ group.description }}</p>
+    </div>
+
+    {% if is_member %}
+    <!-- Crear post -->
+    <div class="korva-card rounded-lg p-6 border border-korva-dark-alt mb-6">
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <textarea name="content" rows="3" class="korva-input w-full" placeholder="Comparte algo con el grupo..."></textarea>
+            <div class="flex justify-between items-center">
+                <input type="file" name="image" accept="image/*" class="text-sm text-gray-400">
+                <button type="submit" class="korva-btn-primary px-6 py-2 rounded-lg font-semibold">
+                    <i class="fas fa-paper-plane mr-2"></i> Publicar
+                </button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Posts -->
+    {% if posts %}
+    <div class="space-y-4">
+        {% for post in posts %}
+        <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
+            <div class="flex items-center space-x-3 mb-3">
+                {% if post.author.logo %}
+                <img src="{{ post.author.logo.url }}" class="w-8 h-8 rounded-full">
+                {% else %}
+                <div class="w-8 h-8 rounded-full bg-korva-success flex items-center justify-center text-white text-sm">
+                    <i class="fas fa-building"></i>
+                </div>
+                {% endif %}
+                <div>
+                    <a href="{% url 'profile' post.author.user.username %}" class="font-semibold text-white hover:text-korva-success">{{ post.author.business_name }}</a>
+                    <p class="text-xs text-gray-500">{{ post.created_at|time_ago }}</p>
+                </div>
+            </div>
+            <p class="text-gray-300">{{ post.content }}</p>
+            {% if post.image %}
+            <img src="{{ post.image.url }}" class="mt-3 rounded-lg max-h-64 object-cover">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-12 korva-card rounded-lg border border-korva-dark-alt">
+        <p class="text-gray-500">No hay publicaciones en este grupo</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

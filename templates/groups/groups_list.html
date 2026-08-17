@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load time_filters %}
+
+{% block title %}Grupos por Sector - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-4xl font-bold text-white">
+            <i class="fas fa-users text-korva-success"></i> Grupos por Sector
+        </h1>
+        {% if user.is_authenticated %}
+        <a href="{% url 'create_group' %}" class="korva-btn-primary px-6 py-3 rounded-lg font-semibold">
+            <i class="fas fa-plus mr-2"></i> Crear Grupo
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-8">
+        <a href="{% url 'groups_list' %}" class="px-4 py-2 rounded-lg text-sm font-medium transition
+            {% if not sector %}bg-korva-success text-white{% else %}bg-korva-dark-alt text-gray-400 hover:text-white{% endif %}">
+            Todos
+        </a>
+        {% for value, label in sectors %}
+        <a href="{% url 'groups_list' %}?sector={{ value }}" class="px-4 py-2 rounded-lg text-sm font-medium transition
+            {% if sector == value %}bg-korva-success text-white{% else %}bg-korva-dark-alt text-gray-400 hover:text-white{% endif %}">
+            {{ label }}
+        </a>
+        {% endfor %}
+    </div>
+
+    {% if groups %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for group in groups %}
+        <a href="{% url 'group_detail' group.id %}" class="korva-card rounded-lg border border-korva-dark-alt p-6 hover:border-korva-success transition block">
+            <div class="flex items-center space-x-4 mb-3">
+                {% if group.image %}
+                <img src="{{ group.image.url }}" class="w-12 h-12 rounded-full object-cover">
+                {% else %}
+                <div class="w-12 h-12 rounded-full bg-korva-success flex items-center justify-center">
+                    <i class="fas fa-users text-white"></i>
+                </div>
+                {% endif %}
+                <div>
+                    <h3 class="font-bold text-white">{{ group.name }}</h3>
+                    <span class="text-xs text-gray-500">{{ group.get_sector_display }}</span>
+                </div>
+            </div>
+            <p class="text-gray-400 text-sm">{{ group.description|truncatewords:20 }}</p>
+            <div class="flex items-center text-xs text-gray-500 mt-3">
+                <span><i class="fas fa-users mr-1"></i> {{ group.member_count }} miembros</span>
+                <span class="mx-2">|</span>
+                <span>{{ group.posts.count }} posts</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16 korva-card rounded-lg border border-korva-dark-alt">
+        <i class="fas fa-users text-5xl text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-400">No hay grupos aun</h3>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

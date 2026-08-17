@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load time_filters %}
+
+{% block title %}Busqueda - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-white mb-6"><i class="fas fa-search text-korva-success"></i> Busqueda Avanzada</h1>
+
+    <!-- Barra de busqueda -->
+    <form method="get" class="mb-8">
+        <div class="flex gap-3">
+            <input type="text" name="q" value="{{ q }}" placeholder="Buscar empresas, productos, publicaciones..."
+                class="korva-input flex-1 text-lg py-3">
+            <button type="submit" class="korva-btn-primary px-8 py-3 rounded-lg font-semibold">
+                <i class="fas fa-search mr-2"></i> Buscar
+            </button>
+        </div>
+        <!-- Filtros de seccion -->
+        <div class="flex flex-wrap gap-2 mt-4">
+            {% for sec, label in sections %}
+            <a href="?q={{ q }}&section={{ sec }}" class="px-4 py-2 rounded-lg text-sm font-medium transition
+                {% if section == sec %}bg-korva-success text-white{% else %}bg-korva-dark-alt text-gray-400 hover:text-white{% endif %}">
+                {{ label }}
+            </a>
+            {% endfor %}
+        </div>
+    </form>
+
+    {% if q %}
+    <p class="text-gray-400 mb-6">{{ total }} resultado{{ total|pluralize }} para "<strong class="text-white">{{ q }}</strong>"</p>
+
+    <!-- Empresas -->
+    {% if results.profiles %}
+    <div class="mb-8">
+        <h2 class="text-xl font-bold text-white mb-4"><i class="fas fa-building text-korva-success mr-2"></i> Empresas ({{ results.profiles|length }})</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for p in results.profiles %}
+            <a href="{% url 'profile' p.user.username %}" class="korva-card rounded-lg p-4 border border-korva-dark-alt hover:border-korva-success transition block">
+                <div class="flex items-center space-x-3">
+                    {% if p.logo %}
+                    <img src="{{ p.logo.url }}" class="w-10 h-10 rounded-full">
+                    {% else %}
+                    <div class="w-10 h-10 rounded-full bg-korva-success flex items-center justify-center text-white"><i class="fas fa-building text-sm"></i></div>
+                    {% endif %}
+                    <div>
+                        <p class="font-semibold text-white">{{ p.business_name }}</p>
+                        <p class="text-xs text-gray-500">{{ p.get_city_display }} - {{ p.get_sector_display }}</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Publicaciones -->
+    {% if results.posts %}
+    <div class="mb-8">
+        <h2 class="text-xl font-bold text-white mb-4"><i class="fas fa-file-alt text-korva-success mr-2"></i> Publicaciones ({{ results.posts|length }})</h2>
+        <div class="space-y-3">
+            {% for post in results.posts %}
+            <a href="{% url 'post_detail' post.id %}" class="korva-card rounded-lg p-4 border border-korva-dark-alt hover:border-korva-success transition block">
+                <p class="font-semibold text-white">{{ post.title }}</p>
+                <p class="text-gray-400 text-sm mt-1">{{ post.content|truncatewords:20 }}</p>
+                <p class="text-xs text-gray-500 mt-2">{{ post.author.business_name }} - {{ post.timestamp|time_ago }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Productos -->
+    {% if results.products %}
+    <div class="mb-8">
+        <h2 class="text-xl font-bold text-white mb-4"><i class="fas fa-shopping-bag text-korva-success mr-2"></i> Productos ({{ results.products|length }})</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for prod in results.products %}
+            <a href="{% url 'product_detail' prod.id %}" class="korva-card rounded-lg border border-korva-dark-alt overflow-hidden hover:border-korva-success transition block">
+                {% if prod.image %}
+                <img src="{{ prod.image.url }}" class="w-full h-32 object-cover">
+                {% endif %}
+                <div class="p-4">
+                    <p class="font-semibold text-white">{{ prod.name }}</p>
+                    <p class="text-korva-success font-bold mt-1">{{ prod.price_display }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Grupos -->
+    {% if results.groups %}
+    <div class="mb-8">
+        <h2 class="text-xl font-bold text-white mb-4"><i class="fas fa-users text-korva-success mr-2"></i> Grupos ({{ results.groups|length }})</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for g in results.groups %}
+            <a href="{% url 'group_detail' g.id %}" class="korva-card rounded-lg p-4 border border-korva-dark-alt hover:border-korva-success transition block">
+                <p class="font-semibold text-white">{{ g.name }}</p>
+                <p class="text-xs text-gray-500">{{ g.get_sector_display }} - {{ g.member_count }} miembros</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if total == 0 %}
+    <div class="text-center py-12 korva-card rounded-lg border border-korva-dark-alt">
+        <i class="fas fa-search text-4xl text-gray-600 mb-4"></i>
+        <p class="text-gray-400">No se encontraron resultados</p>
+    </div>
+    {% endif %}
+
+    {% endif %}
+</div>
+{% endblock %}
