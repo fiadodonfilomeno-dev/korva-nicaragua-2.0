@@ -80,6 +80,41 @@ class TestSocialViews:
         post.refresh_from_db()
         assert post.downvotes == 1
 
+    def test_downvote_post_toggle(self, client_logged_in, post):
+        # Primer downvote -> registra downvote
+        client_logged_in.post(reverse('downvote_post', args=[post.id]))
+        post.refresh_from_db()
+        assert post.downvotes == 1
+
+        # Segundo downvote -> elimina el downvote (toggle)
+        client_logged_in.post(reverse('downvote_post', args=[post.id]))
+        post.refresh_from_db()
+        assert post.downvotes == 0
+
+    def test_downvote_after_upvote_switches(self, client_logged_in, post):
+        # Vota up
+        client_logged_in.post(reverse('upvote_post', args=[post.id]))
+        post.refresh_from_db()
+        assert post.upvotes == 1
+        assert post.downvotes == 0
+
+        # Cambia a down
+        client_logged_in.post(reverse('downvote_post', args=[post.id]))
+        post.refresh_from_db()
+        assert post.upvotes == 0
+        assert post.downvotes == 1
+
     def test_search_posts(self, client, post):
         response = client.get(reverse('home') + '?q=Test')
         assert response.status_code == 200
+
+    def test_home_pagination(self, client_logged_in, profile):
+        # Crear 12 posts para verificar la paginación de 10 elementos por página
+        for i in range(12):
+            Post.objects.create(title=f'Post {i}', content=f'Content {i}', author=profile)
+        
+        response = client_logged_in.get(reverse('home'))
+        assert response.status_code == 200
+        assert len(response.context['posts']) == 10
+        assert response.context['posts'].has_next() is True
+

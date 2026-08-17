@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Q
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from .models import Post, Comment, PostImage, Vote
 from .forms import PostForm, CommentForm, PostImageForm
 from users.models import Profile
@@ -12,23 +13,32 @@ def home(request):
     """
     MURO SOCIAL / PÁGINA DE INICIO:
     Si el usuario no está autenticado, renderiza la página de bienvenida (Landing).
-    Si está autenticado, muestra el muro social con todas las publicaciones.
+    Si está autenticado, muestra el muro social con todas las publicaciones paginadas.
     Permite filtrar/buscar publicaciones por título, contenido o nombre de la PyME.
     """
     if not request.user.is_authenticated:
         return render(request, 'landing.html')
     
     try:
-        posts = Post.objects.select_related('author').all()
+        posts_list = Post.objects.select_related('author').all()
         
         # Buscar posts
         search_query = request.GET.get('q')
         if search_query:
-            posts = posts.filter(
+            posts_list = posts_list.filter(
                 Q(title__icontains=search_query) |
                 Q(content__icontains=search_query) |
                 Q(author__business_name__icontains=search_query)
             )
+        
+        paginator = Paginator(posts_list, 10)
+        page = request.GET.get('page')
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
         
         context = {
             'posts': posts,
@@ -38,7 +48,7 @@ def home(request):
         return render(request, 'social/home.html', context)
     except Exception as e:
         messages.error(request, f'Error al cargar el muro: {str(e)}')
-        return redirect('home')
+        return render(request, 'social/home.html', {'posts': [], 'search_query': ''})
 
 
 @login_required(login_url='login')
@@ -80,7 +90,7 @@ def post_detail(request, post_id):
     Si el usuario está autenticado, permite enviar nuevos comentarios al post.
     """
     try:
-        post = get_or_404(Post, pk=post_id)
+        post = get_object_or_404(Post, pk=post_id)
         comments = post.comments.all()
         
         if request.method == 'POST' and request.user.is_authenticated:
@@ -170,11 +180,37 @@ def downvote_post(request, post_id):
     """
     VOTO NEGATIVO (DOWNVOTE):
     Registra votos negativos reduciendo la popularidad de la PyME autora en -5 puntos.
+    Evita votos duplicados del mismo usuario (los alterna o elimina si ya existían).
     """
     try:
         post = get_object_or_404(Post, pk=post_id)
-        post.downvotes += 1
-        post.author.popularity_score = max(0, post.author.popularity_score - 5)
+        user_profile = request.user.profile
+        
+        # Verificar si ya votó
+        existing_vote = Vote.objects.filter(user=user_profile, post=post).first()
+        
+        if existing_vote:
+            if existing_vote.vote_type == 'down':
+                # Ya votó down, quitar voto
+                existing_vote.delete()
+                post.downvotes = max(0, post.downvotes - 1)
+                post.author.popularity_score += 5
+                vote_action = 'removed'
+            else:
+                # Cambió de up a down
+                existing_vote.vote_type = 'down'
+                existing_vote.save()
+                post.downvotes += 1
+                post.upvotes = max(0, post.upvotes - 1)
+                post.author.popularity_score = max(0, post.author.popularity_score - 15)
+                vote_action = 'changed_to_down'
+        else:
+            # Nuevo voto down
+            Vote.objects.create(user=user_profile, post=post, vote_type='down')
+            post.downvotes += 1
+            post.author.popularity_score = max(0, post.author.popularity_score - 5)
+            vote_action = 'downvoted'
+        
         post.author.save()
         post.save()
         
@@ -182,7 +218,9 @@ def downvote_post(request, post_id):
             return JsonResponse({
                 'upvotes': post.upvotes,
                 'downvotes': post.downvotes,
-                'author_score': post.author.popularity_score
+                'author_score': post.author.popularity_score,
+                'action': vote_action,
+                'user_vote': 'down' if vote_action in ['downvoted', 'changed_to_down'] else None
             })
         
         return redirect('post_detail', post_id=post.pk)

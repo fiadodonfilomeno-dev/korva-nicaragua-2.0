@@ -138,6 +138,39 @@
         </div>
         {% endfor %}
     </div>
+
+    <!-- Pagination Controls -->
+    {% if posts.has_other_pages %}
+    <div class="flex items-center justify-between pt-6 mt-4">
+        <div>
+            {% if posts.has_previous %}
+            <a href="?page={{ posts.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}" 
+               class="korva-btn-primary px-4 py-2 rounded-lg text-sm">
+                <i class="fas fa-chevron-left mr-1"></i> Anterior
+            </a>
+            {% else %}
+            <span class="px-4 py-2 rounded-lg text-sm bg-korva-dark-alt text-gray-500 cursor-not-allowed">
+                <i class="fas fa-chevron-left mr-1"></i> Anterior
+            </span>
+            {% endif %}
+        </div>
+        <div class="text-sm text-gray-400">
+            Página <span class="font-semibold text-white">{{ posts.number }}</span> de <span class="font-semibold text-white">{{ posts.paginator.num_pages }}</span>
+        </div>
+        <div>
+            {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}" 
+               class="korva-btn-primary px-4 py-2 rounded-lg text-sm">
+                Siguiente <i class="fas fa-chevron-right ml-1"></i>
+            </a>
+            {% else %}
+            <span class="px-4 py-2 rounded-lg text-sm bg-korva-dark-alt text-gray-500 cursor-not-allowed">
+                Siguiente <i class="fas fa-chevron-right ml-1"></i>
+            </span>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
     {% else %}
     <div class="text-center py-12 korva-card rounded-lg">
         <i class="fas fa-inbox text-4xl text-gray-600 mb-4"></i>

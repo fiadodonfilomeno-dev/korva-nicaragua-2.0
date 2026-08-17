@@ -54,8 +54,25 @@ Esto ocurría porque Django ejecutaba la señal `post_save` configurada en `user
 
 ---
 
-## 4. Estado de la Suite de Pruebas
+## 4. Mejoras de Seguridad y Rendimiento para Hackathon
 
-Se ejecutó la suite completa de pruebas unitarias (`pytest`), confirmando que todos los componentes clave de la aplicación funcionan correctamente:
-* **Total de Pruebas Ejecutadas**: 72
-* **Resultado**: 72 aprobadas (100% de éxito)
+* **Refactorización del Sistema de Votos Negativos ([views.py](file:///c:/Users/DELL%205591/Downloads/korva-nicaragua-main/korva-nicaragua-main/social/views.py))**:
+  * Se integró la entidad `Vote` en `downvote_post` para restringir a los usuarios a un solo voto por publicación.
+  * Se añadió lógica de alternancia (*toggle*): un segundo *downvote* elimina el voto y restituye los puntos de popularidad del autor.
+  * Se permite el cambio fluido entre *upvote* y *downvote* ajustando dinámicamente los contadores y el `popularity_score`.
+
+* **Paginación del Muro Social ([home.html](file:///c:/Users/DELL%205591/Downloads/korva-nicaragua-main/korva-nicaragua-main/templates/social/home.html))**:
+  * Se implementó `Paginator` de Django (10 elementos por página) en la vista `home` para garantizar cargas ultrarrápidas del muro durante las demostraciones.
+  * Se añadieron botones de navegación responsivos (Anterior / Siguiente) respetando los parámetros de búsqueda activos (`q`).
+
+* **Prevención de Bucles de Redirección**:
+  * Se sustituyó la auto-redirección recursiva en la captura de excepciones de la vista `home` por un renderizado limpio con mensaje de aviso.
+
+---
+
+## 5. Estado de la Suite de Pruebas
+
+Se ejecutó la suite completa de pruebas unitarias (`pytest`), incluyendo las nuevas pruebas para el sistema de votos y paginación:
+* **Total de Pruebas Ejecutadas**: 75
+* **Resultado**: 75 aprobadas (100% de éxito)
+
