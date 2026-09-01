@@ -31,11 +31,14 @@ if db_url:
 "
 fi
 
-echo "=== Recopilando archivos estáticos ==="
+echo "=== Recopilando archivos estaticos ==="
 python manage.py collectstatic --no-input
 
 echo "=== Ejecutando migraciones ==="
 python manage.py migrate --no-input
+
+echo "=== Cargando datos seed (productos, posts, usuarios) ==="
+python manage.py seed
 
 echo "=== Creando superusuario si no existe ==="
 python manage.py shell -c "
