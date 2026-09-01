@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Alianzas - Korva Nicaragua{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 flex items-center">
+            <i class="fas fa-handshake text-korva-success mr-3"></i> Alianzas
+        </h1>
+        <p class="text-gray-400">Oportunidades de negocio: PyMEs buscando socios comerciales, distribución y colaboración</p>
+    </div>
+
+    <!-- Buscar y crear alianza -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="md:col-span-2">
+            <form method="get" class="flex">
+                <input type="text" name="q" placeholder="Buscar alianzas..." value="{{ search_query|default:'' }}"
+                    class="korva-input flex-1 rounded-l-lg" />
+                <button type="submit" class="korva-btn-primary px-6 rounded-r-lg font-medium">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'create_post' %}?tipo=alianza" class="korva-btn-primary px-6 py-3 rounded-lg font-medium text-center">
+            <i class="fas fa-handshake"></i> Publicar Alianza
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Lista de alianzas -->
+    {% if alliance_posts %}
+    <div class="space-y-6">
+        {% for post in alliance_posts %}
+        <div class="korva-card hoverable rounded-2xl border border-korva-dark-alt overflow-hidden hover:border-korva-success transition p-6">
+            <!-- Header de la empresa -->
+            <div class="flex items-center space-x-4 mb-5">
+                {% if post.author.logo %}
+                <img src="{{ post.author.logo.url }}" alt="{{ post.author.business_name }}"
+                    class="w-12 h-12 rounded-full border border-korva-success">
+                {% else %}
+                <div class="w-12 h-12 rounded-full bg-korva-success flex items-center justify-center text-white">
+                    <i class="fas fa-building"></i>
+                </div>
+                {% endif %}
+
+                <div class="flex-1">
+                    <div class="flex items-center space-x-2">
+                        <a href="{% url 'profile' post.author.user.username %}" class="font-semibold text-white hover:text-korva-success transition">
+                            {{ post.author.business_name }}
+                        </a>
+                        {% if post.author.verified %}
+                        <span class="text-korva-success text-sm" title="Verificado"><i class="fas fa-check-circle"></i></span>
+                        {% endif %}
+                    </div>
+                    <p class="text-xs text-gray-500">{{ post.author.get_city_display|default:'Nicaragua' }} · {{ post.timestamp|date:"d M Y H:i" }}</p>
+                </div>
+
+                <span class="korva-chip" style="color:#10b981;border-color:rgba(16,185,129,.3);background-color:rgba(16,185,129,.12)">
+                    <i class="fas fa-handshake text-xs"></i> Alianza
+                </span>
+            </div>
+
+            <!-- Contenido -->
+            <h3 class="text-xl font-bold text-white mb-3">{{ post.title }}</h3>
+            <p class="text-gray-400 mb-5">{{ post.content }}</p>
+
+            {% if post.image %}
+            <img src="{{ post.image.url }}" alt="{{ post.title }}"
+                class="w-full max-h-72 object-cover rounded-lg border border-korva-dark-alt mb-5">
+            {% endif %}
+
+            <!-- Tags y acciones -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-korva-dark-alt">
+                <div class="flex flex-wrap gap-2">
+                    {% for tag in post.tags.all %}
+                    <span class="text-xs bg-korva-dark-alt px-3 py-1 rounded-full text-korva-success">#{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-500 text-xs"><i class="fas fa-thumbs-up mr-1"></i>{{ post.upvotes }}</span>
+                    <span class="text-gray-500 text-xs"><i class="fas fa-comment-dots mr-1"></i> {{ post.comments.count }}</span>
+                    {% if user.is_authenticated and user.profile != post.author %}
+                    <a href="{% url 'start_conversation' post.author.user.username %}"
+                       class="korva-btn-primary px-4 py-2 rounded-lg font-semibold text-xs">
+                        <i class="fas fa-envelope mr-1"></i> Contactar
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'post_detail' post.id %}"
+                       class="px-4 py-2 bg-korva-dark-alt text-korva-success rounded-lg font-semibold text-xs hover:bg-korva-success hover:text-white transition">
+                        Ver Más
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16 korva-card rounded-lg border border-korva-dark-alt">
+        <i class="fas fa-handshake text-4xl text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-400 mb-2">No hay alianzas</h3>
+        <p class="text-gray-500 mb-4">Publica una oportunidad de alianza y conéctate con otras PyMEs</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'create_post' %}?tipo=alianza" class="korva-btn-primary px-6 py-2 rounded-lg inline-block">
+            <i class="fas fa-handshake"></i> Publicar Alianza
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

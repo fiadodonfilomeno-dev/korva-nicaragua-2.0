@@ -1,0 +1,197 @@
+<nav class="bg-korva-card border-b border-korva-dark-alt sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            
+            <!-- Logo / Brand -->
+            <div class="flex items-center space-x-2">
+                <a href="{% url 'home' %}" class="flex items-center space-x-2 hover:opacity-80 transition">
+                    {% load static %}
+                    <img src="{% static 'korva-logo.jpg' %}" alt="Korva Nicaragua"
+                        class="w-10 h-10 rounded-full object-cover border-2 border-korva-success shadow-lg">
+                    <span class="text-xl font-bold text-white hidden sm:inline">Korva Nicaragua</span>
+                </a>
+            </div>
+            
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="{% url 'home' %}" class="text-gray-300 hover:text-korva-success transition">
+                    <i class="fas fa-home"></i> Muro
+                </a>
+                <a href="{% url 'marketplace' %}" class="text-gray-300 hover:text-korva-success transition">
+                    <i class="fas fa-shopping-bag"></i> Marketplace
+                </a>
+                <a href="{% url 'alliances' %}" class="text-gray-300 hover:text-korva-success transition">
+                    <i class="fas fa-handshake"></i> Alianzas
+                </a>
+                <a href="{% url 'rankings' %}" class="text-gray-300 hover:text-korva-success transition">
+                    <i class="fas fa-trophy"></i> Rankings
+                </a>
+                <a href="{% url 'messages' %}" class="text-gray-300 hover:text-korva-success transition">
+                    <i class="fas fa-envelope"></i> Mensajes
+                </a>
+                <a href="{% url 'korva_ai' %}" class="text-gray-300 hover:text-korva-success transition">
+                    <i class="fas fa-robot"></i> Korva IA
+                </a>
+            </div>
+            
+            <!-- User Menu / Auth + Theme Toggle -->
+            <div class="flex items-center space-x-4">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-lg text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition" aria-label="Cambiar tema" title="Cambiar tema">
+                    <i id="theme-icon" class="fas fa-sun text-xl"></i>
+                </button>
+                
+                {% if user.is_authenticated %}
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 korva-btn-primary px-4 py-2 rounded-lg text-sm font-medium">
+                            <i class="fas fa-user"></i>
+                            <span class="hidden sm:inline">{{ user.username }}</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 mt-2 w-48 bg-korva-card border border-korva-dark-alt rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
+                            <a href="{% url 'profile' user.username %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-user-circle"></i> Mi Perfil
+                            </a>
+                            <a href="{% url 'edit_profile' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-edit"></i> Editar Perfil
+                            </a>
+                            <a href="{% url 'reports' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-chart-bar"></i> Mis Reportes
+                            </a>
+                            {% if user.is_staff %}
+                            <a href="/admin/" class="block px-4 py-2 text-yellow-400 hover:text-yellow-300 hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-shield-alt"></i> Admin
+                            </a>
+                            {% endif %}
+                            <hr class="border-korva-dark-alt">
+                            <a href="{% url 'logout' %}" class="block px-4 py-2 text-red-400 hover:bg-korva-dark-alt transition">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="text-gray-300 hover:text-korva-success transition">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </a>
+                    <a href="{% url 'register' %}" class="korva-btn-primary px-4 py-2 rounded-lg text-sm font-medium">
+                        <i class="fas fa-user-plus"></i> Registrarse
+                    </a>
+                {% endif %}
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-korva-success transition p-2" aria-label="Menú">
+                <i id="mobile-menu-icon" class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Dropdown -->
+    <div id="mobile-menu" class="md:hidden hidden border-t border-korva-dark-alt bg-korva-card">
+        <div class="px-4 py-3 space-y-3">
+            <a href="{% url 'home' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-home"></i> Muro
+            </a>
+            <a href="{% url 'marketplace' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-shopping-bag"></i> Marketplace
+            </a>
+            <a href="{% url 'alliances' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-handshake"></i> Alianzas
+            </a>
+            <a href="{% url 'rankings' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-trophy"></i> Rankings
+            </a>
+            <a href="{% url 'messages' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-envelope"></i> Mensajes
+            </a>
+            <a href="{% url 'korva_ai' %}" class="block px-4 py-3 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt rounded-lg transition">
+                <i class="fas fa-robot"></i> Korva IA
+            </a>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Theme Toggle Functionality
+    (function() {
+        const html = document.getElementById('html-root');
+        const toggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        
+        // Check for saved theme preference or default to dark
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
+            html.classList.add('light');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+        
+        toggleBtn.addEventListener('click', function() {
+            html.classList.toggle('light');
+            const isLight = html.classList.contains('light');
+            
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            
+            if (isLight) {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        });
+        
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            if (!localStorage.getItem('theme')) {
+                if (e.matches) {
+                    html.classList.remove('light');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    html.classList.add('light');
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            }
+        });
+    })();
+
+    // Mobile Menu Toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('mobile-menu-icon');
+        
+        if (menuBtn && mobileMenu) {
+            menuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                mobileMenu.classList.toggle('hidden');
+                menuIcon.classList.toggle('fa-bars');
+                menuIcon.classList.toggle('fa-times');
+            });
+            
+            // Close menu when clicking a link
+            mobileMenu.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.classList.add('fa-bars');
+                    menuIcon.classList.remove('fa-times');
+                });
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.classList.add('fa-bars');
+                    menuIcon.classList.remove('fa-times');
+                }
+            });
+        }
+    });
+</script>

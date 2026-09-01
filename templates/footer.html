@@ -1,0 +1,73 @@
+<footer class="bg-korva-card border-t border-korva-dark-alt mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            
+            <!-- Brand Section -->
+            <div>
+                <div class="flex items-center space-x-2 mb-4">
+                    {% load static %}
+                    <img src="{% static 'korva-logo.jpg' %}" alt="Korva Nicaragua"
+                        class="w-8 h-8 rounded-full object-cover border-2 border-korva-success">
+                    <span class="text-lg font-bold text-white">Korva</span>
+                </div>
+                <p class="text-gray-400 text-sm">Plataforma social y colaborativa para el fomento comercial de PyMEs en Nicaragua.</p>
+            </div>
+            
+            <!-- Productos -->
+            <div>
+                <h3 class="text-white font-semibold mb-4">Productos</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="{% url 'home' %}" class="hover:text-korva-success transition">Muro Social</a></li>
+                    <li><a href="{% url 'marketplace' %}" class="hover:text-korva-success transition">Marketplace</a></li>
+                    <li><a href="{% url 'rankings' %}" class="hover:text-korva-success transition">Rankings</a></li>
+                    <li><a href="{% url 'messages' %}" class="hover:text-korva-success transition">Mensajería</a></li>
+                </ul>
+            </div>
+            
+            <!-- Recursos -->
+            <div>
+                <h3 class="text-white font-semibold mb-4">Recursos</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-korva-success transition">Centro de Ayuda</a></li>
+                    <li><a href="#" class="hover:text-korva-success transition">Blog</a></li>
+                    <li><a href="#" class="hover:text-korva-success transition">Documentación</a></li>
+                    <li><a href="#" class="hover:text-korva-success transition">API</a></li>
+                </ul>
+            </div>
+            
+            <!-- Empresa -->
+            <div>
+                <h3 class="text-white font-semibold mb-4">Empresa</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-korva-success transition">Acerca de</a></li>
+                    <li><a href="#" class="hover:text-korva-success transition">Política de Privacidad</a></li>
+                    <li><a href="#" class="hover:text-korva-success transition">Términos de Servicio</a></li>
+                    <li><a href="#" class="hover:text-korva-success transition">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Divider -->
+        <div class="border-t border-korva-dark-alt pt-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">&copy; 2026 Korva Nicaragua. Todos los derechos reservados.</p>
+                
+                <!-- Social Links -->
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-korva-success transition" title="Facebook">
+                        <i class="fab fa-facebook text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-korva-success transition" title="Twitter">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-korva-success transition" title="Instagram">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-korva-success transition" title="LinkedIn">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

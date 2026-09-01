@@ -1,0 +1,123 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Migrations (keep initial migrations)
+*/migrations/*.pyc
+*/migrations/__pycache__/
+
+# Test files
+test_*.py
+*_test.py
+
+# Logs
+logs/
+*.log
+
+# Local settings
+local_settings.py
+
+# Production
+*.pem
+*.key
+*.crt
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Backup files
+*.bak
+*.backup
+
+# Node modules (if any frontend build)
+node_modules/
+
+# --- Credenciales y datos sensibles ---
+cookies.txt
+$null
+
+# --- Docs internos / especificaciones (no van a producción) ---
+korva_config/Bugs
+specification
+
+# --- Notas y logs locales ---
+*ACCESO_RAPIDO*.txt
+*RESUMEN_PROYECTO*.txt
+server_log.txt
+tunnel_log.txt
+tunnel_err.txt
+
+# --- Scripts de desarrollo / seed / data dump (no van a producción) ---
+run_server.py
+agregar_alianzas.py
+asignar_imagenes_posts.py
+crear_base_completa.py
+create_admin.py
+debug_profiles.py
+descargar_fotos.py
+descargar_fotos_reales.py
+generar_imagenes_tema.py
+load_test_data.py
+mejorar_imagenes.py
+tmp_*.py
+tmp_*.txt
+
+# --- Imagen raw en la raíz (altamente sospechosa de ser datos) ---
+4f3ce73e-789b-4dda-95a5-736b4a50bd4d.jpg
