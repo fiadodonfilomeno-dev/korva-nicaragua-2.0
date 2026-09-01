@@ -5,7 +5,8 @@
 __pycache__/
 db.sqlite3
 db.sqlite3-journal
-media/
+# No ignoramos media/ porque contiene imágenes semilla que deben servir en producción
+# (banners, logos, productos, posts)
 staticfiles/
 
 # Environment
