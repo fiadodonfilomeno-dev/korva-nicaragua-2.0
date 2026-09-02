@@ -22,10 +22,10 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <input type="text" name="q" value="{{ search_query|default:'' }}" placeholder="Buscar productos..."
-                        class="w-full px-4 py-2 bg-korva-dark-alt border border-korva-dark-alt rounded-lg text-white placeholder-gray-500">
+                        class="korva-input w-full">
                 </div>
                 <div>
-                    <select name="category" class="w-full px-4 py-2 bg-korva-dark-alt border border-korva-dark-alt rounded-lg text-white">
+                    <select name="category" class="korva-input w-full">
                         <option value="">Todas las categorías</option>
                         <option value="ventas" {% if category == 'ventas' %}selected{% endif %}>Ventas</option>
                         <option value="compras" {% if category == 'compras' %}selected{% endif %}>Compras</option>
