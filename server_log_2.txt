@@ -644,3 +644,105 @@ INFO - Broken pipe from ('127.0.0.1', 57349)
 WARNING Not Found: /ws/chat/
 WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
 INFO - Broken pipe from ('127.0.0.1', 52710)
+INFO "GET / HTTP/1.1" 200 137277
+INFO "GET /media/products/producto_9_real.jpg HTTP/1.1" 304 0
+INFO "GET /media/logos/panaderia_nicaraguena_real_logo.jpg HTTP/1.1" 304 0
+INFO "GET /media/products/producto_8_balanza_justicia.jpg HTTP/1.1" 304 0
+INFO "GET /media/logos/consultoria_juridica_nica_real_logo.jpg HTTP/1.1" 304 0
+INFO "GET /media/products/producto_7_real.jpg HTTP/1.1" 304 0
+INFO "GET /media/logos/transporte_cacao_express_real_logo.jpg HTTP/1.1" 304 0
+INFO "GET /media/products/producto_6_real.jpg HTTP/1.1" 304 0
+INFO "GET /media/logos/granja_don_roberto_real_logo.jpg HTTP/1.1" 304 0
+INFO "GET /media/products/producto_5_real.jpg HTTP/1.1" 304 0
+INFO "GET /media/logos/moda_textil_masaya_real_logo.jpg HTTP/1.1" 304 0
+INFO "GET /media/products/producto_4_real.jpg HTTP/1.1" 304 0
+INFO "GET /media/logos/cafe_el_cedro_real_logo.jpg HTTP/1.1" 304 0
+INFO "GET /media/products/producto_3_real.jpg HTTP/1.1" 304 0
+INFO "GET /media/logos/tech_solutions_real_logo.jpg HTTP/1.1" 304 0
+INFO "GET /media/products/producto_2_taza_ceramica.jpg HTTP/1.1" 304 0
+INFO "GET /media/logos/artesanias_esteli_real_logo.jpg HTTP/1.1" 304 0
+INFO "GET /media/products/producto_1_real.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_15_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_14_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_13_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_12_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_11_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_10_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_9_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_8_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_7_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_6_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_5_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_3_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_4_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_1_prod.jpg HTTP/1.1" 304 0
+INFO "GET /media/posts/post_2_prod.jpg HTTP/1.1" 304 0
+INFO "GET /api/ws-config/ HTTP/1.1" 200 198
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 63575)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 58764)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 63357)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 49554)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 52209)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 62570)
+INFO "GET / HTTP/1.1" 200 137277
+INFO "GET /api/ws-config/ HTTP/1.1" 200 198
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 55491)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 64716)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 56018)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 54842)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 65164)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 63271)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 59949)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 63602)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 54045)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 59834)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 64787)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 64019)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 54623)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 63379)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 63564)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 50119)

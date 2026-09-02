@@ -60,11 +60,6 @@
                             <a href="{% url 'reports' %}" class="block px-4 py-2 text-gray-300 hover:text-korva-success hover:bg-korva-dark-alt transition">
                                 <i class="fas fa-chart-bar"></i> Mis Reportes
                             </a>
-                            {% if user.is_staff %}
-                            <a href="/admin/" class="block px-4 py-2 text-yellow-400 hover:text-yellow-300 hover:bg-korva-dark-alt transition">
-                                <i class="fas fa-shield-alt"></i> Admin
-                            </a>
-                            {% endif %}
                             <hr class="border-korva-dark-alt">
                             <a href="{% url 'logout' %}" class="block px-4 py-2 text-red-400 hover:bg-korva-dark-alt transition">
                                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión

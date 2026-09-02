@@ -35,6 +35,17 @@ def home(request):
             Q(content__icontains='alianza')
         ).select_related('author').distinct()[:6]
 
+        # Para el muro: cada post muestra la imagen real de un producto del
+        # marketplace perteneciente al autor del post (no imágenes aleatorias)
+        post_authors = set(p.author_id for p in posts)
+        products_by_author = {}
+        for prod in Product.objects.filter(user_id__in=post_authors, image__isnull=False).select_related('user'):
+            products_by_author.setdefault(prod.user_id, []).append(prod)
+        for p in posts:
+            author_products = products_by_author.get(p.author_id, [])
+            if author_products:
+                p.product_image_url = author_products[0].image.url
+
         # Estadísticas generales para el índice del muro
         stats = {
             'empresas': Profile.objects.count(),
