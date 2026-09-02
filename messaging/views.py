@@ -95,12 +95,25 @@ def conversation_detail(request, conversation_id):
         
         # AJAX: comprobar nuevos mensajes
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            # Marcar como leídos los mensajes recibidos
+            for m in chat_messages.filter(recipient=user_profile):
+                if not m.is_read_by(user_profile):
+                    m.mark_as_read(user_profile)
             last_msg_id = request.GET.get('last_msg_id')
             if last_msg_id:
                 new_messages = chat_messages.filter(id__gt=last_msg_id)
                 if new_messages.exists():
-                    return JsonResponse({'new_messages': True})
-            return JsonResponse({'new_messages': False})
+                    data = [{
+                        'id': m.pk,
+                        'content': m.content or '',
+                        'image_url': m.image.url if m.image else '',
+                        'video_url': m.video.url if m.video else '',
+                        'timestamp': m.timestamp.strftime('%H:%M'),
+                        'mine': m.sender == user_profile,
+                        'read': m.recipient == user_profile and m.is_read_by(user_profile),
+                    } for m in new_messages]
+                    return JsonResponse({'new_messages': True, 'messages': data})
+            return JsonResponse({'new_messages': False, 'messages': []})
         
         # Marcar mensajes como leídos por el usuario actual
         for msg in chat_messages.filter(recipient=user_profile):
@@ -183,11 +196,22 @@ def send_message(request):
             user_profile = request.user.profile
             recipient = get_object_or_404(Profile, pk=recipient_id)
             
+            if not content and not request.FILES.get('image') and not request.FILES.get('video'):
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'ok': False, 'error': 'Mensaje vacío'}, status=400)
+                messages.error(request, 'Escribe un mensaje para enviar.')
+                return redirect('messages')
+            
             message = Message.objects.create(
                 sender=user_profile,
                 recipient=recipient,
                 content=content
             )
+            if request.FILES.get('image'):
+                message.image = request.FILES['image']
+            if request.FILES.get('video'):
+                message.video = request.FILES['video']
+            message.save()
             
             # Actualizar o crear conversación
             conversation = Conversation.objects.filter(
@@ -204,10 +228,23 @@ def send_message(request):
                     user2=recipient
                 )
             
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                from django.utils import timezone
+                return JsonResponse({
+                    'ok': True,
+                    'id': message.pk,
+                    'content': message.content or '',
+                    'image_url': message.image.url if message.image else '',
+                    'video_url': message.video.url if message.video else '',
+                    'timestamp': message.timestamp.strftime('%H:%M'),
+                })
+            
             return redirect('messages')
         
         return redirect('messages')
     except Exception as e:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'ok': False, 'error': str(e)}, status=500)
         messages.error(request, f'Error: {str(e)}')
         return redirect('messages')
 

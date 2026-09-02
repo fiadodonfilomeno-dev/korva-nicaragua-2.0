@@ -88,7 +88,7 @@
     </div>
     
     <!-- Message Input -->
-    <form method="post" enctype="multipart/form-data" class="space-y-3">
+    <form id="chat-form" method="post" enctype="multipart/form-data" class="space-y-3">
         {% csrf_token %}
         
         <div class="korva-card rounded-lg p-4 border border-korva-dark-alt">
@@ -103,37 +103,111 @@
                     <label for="id_video" class="cursor-pointer p-3 rounded-lg bg-korva-dark-alt hover:bg-korva-dark text-gray-400 hover:text-korva-success transition" title="Adjuntar video">
                         <i class="fas fa-video text-lg"></i>
                     </label>
-                    <button type="submit" class="korva-btn-primary p-3 rounded-lg">
+                    <button type="submit" id="chat-send" class="korva-btn-primary p-3 rounded-lg">
                         <i class="fas fa-paper-plane text-lg"></i>
                     </button>
                 </div>
             </div>
         </div>
+        <input type="hidden" id="recipient-id" value="{{ other_user.pk }}">
     </form>
 </div>
 
 <script>
-// Auto-scroll to bottom on load
-const chatContainer = document.getElementById('chat-container');
-if (chatContainer) {
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
+(function(){
+    const container = document.getElementById('chat-container');
+    const form = document.getElementById('chat-form');
+    const recipientId = document.getElementById('recipient-id');
+    const sendBtn = document.getElementById('chat-send');
+    if (!container || !form) return;
 
-// Poll for new messages (simple approach)
-setInterval(() => {
-    const lastMsg = document.querySelector('[id^="msg-"]:last-child');
-    if (lastMsg) {
-        const lastMsgId = lastMsg.id.replace('msg-', '');
-        // Check for new messages via AJAX
-        fetch(`?last_msg_id=${lastMsgId}`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        }).then(response => response.json()).then(data => {
-            if (data.new_messages) {
-                // Reload page to show new messages
-                window.location.reload();
-            }
-        }).catch(() => {});
+    const mySide = '{{ request.user.profile.pk }}';
+    const otherName = '{{ other_user.business_name|escapejs }}';
+    const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    function scrollBottom(){ container.scrollTop = container.scrollHeight; }
+
+    function renderMessage(m){
+        // Remove empty-state placeholder if present
+        const empty = container.querySelector('#empty-chat');
+        if (empty) empty.remove();
+        const mine = m.mine !== undefined ? m.mine : true;
+        const readCheck = (mine && m.read)
+            ? '<i class="fas fa-check-double text-korva-success" title="Leído"></i>'
+            : (mine ? '<i class="fas fa-check text-gray-500" title="Entregado"></i>' : '');
+        let inner = '';
+        if (m.content){
+            inner += '<div class="px-4 py-2 rounded-2xl ' + (mine ? 'bg-korva-success text-white rounded-br-sm' : 'bg-korva-dark-alt text-gray-200 rounded-bl-sm') + '">' + m.content + '</div>';
+        }
+        if (m.image_url){
+            inner += '<div class="mt-2"><img src="' + m.image_url + '" class="max-w-full rounded-lg border cursor-pointer" onclick="window.open(\'' + m.image_url + '\', \'_blank\')"></div>';
+        }
+        if (m.video_url){
+            inner += '<div class="mt-2"><video controls class="max-w-full rounded-lg border" style="max-height:300px"><source src="' + m.video_url + '"></video></div>';
+        }
+        inner += '<p class="text-xs text-gray-500 mt-1 flex items-center gap-1 ' + (mine ? 'justify-end' : 'justify-start') + '"><span>' + m.timestamp + '</span>' + readCheck + '</p>';
+
+        const wrap = document.createElement('div');
+        wrap.className = 'flex ' + (mine ? 'justify-end' : 'justify-start');
+        wrap.id = 'msg-' + m.id;
+        const bubble = document.createElement('div');
+        bubble.className = 'max-w-[70%]';
+        bubble.innerHTML = inner;
+        wrap.appendChild(bubble);
+        container.appendChild(wrap);
+        scrollBottom();
     }
-}, 5000);
+
+    function poll(){
+        const lastMsg = container.querySelector('[id^="msg-"]:last-child');
+        if (!lastMsg) return;
+        const lastMsgId = lastMsg.id.replace('msg-','');
+        fetch('?last_msg_id=' + lastMsgId, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(r => r.json())
+            .then(data => {
+                if (data.new_messages && data.messages){
+                    data.messages.forEach(renderMessage);
+                }
+            })
+            .catch(()=>{});
+    }
+
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const input = form.querySelector('input[name=content], textarea[name=content]');
+        const content = input ? input.value.trim() : '';
+        const hasFiles = form.querySelector('input[type=file]') ? true : false;
+        if (!content && !hasFiles){
+            input && input.focus();
+            return;
+        }
+        if (sendBtn){ sendBtn.disabled = true; }
+        const body = new FormData(form);
+        body.append('recipient_id', recipientId.value);
+        fetch('{% url 'send_message' %}', {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrfToken },
+            body: body
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.ok){
+                renderMessage(data);
+                if (input){ input.value=''; }
+                const img = form.querySelector('input[name=image]');
+                const vid = form.querySelector('input[name=video]');
+                if (img) img.value='';
+                if (vid) vid.value='';
+            } else {
+                alert(data.error || 'Error al enviar');
+            }
+        })
+        .catch(()=>alert('Error de conexión'))
+        .finally(()=>{ if (sendBtn){ sendBtn.disabled = false; } });
+    });
+
+    scrollBottom();
+    setInterval(poll, 2500);
+})();
 </script>
 {% endblock %}
