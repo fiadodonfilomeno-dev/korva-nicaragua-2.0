@@ -415,3 +415,62 @@ INFO - Broken pipe from ('127.0.0.1', 63637)
 WARNING Not Found: /ws/notifications/
 WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
 INFO - Broken pipe from ('127.0.0.1', 63642)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 60897)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 64227)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 56732)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 62048)
+INFO "GET / HTTP/1.1" 200 135189
+INFO "GET /api/ws-config/ HTTP/1.1" 200 198
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 61499)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 62619)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 57581)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 64298)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 59576)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 64010)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 64539)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 52498)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 59894)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 50714)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 52280)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 59132)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 53036)
+WARNING Not Found: /ws/chat/
+WARNING "GET /ws/chat/ HTTP/1.1" 404 10259
+INFO - Broken pipe from ('127.0.0.1', 58768)
+WARNING Not Found: /ws/notifications/
+WARNING "GET /ws/notifications/ HTTP/1.1" 404 10286
+INFO - Broken pipe from ('127.0.0.1', 63018)
