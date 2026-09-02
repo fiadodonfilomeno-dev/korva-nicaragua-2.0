@@ -3,9 +3,27 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse
+from django.utils import timezone
+from django.utils.timesince import timesince
 from .models import Message, Conversation
 from .forms import MessageForm
 from users.models import Profile
+
+
+def _format_msg_time(timestamp):
+    """Formatea la hora de un mensaje: Hoy/ayer con hora, o fecha corta."""
+    if not timestamp:
+        return None
+    now = timezone.now()
+    today = now.date()
+    ts = timezone.localtime(timestamp)
+    if ts.date() == today:
+        return ts.strftime('%I:%M %p').lstrip('0')
+    elif ts.date() == today - timezone.timedelta(days=1):
+        return 'Ayer'
+    else:
+        return ts.strftime('%b %d')
+
 
 @login_required(login_url='login')
 def messages_view(request):
@@ -18,8 +36,40 @@ def messages_view(request):
             Q(user1=user_profile) | Q(user2=user_profile)
         ).order_by('-updated_at')
         
+        # Enriquecer cada conversación con el otro usuario, último mensaje y no leídos
+        conv_data = []
+        for conv in conversations:
+            other = conv.get_other_user(user_profile)
+            last_msg = conv.get_messages().last()
+            unread_count = conv.get_messages().filter(
+                recipient=user_profile,
+            ).exclude(read_by=user_profile).count()
+            # Marcar si el último mensaje es de imagen o video
+            last_label = None
+            if last_msg:
+                if last_msg.image:
+                    last_label = '📷 Foto'
+                elif last_msg.video:
+                    last_label = '🎥 Video'
+                else:
+                    last_label = last_msg.content
+            conv_data.append({
+                'conversation': conv,
+                'other_user': other,
+                'last_message': last_msg,
+                'unread_count': unread_count,
+                'last_message_text': (last_label[:80] + '…') if last_label and len(str(last_label)) > 80 else last_label,
+                'last_time': _format_msg_time(last_msg.timestamp) if last_msg else None,
+            })
+        
+        # Contactos frecuentes (otros perfiles para sugerencias)
+        frequent_contacts = Profile.objects.exclude(
+            pk__in=Profile.objects.filter(user__username=request.user.username).values_list('pk', flat=True)
+        ).order_by('-popularity_score')[:4]
+        
         context = {
-            'conversations': conversations,
+            'conversations': conv_data,
+            'frequent_contacts': frequent_contacts,
         }
         
         return render(request, 'messaging/messages.html', context)

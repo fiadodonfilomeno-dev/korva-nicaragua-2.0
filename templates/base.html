@@ -76,6 +76,26 @@
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
             transition: background-color 0.3s ease, color 0.3s ease;
+            letter-spacing: -0.011em;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-image:
+                radial-gradient(1200px 600px at 10% -10%, rgba(16,185,129,0.06), transparent 55%),
+                radial-gradient(1000px 500px at 100% 0%, rgba(16,185,129,0.05), transparent 50%);
+        }
+        html.light body {
+            background-image:
+                radial-gradient(1200px 600px at 10% -10%, rgba(16,185,129,0.08), transparent 55%),
+                radial-gradient(1000px 500px at 100% 0%, rgba(16,185,129,0.06), transparent 50%);
+        }
+
+        /* Navbar profesional */
+        .nav-link { font-weight: 500; }
+        .nav-link:hover { transform: translateY(-1px); }
+        nav.bg-korva-card {
+            background-color: color-mix(in srgb, var(--bg-secondary) 82%, transparent);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
         
         ::selection { background: rgba(16, 185, 129, 0.3); }
@@ -224,33 +244,17 @@
             transition: border-color 0.25s ease, box-shadow 0.25s ease,
                         transform 0.25s ease, background-color 0.3s ease;
             border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            box-shadow: var(--shadow-sm);
         }
+        .korva-card:hover { border-color: var(--border-hover); }
         .korva-card.hoverable:hover {
             transform: translateY(-4px);
             border-color: rgba(16, 185, 129, 0.55);
             box-shadow: var(--shadow-lg), 0 0 0 1px rgba(16, 185, 129, 0.18);
         }
         .korva-card.hoverable { will-change: transform; }
-
-        /* Imágenes con zoom suave y enfoque */
-        .korva-img {
-            overflow: hidden;
-            position: relative;
-        }
-        .korva-img::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, transparent 55%, rgba(9,9,11,0.35));
-            pointer-events: none;
-        }
-        .korva-img img {
-            transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), filter 0.55s ease;
-        }
-        .korva-img:hover img {
-            transform: scale(1.07);
-            filter: brightness(1.05) saturate(1.05);
-        }
 
         /* Botones: jerarquía clara, sombra y foco refinados */
         .korva-btn-primary, .korva-btn-secondary {
@@ -283,6 +287,26 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
         a.korva-btn-primary, a.korva-btn-secondary { text-decoration: none; }
+
+        /* Imágenes con zoom suave y enfoque */
+        .korva-img {
+            overflow: hidden;
+            position: relative;
+        }
+        .korva-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 55%, rgba(9,9,11,0.35));
+            pointer-events: none;
+        }
+        .korva-img img {
+            transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), filter 0.55s ease;
+        }
+        .korva-img:hover img {
+            transform: scale(1.07);
+            filter: brightness(1.05) saturate(1.05);
+        }
 
         /* Botones fantasma (ghost) en tarjetas */
         .korva-btn-ghost {
@@ -369,6 +393,7 @@
             height: 1.4rem;
             border-radius: 99px;
             background: linear-gradient(180deg, #34d399, var(--btn-primary));
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
         }
         .korva-section-header h2, .korva-section-header h3 {
             display: inline-flex;
@@ -377,6 +402,26 @@
             font-weight: 700;
             letter-spacing: -0.02em;
         }
+
+        /* Encabezado de página (título + subtítulo) */
+        .page-heading { margin-bottom: 1.75rem; }
+        .page-heading h1 {
+            font-size: clamp(1.6rem, 3vw, 2.1rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .page-heading h1 i { color: var(--btn-primary); }
+        .page-heading p {
+            color: var(--text-secondary);
+            margin-top: 0.35rem;
+            font-size: 0.95rem;
+        }
+
+        /* Texto consistente para subtítulos */
+        .text-secondary-soft { color: var(--text-secondary); }
 
         /* Foco accesible con reborde verde en toda la app */
         :focus-visible {

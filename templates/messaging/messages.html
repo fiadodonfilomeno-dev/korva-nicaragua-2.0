@@ -2,82 +2,150 @@
 
 {% block title %}Mensajes - Korva Nicaragua{% endblock %}
 
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+    .material-symbols-outlined {
+        font-size: 22px;
+        line-height: 1;
+        user-select: none;
+    }
+    .ms-fill { font-variation-settings: 'FILL' 1; }
+    .ambient-shadow { box-shadow: 0px 4px 12px rgba(11, 28, 48, 0.08); }
+    .chat-item-link { text-decoration: none; display: block; }
+    .chat-item-link:hover { background-color: var(--bg-tertiary); }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 py-8">
-    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-8">
-        <i class="fas fa-envelope text-korva-success"></i> Mis Mensajes
-    </h1>
-    
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold text-white">
+            <span class="material-symbols-outlined ms-fill text-korva-success align-middle mr-2">forum</span>
+            Mensajes
+        </h1>
+    </div>
+
     {% if conversations %}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-1">
-            <div class="korva-card rounded-lg border border-korva-dark-alt overflow-hidden">
-                <div class="p-4 border-b border-korva-dark-alt">
-                    <h2 class="font-semibold text-white">Conversaciones</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Messenger Column -->
+        <div class="lg:col-span-9">
+            <div class="korva-card rounded-xl border border-korva-dark-alt overflow-hidden flex flex-col min-h-[60vh] lg:h-[calc(100vh-220px)]">
+                <!-- Search -->
+                <div class="p-5 border-b border-korva-dark-alt bg-korva-card z-10">
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">search</span>
+                        <input id="chat-search" type="text" placeholder="Buscar contactos o empresas..."
+                            class="w-full pl-11 pr-4 py-2.5 rounded-xl bg-korva-dark border border-korva-dark-alt text-white placeholder:text-gray-500 focus:outline-none focus:border-korva-success focus:ring-1 focus:ring-korva-success transition">
+                    </div>
                 </div>
-                
-                <div class="space-y-0">
-                    {% for conv in conversations %}
-                    {% if conv.user1 == user.profile %}
-                        {% with other_user=conv.user2 %}
-                        <a href="{% url 'conversation_detail' conv.id %}" 
-                            class="block p-4 hover:bg-korva-dark-alt transition border-b border-korva-dark-alt last:border-0">
-                            <div class="flex items-center space-x-3">
-                                {% if other_user.logo %}
-                                <img src="{{ other_user.logo.url }}" class="w-10 h-10 rounded-full">
-                                {% else %}
-                                <div class="w-10 h-10 rounded-full bg-korva-success flex items-center justify-center text-white text-sm">
-                                    <i class="fas fa-building"></i>
-                                </div>
-                                {% endif %}
-                                <div class="flex-1 min-w-0">
-                                    <p class="font-semibold text-white truncate">{{ other_user.business_name }}</p>
-                                    <p class="text-xs text-gray-500">{{ other_user.get_city_display }}</p>
-                                </div>
+
+                <!-- Chat List -->
+                <div id="chat-list" class="flex-1 overflow-y-auto divide-y divide-korva-dark-alt">
+                    {% for item in conversations %}
+                    {% with other=item.other_user conv=item.conversation %}
+                    {% with last_msg=item.last_message_text %}
+                    <a class="chat-item-link p-4 transition-colors flex items-center gap-4" href="{% url 'conversation_detail' conv.id %}" data-search="{{ other.business_name }}">
+                        {% if forloop.counter <= 1 %}
+                        <div class="w-2 h-2 rounded-full bg-korva-success shrink-0" title="No leído"></div>
+                        {% else %}
+                        <div class="w-2 h-2 shrink-0"></div>
+                        {% endif %}
+                        <div class="w-12 h-12 rounded-full overflow-hidden border border-korva-dark-alt bg-korva-dark flex items-center justify-center shrink-0">
+                            {% if other.logo %}
+                            <img src="{{ other.logo.url }}" alt="{{ other.business_name }}" class="w-full h-full object-cover">
+                            {% else %}
+                            <span class="material-symbols-outlined text-korva-success">business</span>
+                            {% endif %}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-baseline">
+                                <h3 class="font-semibold text-white truncate">{{ other.business_name }}</h3>
+                                <span class="text-xs text-gray-500 shrink-0 ml-2">
+                                    {% if item.unread_count %}{% if other.logo %}{% endif %}{% endif %}
+                                </span>
                             </div>
-                        </a>
-                        {% endwith %}
-                    {% else %}
-                        {% with other_user=conv.user1 %}
-                        <a href="{% url 'conversation_detail' conv.id %}" 
-                            class="block p-4 hover:bg-korva-dark-alt transition border-b border-korva-dark-alt last:border-0">
-                            <div class="flex items-center space-x-3">
-                                {% if other_user.logo %}
-                                <img src="{{ other_user.logo.url }}" class="w-10 h-10 rounded-full">
+                            <div class="flex justify-between items-center">
+                                <p class="text-sm text-gray-400 truncate">
+                                    {% if last_msg %}{{ last_msg }}{% else %}Sin mensajes aún{% endif %}
+                                </p>
+                                {% if item.unread_count %}
+                                <span class="shrink-0 ml-2 w-5 h-5 rounded-full bg-korva-success text-white text-[10px] font-bold flex items-center justify-center">{{ item.unread_count }}</span>
                                 {% else %}
-                                <div class="w-10 h-10 rounded-full bg-korva-success flex items-center justify-center text-white text-sm">
-                                    <i class="fas fa-building"></i>
-                                </div>
+                                <span class="material-symbols-outlined text-[16px] text-gray-500 shrink-0 ml-2">done_all</span>
                                 {% endif %}
-                                <div class="flex-1 min-w-0">
-                                    <p class="font-semibold text-white truncate">{{ other_user.business_name }}</p>
-                                    <p class="text-xs text-gray-500">{{ other_user.get_city_display }}</p>
-                                </div>
                             </div>
-                        </a>
-                        {% endwith %}
-                    {% endif %}
+                        </div>
+                    </a>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endfor %}
+                </div>
+
+                <!-- FAB -->
+                <div class="p-5 border-t border-korva-dark-alt flex justify-end">
+                    <a href="{% url 'rankings' %}" title="Nueva conversación"
+                        class="bg-korva-success text-white p-4 rounded-full shadow-lg hover:bg-[#0ea375] transition-colors flex items-center justify-center">
+                        <span class="material-symbols-outlined">edit_square</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar: Contactos frecuentes -->
+        <aside class="hidden lg:block lg:col-span-3">
+            <div class="korva-card rounded-xl border border-korva-dark-alt p-5 sticky top-24">
+                <h3 class="font-semibold text-white mb-4 pb-2 border-b border-korva-dark-alt">Contactos Frecuentes</h3>
+                <div class="flex flex-col gap-3">
+                    {% for contact in frequent_contacts %}
+                    <a href="{% url 'profile' contact.user.username %}" class="chat-item-link rounded-lg p-2 -mx-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full overflow-hidden border border-korva-dark-alt bg-korva-dark flex items-center justify-center shrink-0">
+                                {% if contact.logo %}
+                                <img src="{{ contact.logo.url }}" alt="{{ contact.business_name }}" class="w-full h-full object-cover">
+                                {% else %}
+                                <span class="material-symbols-outlined text-[18px] text-korva-success">business</span>
+                                {% endif %}
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold text-white truncate">{{ contact.business_name }}</p>
+                                <p class="text-xs text-gray-500">{{ contact.get_sector_display|default:"PyME" }}</p>
+                            </div>
+                        </div>
+                    </a>
+                    {% empty %}
+                    <p class="text-sm text-gray-500">Contactos frecuentes aparecerán aquí.</p>
                     {% endfor %}
                 </div>
             </div>
-        </div>
-        
-        <div class="lg:col-span-2">
-            <div class="korva-card rounded-lg border border-korva-dark-alt p-6 text-center">
-                <i class="fas fa-comments text-4xl text-gray-600 mb-4"></i>
-                <p class="text-gray-400">Selecciona una conversación para empezar a chatear</p>
-            </div>
-        </div>
+        </aside>
     </div>
     {% else %}
-    <div class="text-center py-12 korva-card rounded-lg border border-korva-dark-alt">
-        <i class="fas fa-inbox text-4xl text-gray-600 mb-4"></i>
-        <h3 class="text-xl font-semibold text-gray-400 mb-2">No hay conversaciones</h3>
-        <p class="text-gray-500 mb-4">Comienza a chatear con otras empresas</p>
-        <a href="{% url 'rankings' %}" class="korva-btn-primary px-6 py-2 rounded-lg inline-block">
-            Ver empresas
-        </a>
+    <!-- Estado vacío -->
+    <div class="text-center py-16 korva-card rounded-xl border border-korva-dark-alt max-w-xl mx-auto">
+        <span class="material-symbols-outlined text-5xl text-gray-600 inline-block mb-4">chat_bubble</span>
+        <h3 class="text-xl font-semibold text-gray-300 mb-2">No hay conversaciones</h3>
+        <p class="text-gray-500 mb-6">Comienza a chatear con otras empresas</p>
+        <a href="{% url 'rankings' %}" class="korva-btn-primary px-6 py-2 rounded-lg inline-block">Ver empresas</a>
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function(){
+        const searchInput = document.getElementById('chat-search');
+        if (!searchInput) return;
+        const items = document.querySelectorAll('#chat-list .chat-item-link');
+        searchInput.addEventListener('input', function(){
+            const q = this.value.toLowerCase();
+            items.forEach(function(el){
+                const haystack = (el.getAttribute('data-search') || el.textContent).toLowerCase();
+                el.style.display = haystack.indexOf(q) !== -1 ? '' : 'none';
+            });
+        });
+    })();
+</script>
 {% endblock %}
