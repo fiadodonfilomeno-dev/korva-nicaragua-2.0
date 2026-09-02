@@ -122,12 +122,37 @@
         </aside>
     </div>
     {% else %}
-    <!-- Estado vacío -->
-    <div class="text-center py-16 korva-card rounded-xl border border-korva-dark-alt max-w-xl mx-auto">
+    <!-- Estado vacío con empresas sugeridas para iniciar conversación -->
+    <div class="text-center kolva-card korva-card rounded-xl border border-korva-dark-alt max-w-3xl mx-auto p-8">
         <span class="material-symbols-outlined text-5xl text-gray-600 inline-block mb-4">chat_bubble</span>
-        <h3 class="text-xl font-semibold text-gray-300 mb-2">No hay conversaciones</h3>
-        <p class="text-gray-500 mb-6">Comienza a chatear con otras empresas</p>
-        <a href="{% url 'rankings' %}" class="korva-btn-primary px-6 py-2 rounded-lg inline-block">Ver empresas</a>
+        <h3 class="text-xl font-semibold text-gray-300 mb-1">No hay conversaciones</h3>
+        <p class="text-gray-500 mb-6">Comienza a chatear con otras empresas del ecosistema Korva</p>
+
+        {% if frequent_contacts %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left mb-6">
+            {% for contact in frequent_contacts %}
+            <div class="korva-card rounded-xl border border-korva-dark-alt p-4 flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full overflow-hidden border border-korva-dark-alt bg-korva-dark flex items-center justify-center shrink-0">
+                    {% if contact.logo %}
+                    <img src="{{ contact.logo.url }}" alt="{{ contact.business_name }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <span class="material-symbols-outlined text-korva-success">business</span>
+                    {% endif %}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-white truncate">{{ contact.business_name }}</p>
+                    <p class="text-xs text-gray-500">{{ contact.get_sector_display|default:"PyME" }}</p>
+                </div>
+                <a href="{% url 'start_conversation' contact.user.username %}" class="korva-btn-primary px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0"
+                   title="Conversar">
+                    <i class="fas fa-envelope mr-1"></i> Conversar
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <a href="{% url 'rankings' %}" class="korva-btn-primary px-6 py-2.5 rounded-lg inline-block">Ver más empresas</a>
     </div>
     {% endif %}
 </div>
