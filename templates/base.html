@@ -265,6 +265,22 @@
         html.light .border-korva-dark-alt {
             border-color: #e2e8f0 !important;
         }
+        /* Superficies 'korva-dark' internas (cabeceras de tabla, inputs, avatares)
+           que deben quedar claras/legibles en modo claro, NO negras */
+        html.light .bg-korva-dark {
+            background-color: #eef2f7 !important;
+        }
+        html.light thead.bg-korva-dark th {
+            color: #475569 !important;
+        }
+        html.light input.bg-korva-dark,
+        html.light textarea.bg-korva-dark {
+            background-color: #ffffff !important;
+            color: #1e293b !important;
+        }
+        html.light input.bg-korva-dark::placeholder {
+            color: #94a3b8 !important;
+        }
         /* Selects e inputs de filtro/categorías: claros y legibles en light */
         html.light select.bg-korva-dark-alt,
         html.light input.bg-korva-dark-alt,
