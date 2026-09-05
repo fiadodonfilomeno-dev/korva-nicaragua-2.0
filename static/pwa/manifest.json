@@ -1,0 +1,64 @@
+{
+  "name": "Korva Nicaragua - Red Social de Empresas",
+  "short_name": "Korva NI",
+  "description": "Red social para PyMEs y empresas de Nicaragua: comparte productos, alianzas y crece tu negocio.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "categories": ["business", "social"],
+  "lang": "es",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/static/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/pwa/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/static/pwa/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Muro Social",
+      "short_name": "Muro",
+      "url": "/"
+    },
+    {
+      "name": "Marketplace",
+      "short_name": "Market",
+      "url": "/marketplace/"
+    },
+    {
+      "name": "Mensajes",
+      "short_name": "Chat",
+      "url": "/messages/"
+    },
+    {
+      "name": "Rankings",
+      "short_name": "Rank",
+      "url": "/rankings/"
+    }
+  ]
+}

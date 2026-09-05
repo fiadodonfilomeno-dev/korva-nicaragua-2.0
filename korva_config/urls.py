@@ -42,8 +42,12 @@ from core.ai_views import (
     update_ai_config, quick_prompts
 )
 
+# PWA
+from core.pwa_views import service_worker
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('sw.js', service_worker, name='service_worker'),
     
     # Autenticación
     path('register/', register, name='register'),
