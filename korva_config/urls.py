@@ -43,11 +43,12 @@ from core.ai_views import (
 )
 
 # PWA
-from core.pwa_views import service_worker
+from core.pwa_views import service_worker, assetlinks
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('sw.js', service_worker, name='service_worker'),
+    path('.well-known/assetlinks.json', assetlinks, name='assetlinks'),
     
     # Autenticación
     path('register/', register, name='register'),
