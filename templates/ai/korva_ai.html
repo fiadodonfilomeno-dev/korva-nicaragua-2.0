@@ -4,40 +4,74 @@
 
 {% block content %}
 <div class="max-w-6xl mx-auto px-4 py-8">
-    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-8">
-        <i class="fas fa-robot text-korva-success"></i> Korva IA - Tu Asistente Inteligente
-    </h1>
-    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+                <i class="fas fa-robot text-korva-success mr-2"></i> Korva IA
+            </h1>
+            <p class="text-gray-400 mt-1">Tu asistente inteligente para hacer crecer tu PyME</p>
+        </div>
+        <div class="flex gap-3">
+            {% if needs_tutorial %}
+            <a href="{% url 'ai_tutorial' %}" class="korva-btn-primary px-4 py-2 rounded-lg text-sm font-semibold">
+                <i class="fas fa-graduation-cap mr-2"></i> Tutorial
+            </a>
+            {% endif %}
+            <button onclick="document.getElementById('ai-config-card').scrollIntoView({behavior:'smooth'})"
+                class="korva-btn-secondary bg-korva-warning hover:opacity-90 text-black px-4 py-2 rounded-lg text-sm font-semibold">
+                <i class="fas fa-cog mr-2"></i> Configuración
+            </button>
+        </div>
+    </div>
+
+    {% if needs_tutorial %}
+    <!-- Aviso de configuración necesaria -->
+    <div class="korva-card rounded-lg p-4 border border-korva-warning mb-6 flex items-start gap-3">
+        <i class="fas fa-exclamation-triangle text-korva-warning text-xl mt-0.5"></i>
+        <div>
+            <p class="text-white font-semibold">Necesitas configurar tu clave para usar Korva IA</p>
+            <p class="text-gray-400 text-sm mt-1">Obtén tu API Key gratuita de Google Gemini (ai.google.dev) y actívala en Configuración.</p>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <!-- Conversations List -->
+        <!-- Left column: Conversaciones -->
         <div class="lg:col-span-1">
-            <div class="korva-card rounded-lg border border-korva-dark-alt overflow-hidden">
+            <div class="korva-card rounded-lg border border-korva-dark-alt overflow-hidden lg:sticky lg:top-4">
                 <div class="p-4 border-b border-korva-dark-alt bg-korva-dark-alt">
-                    <h2 class="font-semibold text-white mb-4">Mis Conversaciones</h2>
-                    
-                    <form method="post" action="{% url 'create_ai_conversation' %}" class="space-y-2">
+                    <h2 class="font-semibold text-white">
+                        <i class="fas fa-comments mr-2"></i> Mis Conversaciones
+                    </h2>
+                    <span class="text-xs text-gray-500">{{ total_conversations }} en total</span>
+                
+                    <form method="post" action="{% url 'create_ai_conversation' %}" class="mt-3 flex gap-2">
                         {% csrf_token %}
                         <input type="text" name="title" placeholder="Nuevo tema..." 
-                            class="w-full px-3 py-2 bg-korva-dark rounded text-white placeholder-gray-500 text-sm">
-                        <button type="submit" class="w-full korva-btn-primary px-3 py-2 rounded text-sm font-semibold">
-                            <i class="fas fa-plus mr-2"></i> Nueva
+                            class="flex-1 px-3 py-2 bg-korva-dark rounded text-white placeholder-gray-500 text-sm korva-input">
+                        <button type="submit" class="korva-btn-primary px-3 py-2 rounded text-sm font-semibold shrink-0">
+                            <i class="fas fa-plus"></i>
                         </button>
                     </form>
                 </div>
                 
                 {% if conversations %}
-                <div class="space-y-0 max-h-96 overflow-y-auto">
+                <div class="max-h-96 overflow-y-auto">
                     {% for conv in conversations %}
                     <a href="{% url 'conversation_chat' conv.id %}" 
                         class="block p-3 hover:bg-korva-dark-alt transition border-b border-korva-dark-alt last:border-0">
-                        <p class="text-white text-sm font-medium truncate">{{ conv.title }}</p>
-                        <p class="text-xs text-gray-500">{{ conv.updated_at|date:"d/m H:i" }}</p>
+                        <p class="text-white text-sm font-medium truncate">
+                            <i class="fas fa-message text-korva-success mr-1 text-xs"></i>{{ conv.title }}</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ conv.updated_at|date:"d/m H:i" }} · {{ conv.messages.count }} msgs</p>
                     </a>
                     {% endfor %}
                 </div>
                 {% else %}
                 <div class="p-4 text-center text-gray-500">
-                    <p class="text-sm">No hay conversaciones. ¡Crea una nueva!</p>
+                    <i class="fas fa-comment-dots text-3xl mb-2 block"></i>
+                    <p class="text-sm">No hay conversaciones.</p>
+                    <p class="text-xs mt-1">Crea una nueva o usa una pregunta rápida.</p>
                 </div>
                 {% endif %}
             </div>
@@ -45,83 +79,146 @@
         
         <!-- Main Content -->
         <div class="lg:col-span-3">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Quick Prompts -->
-                <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
-                    <h3 class="text-xl font-bold text-white mb-4">
-                        <i class="fas fa-bolt text-korva-success"></i> Preguntas Rápidas
-                    </h3>
-                    
-                    <div class="space-y-3">
-                        <a href="{% url 'create_ai_conversation' %}" class="block p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition">
-                            <p class="text-white font-medium">¿Plan de Negocio?</p>
-                            <p class="text-xs text-gray-400">Pasos para crear un plan exitoso</p>
-                        </a>
-                        
-                        <a href="{% url 'create_ai_conversation' %}" class="block p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition">
-                            <p class="text-white font-medium">Registro RUC</p>
-                            <p class="text-xs text-gray-400">Cómo registrar tu empresa</p>
-                        </a>
-                        
-                        <a href="{% url 'create_ai_conversation' %}" class="block p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition">
-                            <p class="text-white font-medium">Marketing Digital</p>
-                            <p class="text-xs text-gray-400">Mejora tu presencia en línea</p>
-                        </a>
+            <!-- Bienvenida -->
+            <div class="korva-card rounded-lg p-6 border border-korva-dark-alt mb-6 bg-gradient-to-r from-korva-dark-alt to-korva-dark">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-korva-success rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-robot text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">¿En qué te ayudo hoy?</h2>
+                        <p class="text-gray-400 text-sm">Pregúntame sobre tu negocio, marketing, impuestos, planes de negocio o cómo usar Korva Nicaragua.</p>
+                        {% if total_messages %}
+                        <p class="text-xs text-korva-success mt-2">
+                            <i class="fas fa-chart-line mr-1"></i> {{ total_messages }} mensajes con Korva IA
+                        </p>
+                        {% endif %}
                     </div>
                 </div>
                 
-                <!-- Configuration -->
-                <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
-                    <h3 class="text-xl font-bold text-white mb-4">
-                        <i class="fas fa-cog text-korva-success"></i> Configuración
-                    </h3>
-                    
-                    <form method="post" action="{% url 'update_ai_config' %}" class="space-y-4">
+                <!-- Chat de inicio (acceso rápido) -->
+                <form method="post" action="{% url 'create_ai_conversation' %}" class="mt-5">
+                    {% csrf_token %}
+                    <div class="flex gap-3">
+                        <input type="text" name="title" placeholder="Escribe tu pregunta para comenzar..." 
+                            class="flex-1 px-4 py-3 bg-korva-dark border border-korva-dark-alt rounded-lg text-white placeholder-gray-500 korva-input">
+                        <button type="submit" class="korva-btn-primary px-6 py-3 rounded-lg font-semibold shrink-0">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Preguntas Rápidas -->
+            <div class="korva-card rounded-lg p-6 border border-korva-dark-alt">
+                <h3 class="text-lg font-bold text-white mb-4">
+                    <i class="fas fa-bolt text-korva-warning"></i> Preguntas Rápidas
+                </h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <form method="post" action="{% url 'create_ai_conversation' %}">
                         {% csrf_token %}
-                        
-                        <label class="flex items-center space-x-3 cursor-pointer">
-                            <input type="checkbox" name="uses_personal_key" 
-                                {% if ai_config.uses_personal_key %}checked{% endif %}
-                                class="w-4 h-4">
-                            <span class="text-white text-sm">Usar mi propia clave API</span>
-                        </label>
-                        
-                        <textarea name="user_api_key" placeholder="Tu clave API de Google Gemini..." 
-                            class="w-full px-3 py-2 bg-korva-dark-alt border border-korva-dark-alt rounded text-white placeholder-gray-500 text-sm h-24"
-                            >{{ ai_config.user_api_key }}</textarea>
-                        
-                        <button type="submit" class="w-full korva-btn-primary px-3 py-2 rounded font-semibold text-sm">
-                            <i class="fas fa-save mr-2"></i> Guardar
+                        <input type="hidden" name="title" value="Plan de Negocio">
+                        <input type="hidden" name="prompt" value="¿Cuáles son los pasos principales para crear un plan de negocio exitoso en Nicaragua?">
+                        <button type="submit" class="w-full text-left p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition group">
+                            <i class="fas fa-chart-line text-korva-success mr-2"></i>
+                            <span class="text-white font-medium">Plan de Negocio</span>
+                            <span class="block text-xs text-gray-400 mt-1 group-hover:text-gray-300">Pasos para un plan exitoso</span>
+                        </button>
+                    </form>
+                    
+                    <form method="post" action="{% url 'create_ai_conversation' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="title" value="Registro RUC">
+                        <input type="hidden" name="prompt" value="¿Cómo registro mi empresa en el RUC de Nicaragua?">
+                        <button type="submit" class="w-full text-left p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition group">
+                            <i class="fas fa-file-contract text-korva-success mr-2"></i>
+                            <span class="text-white font-medium">Registro RUC</span>
+                            <span class="block text-xs text-gray-400 mt-1 group-hover:text-gray-300">Inscripciones y trámites</span>
+                        </button>
+                    </form>
+                    
+                    <form method="post" action="{% url 'create_ai_conversation' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="title" value="Marketing Digital">
+                        <input type="hidden" name="prompt" value="¿Cómo puedo mejorar mi presencia digital y alcanzar más clientes en Nicaragua?">
+                        <button type="submit" class="w-full text-left p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition group">
+                            <i class="fas fa-bullhorn text-korva-success mr-2"></i>
+                            <span class="text-white font-medium">Marketing Digital</span>
+                            <span class="block text-xs text-gray-400 mt-1 group-hover:text-gray-300">Presencia en línea</span>
+                        </button>
+                    </form>
+                    
+                    <form method="post" action="{% url 'create_ai_conversation' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="title" value="Impuestos">
+                        <input type="hidden" name="prompt" value="¿Cuáles son mis obligaciones fiscales como PyME en Nicaragua?">
+                        <button type="submit" class="w-full text-left p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition group">
+                            <i class="fas fa-percentage text-korva-success mr-2"></i>
+                            <span class="text-white font-medium">Impuestos</span>
+                            <span class="block text-xs text-gray-400 mt-1 group-hover:text-gray-300">Obligaciones fiscales</span>
+                        </button>
+                    </form>
+                    
+                    <form method="post" action="{% url 'create_ai_conversation' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="title" value="Estrategia Korva">
+                        <input type="hidden" name="prompt" value="¿Cómo puedo aprovechar al máximo la plataforma Korva para hacer crecer mi negocio?">
+                        <button type="submit" class="w-full text-left p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition group">
+                            <i class="fas fa-rocket text-korva-success mr-2"></i>
+                            <span class="text-white font-medium">Estrategia Korva</span>
+                            <span class="block text-xs text-gray-400 mt-1 group-hover:text-gray-300">Crece con la plataforma</span>
+                        </button>
+                    </form>
+                    
+                    <form method="post" action="{% url 'create_ai_conversation' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="title" value="Envíos Nacionales">
+                        <input type="hidden" name="prompt" value="¿Cuáles son las mejores opciones para envíos a nivel nacional en Nicaragua?">
+                        <button type="submit" class="w-full text-left p-3 bg-korva-dark-alt rounded hover:bg-korva-dark transition group">
+                            <i class="fas fa-truck text-korva-success mr-2"></i>
+                            <span class="text-white font-medium">Envíos Nacionales</span>
+                            <span class="block text-xs text-gray-400 mt-1 group-hover:text-gray-300">Logística y entregas</span>
                         </button>
                     </form>
                 </div>
             </div>
-            
-            <!-- Features -->
-            <div class="korva-card rounded-lg p-6 border border-korva-dark-alt mt-6">
-                <h3 class="text-xl font-bold text-white mb-4">
-                    <i class="fas fa-star text-korva-warning"></i> Características
+
+            <!-- Configuración -->
+            <div id="ai-config-card" class="korva-card rounded-lg p-6 border border-korva-dark-alt mt-6">
+                <h3 class="text-lg font-bold text-white mb-4">
+                    <i class="fas fa-cog text-korva-success"></i> Configuración
                 </h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="text-center">
-                        <i class="fas fa-comments text-korva-success text-3xl mb-2"></i>
-                        <p class="font-semibold text-white">Chat IA Avanzado</p>
-                        <p class="text-gray-500 text-sm">Conversaciones inteligentes y personalizadas</p>
+                <form method="post" action="{% url 'update_ai_config' %}" class="space-y-4">
+                    {% csrf_token %}
+                    
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" name="uses_personal_key" 
+                            {% if ai_config.uses_personal_key %}checked{% endif %}
+                            class="w-4 h-4">
+                        <span class="text-white text-sm">Usar mi propia clave API</span>
+                    </label>
+                    
+                    <div>
+                        <textarea name="user_api_key" placeholder="Tu clave API de Google Gemini..." 
+                            class="w-full px-3 py-2 bg-korva-dark-alt border border-korva-dark-alt rounded text-white placeholder-gray-500 text-sm h-24 korva-input"
+                            >{{ ai_config.user_api_key }}</textarea>
+                        <p class="text-xs text-gray-500 mt-1">
+                            {% if has_api %}<i class="fas fa-check-circle text-korva-success mr-1"></i> API configurada
+                            {% else %}<i class="fas fa-info-circle mr-1"></i> Sin clave configurada — usa la del servidor o añade la tuya (gratuita en ai.google.dev){% endif %}
+                        </p>
                     </div>
                     
-                    <div class="text-center">
-                        <i class="fas fa-history text-korva-success text-3xl mb-2"></i>
-                        <p class="font-semibold text-white">Historial</p>
-                        <p class="text-gray-500 text-sm">Mantén tus conversaciones almacenadas</p>
+                    <div class="flex gap-3">
+                        <button type="submit" class="korva-btn-primary px-6 py-2 rounded font-semibold text-sm">
+                            <i class="fas fa-save mr-2"></i> Guardar
+                        </button>
+                        <a href="{% url 'ai_tutorial' %}" class="text-korva-success hover:text-green-400 text-sm py-2">
+                            <i class="fas fa-book mr-1"></i> Ver tutorial
+                        </a>
                     </div>
-                    
-                    <div class="text-center">
-                        <i class="fas fa-shield-alt text-korva-success text-3xl mb-2"></i>
-                        <p class="font-semibold text-white">Privado</p>
-                        <p class="text-gray-500 text-sm">Tus datos siempre protegidos</p>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

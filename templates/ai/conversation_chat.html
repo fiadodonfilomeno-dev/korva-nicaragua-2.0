@@ -6,55 +6,155 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
-        <div>
-            <h1 class="text-3xl font-bold text-white">
-                <i class="fas fa-robot text-korva-success"></i> {{ conversation.title }}
-            </h1>
-            <p class="text-gray-500 text-sm mt-1">{{ conversation.created_at|date:"d M Y H:i" }}</p>
+        <div class="flex items-center gap-3 min-w-0">
+            <a href="{% url 'korva_ai' %}" class="text-gray-400 hover:text-white transition shrink-0">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </a>
+            <div class="min-w-0">
+                <h1 class="text-2xl font-bold text-white truncate">
+                    <i class="fas fa-robot text-korva-success"></i> {{ conversation.title }}
+                </h1>
+                <p class="text-gray-500 text-sm mt-0.5">{{ conversation.created_at|date:"d M Y H:i" }}</p>
+            </div>
         </div>
-        <a href="{% url 'korva_ai' %}" class="text-gray-400 hover:text-white transition">
+        <a href="{% url 'korva_ai' %}" class="text-gray-400 hover:text-white transition shrink-0">
             <i class="fas fa-times text-2xl"></i>
         </a>
     </div>
     
     <!-- Chat Container -->
-    <div class="korva-card rounded-lg border border-korva-dark-alt p-6 mb-6 h-96 overflow-y-auto">
-        {% if messages %}
-            {% for message in messages %}
-            <div class="mb-4 {% if message.role == 'user' %}text-right{% endif %}">
-                <div class="inline-block max-w-xs {% if message.role == 'user' %}bg-korva-success{% else %}bg-korva-dark-alt{% endif %} rounded-lg p-3">
-                    <p class="text-sm {% if message.role == 'user' %}text-white{% else %}text-gray-300{% endif %} break-words">
-                        {{ message.content }}
-                    </p>
-                    <p class="text-xs {% if message.role == 'user' %}text-green-100{% else %}text-gray-500{% endif %} mt-1">
-                        {{ message.timestamp|date:"H:i" }}
-                    </p>
+    <div id="chat-container" class="korva-card rounded-lg border border-korva-dark-alt p-6 mb-6 h-[500px] overflow-y-auto">
+        <div id="chat-messages">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="mb-4 flex {% if message.role == 'user' %}justify-end{% else %}justify-start{% endif %}">
+                    <div class="inline-block max-w-[80%] {% if message.role == 'user' %}bg-korva-success text-white{% else %}bg-korva-dark-alt text-gray-300{% endif %} rounded-lg p-3">
+                        <p class="text-sm whitespace-pre-wrap break-words">{{ message.content }}</p>
+                        <p class="text-xs {% if message.role == 'user' %}text-green-100{% else %}text-gray-500{% endif %} mt-1">
+                            {{ message.timestamp|date:"H:i" }}
+                        </p>
+                    </div>
                 </div>
+                {% endfor %}
+            {% else %}
+            <div id="empty-state" class="text-center py-16 text-gray-500">
+                <i class="fas fa-comments text-4xl mb-4"></i>
+                <p>Inicia una conversación. ¡Korva IA está aquí para ayudarte!</p>
             </div>
-            {% endfor %}
-        {% else %}
-        <div class="text-center py-12 text-gray-500">
-            <i class="fas fa-comments text-4xl mb-4"></i>
-            <p>Inicia una conversación. ¡Korva IA está aquí para ayudarte!</p>
+            {% endif %}
         </div>
-        {% endif %}
+        
+        <!-- Indicador escribiendo -->
+        <div id="typing-indicator" class="hidden mb-4 flex justify-start">
+            <div class="bg-korva-dark-alt rounded-lg p-3 inline-flex items-center gap-2">
+                <span class="flex gap-1">
+                    <span class="w-2 h-2 bg-korva-success rounded-full animate-bounce"></span>
+                    <span class="w-2 h-2 bg-korva-success rounded-full animate-bounce" style="animation-delay:0.15s"></span>
+                    <span class="w-2 h-2 bg-korva-success rounded-full animate-bounce" style="animation-delay:0.3s"></span>
+                </span>
+                <span class="text-xs text-gray-400">Korva IA está escribiendo...</span>
+            </div>
+        </div>
     </div>
     
     <!-- Input Form -->
-    <form method="post" action="{% url 'send_ai_message' conversation.id %}" class="space-y-4">
+    <form id="chat-form" method="post" action="{% url 'send_ai_message' conversation.id %}" class="space-y-4">
         {% csrf_token %}
         
         <div class="flex gap-3">
-            <input type="text" name="message" placeholder="Escribe tu pregunta..."
-                class="flex-1 px-4 py-3 bg-korva-dark-alt border border-korva-dark-alt rounded-lg text-white placeholder-gray-500">
-            <button type="submit" class="korva-btn-primary px-6 py-3 rounded-lg font-semibold">
+            <input type="text" id="chat-input" name="message" placeholder="Escribe tu pregunta..."
+                class="flex-1 px-4 py-3 bg-korva-dark-alt border border-korva-dark-alt rounded-lg text-white placeholder-gray-500 korva-input"
+                autocomplete="off">
+            <button type="submit" id="send-btn" class="korva-btn-primary px-6 py-3 rounded-lg font-semibold">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
+        <p class="text-center text-gray-500 text-sm">
+            <i class="fas fa-info-circle"></i> Korva IA está potenciado por Google Gemini
+        </p>
     </form>
-    
-    <p class="text-center text-gray-500 text-sm mt-4">
-        <i class="fas fa-info-circle"></i> Korva IA está potenciado por Google Gemini
-    </p>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const container = document.getElementById('chat-container');
+    const messagesDiv = document.getElementById('chat-messages');
+    const typing = document.getElementById('typing-indicator');
+    const emptyState = document.getElementById('empty-state');
+    
+    function scrollToBottom() {
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    function addMessage(role, content, time) {
+        if (emptyState) emptyState.remove();
+        const wrap = document.createElement('div');
+        wrap.className = 'mb-4 flex ' + (role === 'user' ? 'justify-end' : 'justify-start');
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'inline-block max-w-[80%] ' + (role === 'user' ? 'bg-korva-success text-white' : 'bg-korva-dark-alt text-gray-300') + ' rounded-lg p-3';
+        
+        const p = document.createElement('p');
+        p.className = 'text-sm whitespace-pre-wrap break-words';
+        p.textContent = content;
+        bubble.appendChild(p);
+        
+        const ts = document.createElement('p');
+        ts.className = 'text-xs ' + (role === 'user' ? 'text-green-100' : 'text-gray-500') + ' mt-1';
+        ts.textContent = time || new Date().toLocaleTimeString('es', {hour: '2-digit', minute: '2-digit'});
+        bubble.appendChild(ts);
+        
+        wrap.appendChild(bubble);
+        messagesDiv.appendChild(wrap);
+        scrollToBottom();
+    }
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const content = input.value.trim();
+        if (!content) return;
+        
+        input.value = '';
+        input.disabled = true;
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        typing.classList.remove('hidden');
+        scrollToBottom();
+        
+        addMessage('user', content);
+        
+        const formData = new FormData(form);
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        })
+        .then(r => r.json().then(data => ({ok: r.ok, data})))
+        .then(({ok, data}) => {
+            if (ok && data.success) {
+                addMessage('assistant', data.response);
+            } else {
+                addMessage('assistant', '⚠️ ' + (data.error || 'Ocurrió un error. Intenta de nuevo.'));
+            }
+        })
+        .catch(() => {
+            addMessage('assistant', '⚠️ Error de conexión. Intenta de nuevo.');
+        })
+        .finally(() => {
+            typing.classList.add('hidden');
+            input.disabled = false;
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            input.focus();
+        });
+    });
+    
+    scrollToBottom();
+})();
+</script>
 {% endblock %}
