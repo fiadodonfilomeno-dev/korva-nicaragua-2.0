@@ -22,31 +22,11 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-        <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        'korva-primary': '#10b981',
-                        'korva-success': '#10b981',
-                        'korva-warning': '#f59e0b',
-                        'korva-danger': '#ef4444',
-                        'korva-dark': '#09090b',
-                        'korva-card': '#0c0c0e',
-                        'korva-dark-alt': '#1a1a1d',
-                    }
-                }
-            }
-        }
-    </script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/tailwind.min.css' %}">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
